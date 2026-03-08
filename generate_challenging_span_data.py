@@ -83,28 +83,29 @@ Domain:
 - Keep it realistic but intentionally challenging. Avoid nonsense gibberish walls.
 
 Rules:
-1) Do NOT output numeric offsets.
-2) Annotate spans in-place using this exact syntax: [[ROOT_CATEGORY:SUBCATEGORY|value]]
-   - ROOT_CATEGORY must be one of: NON_PII_NUMBER, PII_LOOKALIKE, REAL_PII
-   - For REAL_PII, SUBCATEGORY must be one of: {labels_csv}
-   - For PII_LOOKALIKE, SUBCATEGORY must be one of: {labels_csv}
-   - For NON_PII_NUMBER, SUBCATEGORY is a short descriptor.
-3) Mix difficulty:
-   - some examples with multiple entities near each other
-   - some with overlapping surface patterns (e.g. ID-like strings that are not labels)
-   - some with formatting artifacts that split tokens
-4) Composition guidance per example:
+* Annotate spans in-place using this exact syntax: [[ROOT_CATEGORY:SUBCATEGORY|value]]. Note to NOT repeat the value outside this. ALWAYS follow this ternary pattern in the right order, or the parser will reject it.
+   - ROOT_CATEGORY must be one of: NON_PII, PII_LOOKALIKE, REAL_PII
+   - For REAL_PII and PII_LOOKALIKE, SUBCATEGORY must be one of: {labels_csv}
+   - PII_LOOKALIKE examples: only include values that have the same technical structure as REAL_PII labels, using the same label categories, but where context clearly indicates the value is public/non-sensitive (e.g., institutional hotline phone, public office email, well-known public address).
+   - For NON_PII, SUBCATEGORY is a short descriptor.
+* Introduce difficulty:
+   - some examples with multiple entities near each other; other split by long uninteresting text.
+   - some with formatting artifacts that split tokens or introduce typos
+   - some with the keywords that explain the context (such as Tel, address) either missing or on a different line, as could happen with OCR. 
+* Composition guidance per example:
    - include between 15 to 40 total annotated spans in "annotated_text"
-   - target approximately 50% NON_PII_NUMBER, 20% PII_LOOKALIKE, 30% REAL_PII
-   - hard minimums: at least 5 NON_PII_NUMBER, at least 2 PII_LOOKALIKE, at least 3 REAL_PII
-   - Labels for REAL_PII items: {labels_csv}
-   - NON_PII_NUMBER examples: monetary amounts, form IDs, quantities, law refs, measurements, version numbers, etc.
-   - PII_LOOKALIKE examples: only include values that have the same technical structure as REAL_PII labels ({labels_csv}), using the same label categories, but where context clearly indicates the value is public/non-sensitive (e.g., institutional hotline phone, public office email, well-known public address).
-   - Any other "confusing" patterns that do not map to REAL_PII label structure must be annotated as NON_PII_NUMBER.
-5) Before returning JSON, self-check each example:
+   - target approximately 50% NON_PII, 20% PII_LOOKALIKE, 30% REAL_PII
+   - hard minimums: at least 5 NON_PII, at least 2 PII_LOOKALIKE, at least 3 REAL_PII
+* classification guidelines:   
+   - note that for ORG and associated data, they are REAL_PII if it's a small one the person is one of the few owners, clients, or employees of. Being owners, clients, or employees of a large, public organization is not sensitive information.
+   - The contact details of a large organization are also likely to be public. However infomration such as passwords, or non-public emails, phone numbers, locations, IP addresses, etc, will be sensitive even if they belong to a large organization.
+   - Any other "confusing" patterns that do not map to REAL_PII/PII_LOOKALIKE label structure must be annotated as NON_PII.
+   - NON_PII examples: monetary amounts, form IDs, quantities with units, law refs, measurements, version numbers, paragraph numbers, tables of numbers, etc.
+* Before returning JSON, self-check each example:
    - if spans are too few or proportions are off, add more annotations until constraints are satisfied
-5) Keep each text under 1000 characters.
-6) Do not include explanations, markdown, or extra keys.
+* Keep each text under 1000 characters.
+* Do not include explanations, markdown, or extra keys.
+* Do NOT often redact passwords and other PII or add indications that they are fake, the point is to learn to protect customers from sharing unredacted real ones.
 
 Output format (JSON object):
 {{
@@ -585,7 +586,7 @@ def _request_examples(
         instruction_parts = [
             SYSTEM_PROMPT.strip(),
             USER_PROMPT.strip(),
-            f"Generate exactly {count} examples. Labels allowed: {LABELS_CSV}.",
+            f"Generate exactly {count} examples.",
         ]
         if extra_instruction:
             instruction_parts.append(extra_instruction.strip())
