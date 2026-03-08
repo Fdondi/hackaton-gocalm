@@ -1,0 +1,12 @@
+[
+  {
+    "name": "modernbert_untrained",
+    "base_model": "answerdotai/ModernBERT-base"
+  },
+  {
+    "name": "modernbert_trained",
+    "base_model": "answerdotai/ModernBERT-base",
+    "encoder_path": "outputs/encoder",
+    "checkpoint": "outputs/span_classifier.pt"
+  }
+]

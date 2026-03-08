@@ -1,0 +1,23 @@
+{
+  "model_name": "answerdotai/ModernBERT-base",
+  "max_length": 512,
+  "max_span_len": 12,
+  "train_batch_size": 2,
+  "eval_batch_size": 2,
+  "learning_rate": 2e-5,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.1,
+  "epochs": 3,
+  "seed": 42,
+  "dropout": 0.1,
+  "span_width_vocab_size": 64,
+  "proposal_loss_weight": 1.0,
+  "type_loss_weight": 1.0,
+  "sensitivity_loss_weight": 1.0,
+  "negative_sample_rate": 0.2,
+  "include_regex_candidates": true,
+  "regex_only_inference": false,
+  "redact_score_threshold": 0.5,
+  "nms_iou_threshold": 0.5,
+  "device": "auto"
+}

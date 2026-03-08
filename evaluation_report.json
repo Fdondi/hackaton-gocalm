@@ -1,0 +1,234 @@
+{
+  "device": "cuda",
+  "valid_path": "valid.gpt-5-nano.json",
+  "results": [
+    {
+      "model_name": "modernbert_untrained",
+      "base_model": "answerdotai/ModernBERT-base",
+      "encoder_source": "answerdotai/ModernBERT-base",
+      "checkpoint": null,
+      "num_docs": 300,
+      "avg_loss": 2.7056535720825194,
+      "candidate_accuracy": 0.010674541671902708,
+      "candidate_accuracy_positive_only": 0.11168562564632885,
+      "span_micro_precision": 5.996007364507869e-05,
+      "span_micro_recall": 0.008,
+      "span_micro_f1": 0.00011902803110132437,
+      "span_macro_f1_all_labels": 5.547852976373822e-05,
+      "span_macro_f1_present_labels": 5.547852976373822e-05,
+      "exact_match_rate": 0.0,
+      "span_counts": {
+        "tp": 17,
+        "fp": 283505,
+        "fn": 2108
+      },
+      "per_label": {
+        "PERSON": {
+          "precision": 0.00030661823670927874,
+          "recall": 0.04961832061068702,
+          "f1": 0.0006094702297233943,
+          "support": 262,
+          "predicted": 42398
+        },
+        "ORG": {
+          "precision": 1.8738171529222178e-05,
+          "recall": 0.003875968992248062,
+          "f1": 3.729603729603729e-05,
+          "support": 258,
+          "predicted": 53367
+        },
+        "ADDRESS": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 283,
+          "predicted": 26515
+        },
+        "EMAIL": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 301,
+          "predicted": 794
+        },
+        "PHONE": {
+          "precision": 3.733154141934521e-05,
+          "recall": 0.013333333333333334,
+          "f1": 7.445461990916537e-05,
+          "support": 225,
+          "predicted": 80361
+        },
+        "USERNAME": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 100,
+          "predicted": 29498
+        },
+        "PASSWORD": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 59,
+          "predicted": 23559
+        },
+        "IP_ADDRESS": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 280,
+          "predicted": 2745
+        },
+        "IBAN": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 105,
+          "predicted": 151
+        },
+        "CREDIT_CARD": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 133,
+          "predicted": 11309
+        },
+        "ID_NUMBER": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 48,
+          "predicted": 11797
+        },
+        "ACCOUNT_NUMBER": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 62,
+          "predicted": 59
+        },
+        "OTHER": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 9,
+          "predicted": 969
+        }
+      }
+    },
+    {
+      "model_name": "modernbert_trained",
+      "base_model": "answerdotai/ModernBERT-base",
+      "encoder_source": "outputs/encoder",
+      "checkpoint": "outputs/span_classifier.pt",
+      "num_docs": 300,
+      "avg_loss": 0.035834127565224964,
+      "candidate_accuracy": 0.9966244990854383,
+      "candidate_accuracy_positive_only": 0.0,
+      "span_micro_precision": 0.0,
+      "span_micro_recall": 0.0,
+      "span_micro_f1": 0.0,
+      "span_macro_f1_all_labels": 0.0,
+      "span_macro_f1_present_labels": 0.0,
+      "exact_match_rate": 0.0,
+      "span_counts": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 2125
+      },
+      "per_label": {
+        "PERSON": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 262,
+          "predicted": 0
+        },
+        "ORG": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 258,
+          "predicted": 0
+        },
+        "ADDRESS": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 283,
+          "predicted": 0
+        },
+        "EMAIL": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 301,
+          "predicted": 0
+        },
+        "PHONE": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 225,
+          "predicted": 0
+        },
+        "USERNAME": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 100,
+          "predicted": 0
+        },
+        "PASSWORD": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 59,
+          "predicted": 0
+        },
+        "IP_ADDRESS": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 280,
+          "predicted": 0
+        },
+        "IBAN": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 105,
+          "predicted": 0
+        },
+        "CREDIT_CARD": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 133,
+          "predicted": 0
+        },
+        "ID_NUMBER": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 48,
+          "predicted": 0
+        },
+        "ACCOUNT_NUMBER": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 62,
+          "predicted": 0
+        },
+        "OTHER": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 9,
+          "predicted": 0
+        }
+      }
+    }
+  ]
+}
