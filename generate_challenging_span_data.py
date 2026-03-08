@@ -21,7 +21,7 @@ LABELS = PII_LABELS
 LABELS_CSV = PII_LABELS_CSV
 MIN_ITEMS = 10
 MAX_ITEMS = 40
-MIN_NON_PII_NUMBER = 3
+MIN_NON_PII = 3
 MIN_PII_LOOKALIKE = 1
 MIN_REAL_PII = 2
 ERROR_LOG_FILENAME = "generation_errors.jsonl"
@@ -255,18 +255,72 @@ def _extract_first_json_object(raw: str) -> str:
     return raw
 
 
+def _is_gguf_model_path(model: str) -> bool:
+    return Path(model).suffix.lower() == ".gguf"
+
+
+def _normalize_openai_base_url(base_url: str) -> str:
+    normalized = base_url.strip().rstrip("/")
+    if not normalized:
+        raise ValueError("local_base_url cannot be empty")
+    if not normalized.endswith("/v1"):
+        normalized = f"{normalized}/v1"
+    return normalized
+
+
+def _detect_local_api_base_url_for_model(
+    model: str,
+    api_key: Optional[str],
+) -> Optional[str]:
+    default_base_url = "http://127.0.0.1:1234/v1"
+    try:
+        client = OpenAI(base_url=default_base_url, api_key=api_key or "lm-studio")
+        model_list = client.models.list()
+    except Exception:
+        return None
+
+    for entry in getattr(model_list, "data", []):
+        if getattr(entry, "id", None) == model:
+            return default_base_url
+    return None
+
+
 def _get_local_generator(model: str):
     with LOCAL_GENERATOR_LOCK:
         cached = LOCAL_GENERATORS.get(model)
         if cached is not None:
             return cached
 
+        if _is_gguf_model_path(model):
+            model_path = Path(model).expanduser()
+            if not model_path.exists():
+                raise RuntimeError(
+                    f"GGUF model path does not exist: {model_path}. "
+                    "Pass a valid local file path to a .gguf model."
+                )
+            try:
+                from llama_cpp import Llama
+            except ImportError as exc:
+                raise RuntimeError(
+                    "GGUF local fallback requested, but 'llama-cpp-python' is not installed. "
+                    "Install it in this Python environment (for example: pip install llama-cpp-python)."
+                ) from exc
+            try:
+                generator = Llama(model_path=str(model_path), verbose=False)
+            except Exception as exc:
+                raise RuntimeError(
+                    f"Could not load GGUF model from '{model_path}': {exc}"
+                ) from exc
+            runtime = {"backend": "gguf", "generator": generator}
+            LOCAL_GENERATORS[model] = runtime
+            return runtime
+
         try:
             from transformers import pipeline
         except ImportError as exc:
             raise RuntimeError(
                 "Local fallback requested, but 'transformers' is not installed in this runtime. "
-                "Install it in the container and retry."
+                "Install it in this Python environment and retry."
             ) from exc
 
         try:
@@ -276,8 +330,57 @@ def _get_local_generator(model: str):
                 f"Could not download/load local model '{model}'. "
                 "Provide a valid local/HuggingFace model identifier available to this runtime."
             ) from exc
-        LOCAL_GENERATORS[model] = generator
-        return generator
+        runtime = {"backend": "transformers", "generator": generator}
+        LOCAL_GENERATORS[model] = runtime
+        return runtime
+
+
+def _request_examples_via_chat_api(
+    client: OpenAI,
+    model: str,
+    count: int,
+    call_timeout_seconds: int,
+    labels: set,
+    extra_instruction: Optional[str] = None,
+    prefer_json_object_response: bool = True,
+) -> Tuple[List[Dict], Dict]:
+    user_messages = [
+        {"role": "user", "content": USER_PROMPT},
+        {"role": "user", "content": f"Generate exactly {count} examples. Labels allowed: {LABELS_CSV}."},
+    ]
+    if extra_instruction:
+        user_messages.append({"role": "user", "content": extra_instruction})
+
+    response_format = (
+        {"type": "json_object"} if prefer_json_object_response else {"type": "text"}
+    )
+    completion = client.chat.completions.create(
+        model=model,
+        response_format=response_format,
+        timeout=call_timeout_seconds,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            *user_messages,
+        ],
+    )
+    content = completion.choices[0].message.content or ""
+    cleaned = _clean_json_text(content)
+    try:
+        parsed = json.loads(cleaned)
+    except json.JSONDecodeError as exc:
+        raise ResponseFormatError(f"response is not valid JSON: {exc}", raw_content=content) from exc
+    examples = parsed.get("examples")
+    if not isinstance(examples, list):
+        raise ResponseFormatError("model output missing examples list", raw_content=content)
+    normalized_examples: List[Dict] = []
+    for idx, example in enumerate(examples):
+        try:
+            normalized_examples.append(_normalize_model_example(example, labels=labels))
+        except Exception as exc:
+            raise ResponseFormatError(
+                f"example[{idx}] has invalid annotation format: {exc}", raw_content=content
+            ) from exc
+    return normalized_examples, _extract_usage_info(completion, model=model)
 
 
 def _model_slug(model: str) -> str:
@@ -368,7 +471,7 @@ def _parse_annotated_text_to_example(annotated_text: str, labels: set) -> Dict:
                 "label": label,
                 "note": "public-context lookalike",
             }
-        elif root_category == "NON_PII_NUMBER":
+        elif root_category == "NON_PII":
             item = {
                 "start": start,
                 "end": end,
@@ -378,7 +481,7 @@ def _parse_annotated_text_to_example(annotated_text: str, labels: set) -> Dict:
         else:
             raise ValueError(
                 "invalid ROOT_CATEGORY in marker: "
-                f"{root_category!r}; expected NON_PII_NUMBER, PII_LOOKALIKE, or REAL_PII"
+                f"{root_category!r}; expected NON_PII, PII_LOOKALIKE, or REAL_PII"
             )
         items.append(item)
         i = next_idx
@@ -423,7 +526,7 @@ def _validate_example(example: Dict, labels: set) -> Tuple[ValidationStatus, Opt
             f"items must contain between {MIN_ITEMS} and {MAX_ITEMS} entries; got={len(items)}",
         )
 
-    category_counts = {"NON_PII_NUMBER": 0, "PII_LOOKALIKE": 0, "REAL_PII": 0}
+    category_counts = {"NON_PII": 0, "PII_LOOKALIKE": 0, "REAL_PII": 0}
     real_items = {}
     for idx, item in enumerate(items):
         if not isinstance(item, dict):
@@ -466,7 +569,7 @@ def _validate_example(example: Dict, labels: set) -> Tuple[ValidationStatus, Opt
             return (
                 fail,
                 f"invalid item category at item[{idx}]: {category}; "
-                "allowed categories are NON_PII_NUMBER, PII_LOOKALIKE, REAL_PII "
+                "allowed categories are NON_PII, PII_LOOKALIKE, REAL_PII "
                 "or any valid REAL_PII label used as shorthand category",
             )
         category_counts[category] += 1
@@ -500,11 +603,11 @@ def _validate_example(example: Dict, labels: set) -> Tuple[ValidationStatus, Opt
                     f"allowed={sorted(labels)}",
                 )
 
-    if category_counts["NON_PII_NUMBER"] < MIN_NON_PII_NUMBER:
+    if category_counts["NON_PII"] < MIN_NON_PII:
         return (
             retry,
-            f"must have at least {MIN_NON_PII_NUMBER} NON_PII_NUMBER items; "
-            f"got={category_counts['NON_PII_NUMBER']}",
+            f"must have at least {MIN_NON_PII} NON_PII items; "
+            f"got={category_counts['NON_PII']}",
         )
     if category_counts["PII_LOOKALIKE"] < MIN_PII_LOOKALIKE:
         return (
@@ -519,7 +622,7 @@ def _validate_example(example: Dict, labels: set) -> Tuple[ValidationStatus, Opt
         )
 
     total_items = len(items)
-    non_pii_ratio = category_counts["NON_PII_NUMBER"] / total_items
+    non_pii_ratio = category_counts["NON_PII"] / total_items
     lookalike_ratio = category_counts["PII_LOOKALIKE"] / total_items
     real_pii_ratio = category_counts["REAL_PII"] / total_items
 
@@ -527,9 +630,9 @@ def _validate_example(example: Dict, labels: set) -> Tuple[ValidationStatus, Opt
     if not (0.20 <= non_pii_ratio <= 0.70):
         return (
             retry,
-            "NON_PII_NUMBER ratio is too far from target: "
+            "NON_PII ratio is too far from target: "
             f"ratio={non_pii_ratio:.3f} expected=[0.200,0.700] "
-            f"counts={category_counts['NON_PII_NUMBER']}/{total_items}",
+            f"counts={category_counts['NON_PII']}/{total_items}",
         )
     if not (0.10 <= lookalike_ratio <= 0.40):
         return (
@@ -580,9 +683,28 @@ def _request_examples(
     call_timeout_seconds: int,
     labels: set,
     extra_instruction: Optional[str] = None,
+    local_openai_client: Optional[OpenAI] = None,
 ) -> Tuple[List[Dict], Dict]:
     if not _is_known_priced_model(model):
-        generator = _get_local_generator(model)
+        if local_openai_client is not None:
+            if _is_gguf_model_path(model):
+                raise RuntimeError(
+                    "When using --local-base-url, --model must be the local API model id "
+                    "(not a .gguf file path)."
+                )
+            return _request_examples_via_chat_api(
+                client=local_openai_client,
+                model=model,
+                count=count,
+                call_timeout_seconds=call_timeout_seconds,
+                labels=labels,
+                extra_instruction=extra_instruction,
+                prefer_json_object_response=False,
+            )
+
+        local_runtime = _get_local_generator(model)
+        backend = local_runtime.get("backend")
+        generator = local_runtime.get("generator")
         instruction_parts = [
             SYSTEM_PROMPT.strip(),
             USER_PROMPT.strip(),
@@ -594,22 +716,43 @@ def _request_examples(
         prompt = "\n\n".join(part for part in instruction_parts if part)
 
         try:
-            outputs = generator(
-                prompt,
-                max_new_tokens=LOCAL_MAX_NEW_TOKENS,
-                do_sample=True,
-                temperature=0.2,
-                return_full_text=False,
-            )
+            if backend == "transformers":
+                outputs = generator(
+                    prompt,
+                    max_new_tokens=LOCAL_MAX_NEW_TOKENS,
+                    do_sample=True,
+                    temperature=0.2,
+                    return_full_text=False,
+                )
+                if not outputs or not isinstance(outputs, list) or "generated_text" not in outputs[0]:
+                    raise ResponseFormatError(
+                        "local model output is empty or malformed", raw_content=str(outputs)
+                    )
+                content = outputs[0]["generated_text"] or ""
+            elif backend == "gguf":
+                completion = generator.create_completion(
+                    prompt=prompt,
+                    max_tokens=LOCAL_MAX_NEW_TOKENS,
+                    temperature=0.2,
+                    top_p=0.95,
+                    echo=False,
+                )
+                choices = completion.get("choices") if isinstance(completion, dict) else None
+                if not choices or not isinstance(choices, list):
+                    raise ResponseFormatError(
+                        "local GGUF output is empty or malformed", raw_content=str(completion)
+                    )
+                first_choice = choices[0] if isinstance(choices[0], dict) else {}
+                content = first_choice.get("text", "") or ""
+                if not content and isinstance(first_choice.get("message"), dict):
+                    content = first_choice["message"].get("content", "") or ""
+            else:
+                raise RuntimeError(
+                    f"Unsupported local backend '{backend}' for model '{model}'."
+                )
         except Exception as exc:
             raise RuntimeError(f"Local generation failed for model '{model}': {exc}") from exc
 
-        if not outputs or not isinstance(outputs, list) or "generated_text" not in outputs[0]:
-            raise ResponseFormatError(
-                "local model output is empty or malformed", raw_content=str(outputs)
-            )
-
-        content = outputs[0]["generated_text"] or ""
         cleaned = _clean_json_text(content)
         if not cleaned.startswith("{"):
             cleaned = _extract_first_json_object(cleaned)
@@ -647,40 +790,15 @@ def _request_examples(
             },
         )
 
-    user_messages = [
-        {"role": "user", "content": USER_PROMPT},
-        {"role": "user", "content": f"Generate exactly {count} examples. Labels allowed: {LABELS_CSV}."},
-    ]
-    if extra_instruction:
-        user_messages.append({"role": "user", "content": extra_instruction})
-
-    completion = client.chat.completions.create(
+    return _request_examples_via_chat_api(
+        client=client,
         model=model,
-        response_format={"type": "json_object"},
-        timeout=call_timeout_seconds,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            *user_messages,
-        ],
+        count=count,
+        call_timeout_seconds=call_timeout_seconds,
+        labels=labels,
+        extra_instruction=extra_instruction,
+        prefer_json_object_response=True,
     )
-    content = completion.choices[0].message.content or ""
-    cleaned = _clean_json_text(content)
-    try:
-        parsed = json.loads(cleaned)
-    except json.JSONDecodeError as exc:
-        raise ResponseFormatError(f"response is not valid JSON: {exc}", raw_content=content) from exc
-    examples = parsed.get("examples")
-    if not isinstance(examples, list):
-        raise ResponseFormatError("model output missing examples list", raw_content=content)
-    normalized_examples: List[Dict] = []
-    for idx, example in enumerate(examples):
-        try:
-            normalized_examples.append(_normalize_model_example(example, labels=labels))
-        except Exception as exc:
-            raise ResponseFormatError(
-                f"example[{idx}] has invalid annotation format: {exc}", raw_content=content
-            ) from exc
-    return normalized_examples, _extract_usage_info(completion, model=model)
 
 
 def _load_existing_jsonl(path: Path) -> Tuple[int, set]:
@@ -719,9 +837,13 @@ def generate_dataset(
     call_timeout_seconds: int,
     seed: int,
     overwrite: bool,
+    local: bool,
+    local_base_url: Optional[str],
+    local_api_key: Optional[str],
 ) -> None:
     load_dotenv()
-    local_model_mode = not _is_known_priced_model(model)
+    local_model_mode = local or bool(local_base_url) or not _is_known_priced_model(model)
+    cost_tracking_enabled = not local_model_mode
     if not local_model_mode and not os.getenv("OPENAI_API_KEY"):
         raise RuntimeError(
             "OPENAI_API_KEY is not set. Put it in a .env file or export it in the environment."
@@ -729,10 +851,16 @@ def generate_dataset(
 
     random.seed(seed)
     if local_model_mode:
-        print(
-            f"Model '{model}' is not in known pricing tables. "
-            "Will attempt local download/inference via transformers."
-        )
+        if local and _is_known_priced_model(model):
+            print(
+                f"--local enabled: forcing local mode for model '{model}' "
+                "even though it matches a known priced model name."
+            )
+        else:
+            print(
+                f"Model '{model}' is not in known pricing tables. "
+                "Will attempt local inference."
+            )
     else:
         pricing_per_m = _pricing_for_model(model)
         cached_price_label = (
@@ -771,10 +899,11 @@ def generate_dataset(
         raise ValueError("max_dollars must be >= 0")
     if call_timeout_seconds <= 0:
         raise ValueError("call_timeout_seconds must be > 0")
-    if max_dollars == 0:
-        print("WARNING: --max-dollars=0 selected (unlimited spend).")
-    else:
-        print(f"Estimated cost cap enabled: ${max_dollars:.2f} (soft cap).")
+    if cost_tracking_enabled:
+        if max_dollars == 0:
+            print("WARNING: --max-dollars=0 selected (unlimited spend).")
+        else:
+            print(f"Estimated cost cap enabled: ${max_dollars:.2f} (soft cap).")
 
     seen_texts = set()
     duplicate_count = 0
@@ -791,6 +920,34 @@ def generate_dataset(
     running_cost_usd = 0.0
 
     client = OpenAI()
+    local_openai_client: Optional[OpenAI] = None
+    selected_local_base_url = local_base_url
+    if local_model_mode and not selected_local_base_url:
+        # Convenience path: if LM Studio is running locally and serves this model id,
+        # auto-route local requests through its OpenAI-compatible endpoint.
+        selected_local_base_url = _detect_local_api_base_url_for_model(
+            model=model,
+            api_key=local_api_key,
+        )
+        if selected_local_base_url:
+            print(
+                "Detected local API model on LM Studio; "
+                f"using base_url={selected_local_base_url}."
+            )
+
+    if local_model_mode and selected_local_base_url:
+        normalized_base_url = _normalize_openai_base_url(selected_local_base_url)
+        local_openai_client = OpenAI(
+            base_url=normalized_base_url,
+            api_key=local_api_key or "lm-studio",
+        )
+        print(
+            "Local API mode enabled "
+            f"(base_url={normalized_base_url}, model={model})."
+        )
+    elif local_model_mode:
+        # Fail fast once instead of repeatedly attempting the same invalid local loader setup.
+        _get_local_generator(model)
     attempts = 0
 
     train_path.parent.mkdir(parents=True, exist_ok=True)
@@ -862,7 +1019,7 @@ def generate_dataset(
                 and not quota_exhausted
                 and not budget_exhausted
             ):
-                if max_dollars > 0 and running_cost_usd >= max_dollars:
+                if cost_tracking_enabled and max_dollars > 0 and running_cost_usd >= max_dollars:
                     budget_exhausted = True
                     print(
                         "Estimated cost cap reached; stopping new call submissions and waiting for in-flight calls."
@@ -920,6 +1077,7 @@ def generate_dataset(
                     call_timeout_seconds=call_timeout_seconds,
                     labels=labels_set,
                     extra_instruction=retry_instruction,
+                    local_openai_client=local_openai_client,
                 )
                 pending_futures[future] = {
                     "call_id": call_id,
@@ -960,8 +1118,14 @@ def generate_dataset(
                     running_input_tokens += usage_info["input_tokens"]
                     running_cached_input_tokens += usage_info["cached_input_tokens"]
                     running_output_tokens += usage_info["output_tokens"]
-                    running_cost_usd += usage_info["estimated_cost_usd"]
-                    if max_dollars > 0 and running_cost_usd >= max_dollars and not budget_exhausted:
+                    if cost_tracking_enabled:
+                        running_cost_usd += usage_info["estimated_cost_usd"]
+                    if (
+                        cost_tracking_enabled
+                        and max_dollars > 0
+                        and running_cost_usd >= max_dollars
+                        and not budget_exhausted
+                    ):
                         budget_exhausted = True
                         print(
                             "Estimated cost cap reached after this call; no further calls will be submitted."
@@ -979,13 +1143,21 @@ def generate_dataset(
                                 "trigger_call_id": meta["call_id"],
                             },
                         )
-                    print(
-                        f"[call {meta['call_id']}] finished ok in {elapsed_s:.1f}s "
-                        f"returned={len(result)} "
-                        f"tokens(in={usage_info['input_tokens']}, cached={usage_info['cached_input_tokens']}, "
-                        f"out={usage_info['output_tokens']}) "
-                        f"est_cost=${usage_info['estimated_cost_usd']:.6f} total_est=${running_cost_usd:.6f}"
-                    )
+                    if cost_tracking_enabled:
+                        print(
+                            f"[call {meta['call_id']}] finished ok in {elapsed_s:.1f}s "
+                            f"returned={len(result)} "
+                            f"tokens(in={usage_info['input_tokens']}, cached={usage_info['cached_input_tokens']}, "
+                            f"out={usage_info['output_tokens']}) "
+                            f"est_cost=${usage_info['estimated_cost_usd']:.6f} total_est=${running_cost_usd:.6f}"
+                        )
+                    else:
+                        print(
+                            f"[call {meta['call_id']}] finished ok in {elapsed_s:.1f}s "
+                            f"returned={len(result)} "
+                            f"tokens(in={usage_info['input_tokens']}, cached={usage_info['cached_input_tokens']}, "
+                            f"out={usage_info['output_tokens']})"
+                        )
                     _append_error_log(
                         error_log_path,
                         {
@@ -1107,19 +1279,28 @@ def generate_dataset(
                         error_payload["raw_response"] = exc.raw_content
                     _append_error_log(error_log_path, error_payload)
 
-                print(
-                    f"[calls={attempts}/{theoretical_min_attempts} est (max {effective_max_attempts})] "
-                    f"in_flight={len(pending_futures)} "
-                    f"total={train_written + valid_written}/{target_total} "
-                    f"(train={train_written}/{train_size}, valid={valid_written}/{valid_size}) "
-                    f"cost_est=${running_cost_usd:.6f} "
-                    f"rejects(retry={retry_invalid_count}, fail={fail_invalid_count})"
-                )
+                if cost_tracking_enabled:
+                    print(
+                        f"[calls={attempts}/{theoretical_min_attempts} est (max {effective_max_attempts})] "
+                        f"in_flight={len(pending_futures)} "
+                        f"total={train_written + valid_written}/{target_total} "
+                        f"(train={train_written}/{train_size}, valid={valid_written}/{valid_size}) "
+                        f"cost_est=${running_cost_usd:.6f} "
+                        f"rejects(retry={retry_invalid_count}, fail={fail_invalid_count})"
+                    )
+                else:
+                    print(
+                        f"[calls={attempts}/{theoretical_min_attempts} est (max {effective_max_attempts})] "
+                        f"in_flight={len(pending_futures)} "
+                        f"total={train_written + valid_written}/{target_total} "
+                        f"(train={train_written}/{train_size}, valid={valid_written}/{valid_size}) "
+                        f"rejects(retry={retry_invalid_count}, fail={fail_invalid_count})"
+                    )
 
             if quota_exhausted and not pending_futures:
                 break
 
-    if budget_exhausted and (train_written + valid_written) < target_total:
+    if cost_tracking_enabled and budget_exhausted and (train_written + valid_written) < target_total:
         raise RuntimeError(
             "Estimated cost cap reached (--max-dollars). Stopped submitting new calls. "
             f"Cap=${max_dollars:.2f}, estimated_spend=${running_cost_usd:.6f}. "
@@ -1155,17 +1336,50 @@ def generate_dataset(
 
     print(f"Wrote {train_written} rows to {train_path}")
     print(f"Wrote {valid_written} rows to {valid_path}")
-    print(
-        f"Estimated usage totals: input={running_input_tokens}, cached_input={running_cached_input_tokens}, "
-        f"output={running_output_tokens}, estimated_cost=${running_cost_usd:.6f}"
-    )
+    if cost_tracking_enabled:
+        print(
+            f"Estimated usage totals: input={running_input_tokens}, cached_input={running_cached_input_tokens}, "
+            f"output={running_output_tokens}, estimated_cost=${running_cost_usd:.6f}"
+        )
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Generate intentionally challenging JSONL span data using OpenAI."
+        description="Generate intentionally challenging JSONL span data using OpenAI or local models."
     )
-    parser.add_argument("--model", default="gpt-5-mini")
+    parser.add_argument(
+        "--model",
+        default="gpt-5-mini",
+        help=(
+            "OpenAI model name, local HF model id/path, or a local .gguf file path "
+            "(requires llama-cpp-python)."
+        ),
+    )
+    parser.add_argument(
+        "--local",
+        action="store_true",
+        help=(
+            "Force local mode and skip OpenAI pricing/cost logic. "
+            "Use with --model for local model id/path."
+        ),
+    )
+    parser.add_argument(
+        "--local-base-url",
+        "--local-openai-base-url",
+        dest="local_base_url",
+        default=os.getenv("LOCAL_BASE_URL") or os.getenv("LOCAL_OPENAI_BASE_URL"),
+        help=(
+            "Optional local API endpoint (for example LM Studio: "
+            "http://127.0.0.1:1234/v1). Providing this flag enables local mode automatically."
+        ),
+    )
+    parser.add_argument(
+        "--local-api-key",
+        "--local-openai-api-key",
+        dest="local_api_key",
+        default=os.getenv("LOCAL_API_KEY") or os.getenv("LOCAL_OPENAI_API_KEY", "lm-studio"),
+        help="API key for --local-base-url (LM Studio accepts any non-empty string).",
+    )
     parser.add_argument("--train-size", type=int, default=500)
     parser.add_argument("--valid-size", type=int, default=100)
     parser.add_argument(
@@ -1230,4 +1444,7 @@ if __name__ == "__main__":
         call_timeout_seconds=args.call_timeout_seconds,
         seed=args.seed,
         overwrite=args.overwrite,
+        local=args.local,
+        local_base_url=args.local_base_url,
+        local_api_key=args.local_api_key,
     )
