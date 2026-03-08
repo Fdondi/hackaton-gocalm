@@ -1,0 +1,22 @@
+---
+description: Use single-line bash commands for Windows compatibility
+alwaysApply: true
+---
+
+# Windows-safe bash command formatting
+
+- Do not split bash commands across lines using trailing backslashes (`\`).
+- Always write commands as one physical line.
+- If a command is getting long, prefer `&&` or `;` separators on one line instead of multiline continuation.
+
+Examples:
+
+```bash
+# Bad (line continuation with \)
+python script.py \
+  --train-size 1500 \
+  --valid-size 300
+
+# Good (single line)
+python script.py --train-size 1500 --valid-size 300
+```

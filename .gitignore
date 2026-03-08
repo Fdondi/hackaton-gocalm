@@ -1,8 +1,6 @@
 .env
 deleted/
 __pycache__/
-multihead_pii/
 modernbert_span_model/
-outputs_multihead_smoke/
-outputs_multihead_smoke_bin/
 _tmp*
+*.pt

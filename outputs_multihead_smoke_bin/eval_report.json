@@ -1,0 +1,35 @@
+{
+  "num_docs": 2,
+  "avg_losses": {
+    "loss": 2.959016799926758,
+    "proposal_loss": 0.850185751914978,
+    "type_loss": 2.1088311672210693,
+    "sensitivity_loss": 0.0
+  },
+  "proposal_accuracy": 0.6944444444444444,
+  "sensitivity_candidate_accuracy": 0.0,
+  "sensitivity_redact_probability_mae": 0.0,
+  "sensitivity_redact_probability_brier": 0.0,
+  "type_metrics": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+  },
+  "redaction_metrics": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+  },
+  "span_counts": {
+    "type": {
+      "tp": 0,
+      "fp": 352,
+      "fn": 14
+    },
+    "redaction": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    }
+  }
+}
