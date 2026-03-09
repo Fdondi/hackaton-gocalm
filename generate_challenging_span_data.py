@@ -1040,6 +1040,8 @@ def generate_dataset(
     pending_futures: Dict[concurrent.futures.Future, Dict] = {}
     wait_started = time.monotonic()
     last_return_monotonic = wait_started
+
+    row_id = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=parallel) as executor:
         while (train_written + valid_written) < target_total and (
             calls_submitted < effective_max_attempts or pending_futures
@@ -1257,12 +1259,15 @@ def generate_dataset(
                             continue
                         seen_texts.add(text)
 
-                        lookalike_items = _pii_lookalike_from_items(text, ex["items"])
+                        true_spans = _spans_from_items(text, ex["items"])
+                        lookalike_spans = _pii_lookalike_from_items(text, ex["items"])
+                        row_id += 1
                         row = {
+                            "row_id": row_id,
                             "text": text,
-                            "spans": _spans_from_items(text, ex["items"]),
+                            "spans": true_spans,
                             "original_text": ex.get("original_text", text),
-                            "pii_lookalike": lookalike_items,
+                            "pii_lookalike": lookalike_spans,
                         }
                         remaining_train = train_size - train_written
                         remaining_valid = valid_size - valid_written
