@@ -134,6 +134,8 @@ def main() -> None:
         training=True,
         sensitivity_path=args.train_sensitivity,
         include_regex_candidates=config.include_regex_candidates,
+        lookalike_redact_target=config.lookalike_redact_target,
+        no_info_keep_target=config.no_info_keep_target,
     )
     valid_ds = JsonlMultiHeadDataset(
         path=args.valid,
@@ -144,6 +146,8 @@ def main() -> None:
         training=False,
         sensitivity_path=args.valid_sensitivity,
         include_regex_candidates=config.include_regex_candidates,
+        lookalike_redact_target=config.lookalike_redact_target,
+        no_info_keep_target=config.no_info_keep_target,
     )
     train_loader = DataLoader(
         train_ds,

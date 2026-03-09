@@ -23,6 +23,8 @@ class MultiHeadConfig:
     proposal_loss_weight: float = 1.0
     type_loss_weight: float = 1.0
     sensitivity_loss_weight: float = 1.0
+    lookalike_redact_target: float = 0.8
+    no_info_keep_target: float = 1.0
     negative_sample_rate: float = 0.2
     include_regex_candidates: bool = True
     regex_only_inference: bool = False

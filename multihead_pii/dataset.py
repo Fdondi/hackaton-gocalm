@@ -249,10 +249,16 @@ def _regex_char_candidates(text: str) -> List[Tuple[int, int]]:
 
 def _build_supervision_maps(
     example: MultiHeadExample,
-) -> Tuple[Dict[Tuple[int, int], str], Dict[Tuple[int, int], str], Set[Tuple[int, int]]]:
+) -> Tuple[
+    Dict[Tuple[int, int], str],
+    Dict[Tuple[int, int], str],
+    Set[Tuple[int, int]],
+    Set[Tuple[int, int]],
+]:
     type_by_char_span: Dict[Tuple[int, int], str] = {}
     sens_by_char_span: Dict[Tuple[int, int], str] = {}
     non_pii_spans: Set[Tuple[int, int]] = set()
+    lookalike_spans: Set[Tuple[int, int]] = set()
 
     # Prefer richer item annotations when present.
     if example.items:
@@ -269,6 +275,8 @@ def _build_supervision_maps(
             if category == "NON_PII_NUMBER":
                 non_pii_spans.add(key)
                 continue
+            if isinstance(category, str) and category.upper() == "PII_LOOKALIKE":
+                lookalike_spans.add(key)
             if isinstance(label, str) and label in TYPE_LABEL_TO_ID:
                 type_by_char_span[key] = label
             sensitivity = sensitivity_from_item_category(category)
@@ -315,7 +323,7 @@ def _build_supervision_maps(
         for key in type_by_char_span:
             sens_by_char_span[key] = "REDACT"
 
-    return type_by_char_span, sens_by_char_span, non_pii_spans
+    return type_by_char_span, sens_by_char_span, non_pii_spans, lookalike_spans
 
 
 def _build_proposal_labels(
@@ -383,9 +391,25 @@ def _build_sensitivity_soft_target(
     candidate: Tuple[int, int],
     exact_sens_id: int,
     gold_sens_spans: List[Tuple[Tuple[int, int], int]],
+    exact_is_lookalike: bool = False,
+    lookalike_redact_target: float = 0.8,
+    no_info_keep_target: float = 1.0,
 ) -> List[float]:
     n_sens = len(SENSITIVITY_LABEL_TO_ID)
     target = [0.0] * n_sens
+    redact_id = SENSITIVITY_LABEL_TO_ID.get("REDACT")
+    keep_id = SENSITIVITY_LABEL_TO_ID.get("KEEP")
+
+    if exact_is_lookalike:
+        # Bias lookalikes toward REDACT to prefer caution.
+        redact_mass = max(0.0, min(1.0, float(lookalike_redact_target)))
+        if redact_id is not None:
+            target[redact_id] = redact_mass
+        if keep_id is not None:
+            target[keep_id] = 1.0 - redact_mass
+        elif redact_id is None and n_sens > 0:
+            target[0] = 1.0
+        return target
 
     if exact_sens_id != -100:
         target[exact_sens_id] = 1.0
@@ -400,7 +424,20 @@ def _build_sensitivity_soft_target(
             best_sens_id = gold_sens_id
 
     if best_score <= 0.0 or best_sens_id == -100:
-        return [-1.0] * n_sens
+        keep_mass = max(0.0, min(1.0, float(no_info_keep_target)))
+        if keep_id is not None:
+            target[keep_id] = keep_mass
+            remaining = 1.0 - keep_mass
+            if redact_id is not None:
+                target[redact_id] = remaining
+            elif n_sens > 1:
+                spread = remaining / float(n_sens - 1)
+                for i in range(n_sens):
+                    if i != keep_id:
+                        target[i] = spread
+        elif n_sens > 0:
+            target[0] = 1.0
+        return target
 
     # Spread remaining mass to the opposite class.
     # Sensitivity currently has exactly two classes.
@@ -427,6 +464,8 @@ class JsonlMultiHeadDataset(Dataset):
         training: bool = True,
         sensitivity_path: Optional[str] = None,
         include_regex_candidates: bool = True,
+        lookalike_redact_target: float = 0.8,
+        no_info_keep_target: float = 1.0,
     ):
         main_rows = _load_jsonl_rows(path)
         sensitivity_rows = _load_jsonl_rows(sensitivity_path) if sensitivity_path else None
@@ -442,6 +481,8 @@ class JsonlMultiHeadDataset(Dataset):
         self.negative_sample_rate = negative_sample_rate
         self.training = training
         self.include_regex_candidates = include_regex_candidates
+        self.lookalike_redact_target = lookalike_redact_target
+        self.no_info_keep_target = no_info_keep_target
 
     def __len__(self) -> int:
         return len(self.examples)
@@ -459,9 +500,10 @@ class JsonlMultiHeadDataset(Dataset):
         attention_mask = enc["attention_mask"][0]
         offsets = [tuple(x) for x in enc["offset_mapping"][0].tolist()]
 
-        type_by_char, sens_by_char, _ = _build_supervision_maps(ex)
+        type_by_char, sens_by_char, _, lookalike_by_char = _build_supervision_maps(ex)
         type_by_tok: Dict[Tuple[int, int], int] = {}
         sens_by_tok: Dict[Tuple[int, int], int] = {}
+        lookalike_by_tok: Set[Tuple[int, int]] = set()
         positive_tok_spans: Set[Tuple[int, int]] = set()
 
         for (start, end), label in type_by_char.items():
@@ -476,6 +518,12 @@ class JsonlMultiHeadDataset(Dataset):
             if tok_span is None:
                 continue
             sens_by_tok[tok_span] = SENSITIVITY_LABEL_TO_ID[sensitivity]
+
+        for start, end in lookalike_by_char:
+            tok_span = char_span_to_token_span(offsets, start, end)
+            if tok_span is None:
+                continue
+            lookalike_by_tok.add(tok_span)
 
         proposal_labels = _build_proposal_labels(offsets, positive_tok_spans)
         all_candidates = _enumerate_candidates(offsets, max_span_len=self.max_span_len)
@@ -510,6 +558,9 @@ class JsonlMultiHeadDataset(Dataset):
                     candidate=candidate,
                     exact_sens_id=sens_label,
                     gold_sens_spans=gold_sens_spans,
+                    exact_is_lookalike=candidate in lookalike_by_tok,
+                    lookalike_redact_target=self.lookalike_redact_target,
+                    no_info_keep_target=self.no_info_keep_target,
                 )
             )
 
@@ -538,6 +589,9 @@ class JsonlMultiHeadDataset(Dataset):
                         candidate=tok_span,
                         exact_sens_id=sens_label,
                         gold_sens_spans=gold_sens_spans,
+                        exact_is_lookalike=tok_span in lookalike_by_tok,
+                        lookalike_redact_target=self.lookalike_redact_target,
+                        no_info_keep_target=self.no_info_keep_target,
                     )
                 )
                 existing.add(tok_span)
@@ -548,7 +602,16 @@ class JsonlMultiHeadDataset(Dataset):
             type_labels = [TYPE_LABEL_TO_ID["NONE"]]
             sensitivity_labels = [-100]
             type_soft_labels = [[1.0] + [0.0] * (len(TYPE_LABEL_TO_ID) - 1)]
-            sensitivity_soft_labels = [[-1.0] * len(SENSITIVITY_LABEL_TO_ID)]
+            sensitivity_soft_labels = [
+                _build_sensitivity_soft_target(
+                    candidate=(0, 0),
+                    exact_sens_id=-100,
+                    gold_sens_spans=[],
+                    exact_is_lookalike=False,
+                    lookalike_redact_target=self.lookalike_redact_target,
+                    no_info_keep_target=self.no_info_keep_target,
+                )
+            ]
 
         return {
             "input_ids": input_ids,

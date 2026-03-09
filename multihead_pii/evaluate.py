@@ -82,6 +82,8 @@ def main() -> None:
         training=False,
         sensitivity_path=args.sensitivity,
         include_regex_candidates=config.include_regex_candidates,
+        lookalike_redact_target=config.lookalike_redact_target,
+        no_info_keep_target=config.no_info_keep_target,
     )
     loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, collate_fn=collate_fn)
 
