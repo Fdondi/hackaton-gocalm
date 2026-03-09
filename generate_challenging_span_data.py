@@ -80,7 +80,6 @@ USER_PROMPT_TEMPLATE = """Create unique examples for NER span extraction.
 Domain:
 - PII detection in messy real-world text.
 - Text should look like OCR/PDF grabs: line breaks, broken punctuation, weird spacing, occasional garbled fragments, partial words, duplicated symbols, merged columns.
-- Keep it realistic but intentionally challenging. Avoid nonsense gibberish walls.
 
 Rules:
 * Annotate spans in-place using this exact syntax: [[ROOT_CATEGORY:SUBCATEGORY|value]]. Note to NOT repeat the value outside this. ALWAYS follow this ternary pattern in the right order, or the parser will reject it.
@@ -88,10 +87,13 @@ Rules:
    - For REAL_PII and PII_LOOKALIKE, SUBCATEGORY must be one of: {labels_csv}
    - PII_LOOKALIKE examples: only include values that have the same technical structure as REAL_PII labels, using the same label categories, but where context clearly indicates the value is public/non-sensitive (e.g., institutional hotline phone, public office email, well-known public address).
    - For NON_PII, SUBCATEGORY is a short descriptor.
+
 * Introduce difficulty:
    - some examples with multiple entities near each other; other split by long uninteresting text.
    - some with formatting artifacts that split tokens or introduce typos
-   - some with the keywords that explain the context (such as Tel, address) either missing or on a different line, as could happen with OCR. 
+   - some with the keywords that explain the context (such as Tel, address) either missing or on a different line, as could happen with OCR.
+   - Keep it realistic but intentionally challenging. Add plenty of filler text. It should be a real text with real context, not only a list of PIIs.
+   - Make sure the filler text does NOT have any PIIs or PII lookalikes. Anything looking like PII should be annotated.
 * Composition guidance per example:
    - include between 15 to 40 total annotated spans in "annotated_text"
    - target approximately 50% NON_PII, 20% PII_LOOKALIKE, 30% REAL_PII
