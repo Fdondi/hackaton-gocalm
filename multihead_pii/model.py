@@ -5,7 +5,7 @@ import torch.nn as nn
 from transformers import AutoModel
 
 from .labels import BIO_LABELS, SENSITIVITY_LABELS, TYPE_LABELS
-from .losses import combine_multitask_losses, masked_cross_entropy
+from .losses import combine_multitask_losses, masked_cross_entropy, masked_soft_cross_entropy
 
 
 class MultiHeadPiiModel(nn.Module):
@@ -101,6 +101,20 @@ class MultiHeadPiiModel(nn.Module):
             return torch.empty(0, dtype=torch.long, device=labels.device)
         return torch.stack(out)
 
+    def _gather_flat_soft_labels(
+        self,
+        labels: Optional[torch.Tensor],
+        meta: list,
+    ) -> Optional[torch.Tensor]:
+        if labels is None:
+            return None
+        out = []
+        for batch_idx, span_idx in meta:
+            out.append(labels[batch_idx, span_idx])
+        if not out:
+            return torch.empty(0, labels.size(-1), dtype=labels.dtype, device=labels.device)
+        return torch.stack(out)
+
     def forward(
         self,
         input_ids: torch.Tensor,
@@ -109,6 +123,8 @@ class MultiHeadPiiModel(nn.Module):
         proposal_labels: Optional[torch.Tensor] = None,
         type_labels: Optional[torch.Tensor] = None,
         sensitivity_labels: Optional[torch.Tensor] = None,
+        type_soft_labels: Optional[torch.Tensor] = None,
+        sensitivity_soft_labels: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         out = self.encoder(input_ids=input_ids, attention_mask=attention_mask)
         hidden = out.last_hidden_state
@@ -122,6 +138,8 @@ class MultiHeadPiiModel(nn.Module):
         sensitivity_logits = None
         flat_type_labels = None
         flat_sensitivity_labels = None
+        flat_type_soft_labels = None
+        flat_sensitivity_soft_labels = None
         if span_repr.numel() > 0:
             type_logits = self.type_head(self.dropout(span_repr))
             type_probs = torch.softmax(type_logits, dim=-1)
@@ -129,22 +147,36 @@ class MultiHeadPiiModel(nn.Module):
             sensitivity_logits = self.sensitivity_head(self.dropout(sensitivity_inputs))
             flat_type_labels = self._gather_flat_labels(type_labels, meta)
             flat_sensitivity_labels = self._gather_flat_labels(sensitivity_labels, meta)
+            flat_type_soft_labels = self._gather_flat_soft_labels(type_soft_labels, meta)
+            flat_sensitivity_soft_labels = self._gather_flat_soft_labels(sensitivity_soft_labels, meta)
 
         proposal_loss = masked_cross_entropy(
             proposal_logits.view(-1, proposal_logits.size(-1)),
             proposal_labels.view(-1) if proposal_labels is not None else None,
             ignore_index=-100,
         ).to(hidden.device)
-        type_loss = masked_cross_entropy(
-            type_logits,
-            flat_type_labels,
-            ignore_index=-100,
-        ).to(hidden.device)
-        sensitivity_loss = masked_cross_entropy(
-            sensitivity_logits,
-            flat_sensitivity_labels,
-            ignore_index=-100,
-        ).to(hidden.device)
+        if flat_type_soft_labels is not None:
+            type_loss = masked_soft_cross_entropy(
+                type_logits,
+                flat_type_soft_labels,
+            ).to(hidden.device)
+        else:
+            type_loss = masked_cross_entropy(
+                type_logits,
+                flat_type_labels,
+                ignore_index=-100,
+            ).to(hidden.device)
+        if flat_sensitivity_soft_labels is not None:
+            sensitivity_loss = masked_soft_cross_entropy(
+                sensitivity_logits,
+                flat_sensitivity_soft_labels,
+            ).to(hidden.device)
+        else:
+            sensitivity_loss = masked_cross_entropy(
+                sensitivity_logits,
+                flat_sensitivity_labels,
+                ignore_index=-100,
+            ).to(hidden.device)
 
         total_loss = combine_multitask_losses(
             proposal_loss=proposal_loss,

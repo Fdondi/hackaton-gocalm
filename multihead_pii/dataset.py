@@ -11,10 +11,10 @@ from torch.utils.data import Dataset
 from .labels import (
     BIO_LABEL_TO_ID,
     SENSITIVITY_LABEL_TO_ID,
-    TYPE_ID_TO_LABEL,
     TYPE_LABEL_TO_ID,
     sensitivity_from_item_category,
 )
+from .span_credit import overlap_credit
 
 
 EMAIL_PATTERN = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
@@ -88,6 +88,102 @@ def token_span_to_char_span(
 
 def _span_key(start: int, end: int) -> Tuple[int, int]:
     return (start, end)
+
+
+def _extract_value(text: str, start: int, end: int) -> str:
+    safe_start = max(0, min(start, len(text)))
+    safe_end = max(safe_start, min(end, len(text)))
+    return text[safe_start:safe_end]
+
+
+def _collect_gold_type_spans(example: MultiHeadExample) -> List[Dict]:
+    out: Dict[Tuple[int, int, str], Dict] = {}
+
+    # Prefer richer item annotations first.
+    for item in example.items:
+        if not isinstance(item, dict):
+            continue
+        start = item.get("start")
+        end = item.get("end")
+        label = item.get("label")
+        category = item.get("category")
+        if category == "NON_PII_NUMBER":
+            continue
+        if (
+            not isinstance(start, int)
+            or not isinstance(end, int)
+            or not isinstance(label, str)
+            or label not in TYPE_LABEL_TO_ID
+            or label == "NONE"
+        ):
+            continue
+        value = item.get("value")
+        if not isinstance(value, str):
+            value = _extract_value(example.text, start, end)
+        key = (start, end, label)
+        out[key] = {"start": start, "end": end, "label": label, "value": value}
+
+    for span in example.spans:
+        if not isinstance(span, dict):
+            continue
+        start = span.get("start")
+        end = span.get("end")
+        label = span.get("label")
+        if (
+            not isinstance(start, int)
+            or not isinstance(end, int)
+            or not isinstance(label, str)
+            or label not in TYPE_LABEL_TO_ID
+            or label == "NONE"
+        ):
+            continue
+        value = span.get("value")
+        if not isinstance(value, str):
+            value = _extract_value(example.text, start, end)
+        key = (start, end, label)
+        out.setdefault(key, {"start": start, "end": end, "label": label, "value": value})
+
+    return sorted(out.values(), key=lambda row: (row["start"], row["end"], row["label"]))
+
+
+def _collect_gold_redact_spans(example: MultiHeadExample) -> List[Dict]:
+    out: Dict[Tuple[int, int], Dict] = {}
+
+    for item in example.items:
+        if not isinstance(item, dict):
+            continue
+        start = item.get("start")
+        end = item.get("end")
+        category = item.get("category")
+        if not isinstance(start, int) or not isinstance(end, int):
+            continue
+        sensitivity = sensitivity_from_item_category(category)
+        if sensitivity != "REDACT":
+            continue
+        value = item.get("value")
+        if not isinstance(value, str):
+            value = _extract_value(example.text, start, end)
+        out[(start, end)] = {"start": start, "end": end, "value": value}
+
+    for span in example.sensitivity_spans:
+        if not isinstance(span, dict):
+            continue
+        start = span.get("start")
+        end = span.get("end")
+        sensitivity = span.get("sensitivity")
+        if (
+            not isinstance(start, int)
+            or not isinstance(end, int)
+            or not isinstance(sensitivity, str)
+            or sensitivity != "REDACT"
+        ):
+            continue
+        value = span.get("value")
+        if not isinstance(value, str):
+            value = _extract_value(example.text, start, end)
+        out.setdefault((start, end), {"start": start, "end": end, "value": value})
+
+    return sorted(out.values(), key=lambda row: (row["start"], row["end"]))
 
 
 def _load_jsonl_rows(path: str) -> List[Dict]:
@@ -213,6 +309,12 @@ def _build_supervision_maps(
             continue
         sens_by_char_span[_span_key(start, end)] = sensitivity
 
+    # Span-only datasets have no explicit sensitivity labels.
+    # In that case, default typed spans to REDACT so sensitivity head is trained.
+    if not sens_by_char_span and type_by_char_span:
+        for key in type_by_char_span:
+            sens_by_char_span[key] = "REDACT"
+
     return type_by_char_span, sens_by_char_span, non_pii_spans
 
 
@@ -246,6 +348,72 @@ def _enumerate_candidates(
                 break
             candidates.append((start, end))
     return candidates
+
+
+def _build_type_soft_target(
+    candidate: Tuple[int, int],
+    exact_type_id: int,
+    gold_type_spans: List[Tuple[Tuple[int, int], int]],
+) -> List[float]:
+    n_types = len(TYPE_LABEL_TO_ID)
+    none_id = TYPE_LABEL_TO_ID["NONE"]
+    target = [0.0] * n_types
+
+    if exact_type_id != none_id:
+        target[exact_type_id] = 1.0
+        return target
+
+    best_score = 0.0
+    best_type_id = none_id
+    for gold_span, gold_type_id in gold_type_spans:
+        score = overlap_credit(candidate, gold_span)
+        if score > best_score:
+            best_score = score
+            best_type_id = gold_type_id
+
+    if best_score > 0.0 and best_type_id != none_id:
+        target[best_type_id] = best_score
+        target[none_id] = 1.0 - best_score
+    else:
+        target[none_id] = 1.0
+    return target
+
+
+def _build_sensitivity_soft_target(
+    candidate: Tuple[int, int],
+    exact_sens_id: int,
+    gold_sens_spans: List[Tuple[Tuple[int, int], int]],
+) -> List[float]:
+    n_sens = len(SENSITIVITY_LABEL_TO_ID)
+    target = [0.0] * n_sens
+
+    if exact_sens_id != -100:
+        target[exact_sens_id] = 1.0
+        return target
+
+    best_score = 0.0
+    best_sens_id = -100
+    for gold_span, gold_sens_id in gold_sens_spans:
+        score = overlap_credit(candidate, gold_span)
+        if score > best_score:
+            best_score = score
+            best_sens_id = gold_sens_id
+
+    if best_score <= 0.0 or best_sens_id == -100:
+        return [-1.0] * n_sens
+
+    # Spread remaining mass to the opposite class.
+    # Sensitivity currently has exactly two classes.
+    target[best_sens_id] = best_score
+    if n_sens == 2:
+        other = 1 - best_sens_id
+        target[other] = 1.0 - best_score
+    else:
+        remainder = (1.0 - best_score) / max(1, n_sens - 1)
+        for i in range(n_sens):
+            if i != best_sens_id:
+                target[i] = remainder
+    return target
 
 
 class JsonlMultiHeadDataset(Dataset):
@@ -315,15 +483,35 @@ class JsonlMultiHeadDataset(Dataset):
         candidate_spans: List[List[int]] = []
         type_labels: List[int] = []
         sensitivity_labels: List[int] = []
+        type_soft_labels: List[List[float]] = []
+        sensitivity_soft_labels: List[List[float]] = []
 
         positive_set = set(type_by_tok.keys()) | set(sens_by_tok.keys())
+        gold_type_spans = [(span, label_id) for span, label_id in type_by_tok.items()]
+        gold_sens_spans = [(span, label_id) for span, label_id in sens_by_tok.items()]
         for candidate in all_candidates:
             is_positive = candidate in positive_set
             if self.training and not is_positive and random.random() > self.negative_sample_rate:
                 continue
             candidate_spans.append([candidate[0], candidate[1]])
-            type_labels.append(type_by_tok.get(candidate, TYPE_LABEL_TO_ID["NONE"]))
-            sensitivity_labels.append(sens_by_tok.get(candidate, -100))
+            type_label = type_by_tok.get(candidate, TYPE_LABEL_TO_ID["NONE"])
+            sens_label = sens_by_tok.get(candidate, -100)
+            type_labels.append(type_label)
+            sensitivity_labels.append(sens_label)
+            type_soft_labels.append(
+                _build_type_soft_target(
+                    candidate=candidate,
+                    exact_type_id=type_label,
+                    gold_type_spans=gold_type_spans,
+                )
+            )
+            sensitivity_soft_labels.append(
+                _build_sensitivity_soft_target(
+                    candidate=candidate,
+                    exact_sens_id=sens_label,
+                    gold_sens_spans=gold_sens_spans,
+                )
+            )
 
         if self.include_regex_candidates:
             existing = {tuple(x) for x in candidate_spans}
@@ -334,8 +522,24 @@ class JsonlMultiHeadDataset(Dataset):
                 if tok_span[1] - tok_span[0] + 1 > self.max_span_len:
                     continue
                 candidate_spans.append([tok_span[0], tok_span[1]])
-                type_labels.append(type_by_tok.get(tok_span, TYPE_LABEL_TO_ID["NONE"]))
-                sensitivity_labels.append(sens_by_tok.get(tok_span, -100))
+                type_label = type_by_tok.get(tok_span, TYPE_LABEL_TO_ID["NONE"])
+                sens_label = sens_by_tok.get(tok_span, -100)
+                type_labels.append(type_label)
+                sensitivity_labels.append(sens_label)
+                type_soft_labels.append(
+                    _build_type_soft_target(
+                        candidate=tok_span,
+                        exact_type_id=type_label,
+                        gold_type_spans=gold_type_spans,
+                    )
+                )
+                sensitivity_soft_labels.append(
+                    _build_sensitivity_soft_target(
+                        candidate=tok_span,
+                        exact_sens_id=sens_label,
+                        gold_sens_spans=gold_sens_spans,
+                    )
+                )
                 existing.add(tok_span)
 
         if not candidate_spans:
@@ -343,17 +547,8 @@ class JsonlMultiHeadDataset(Dataset):
             candidate_spans = [[0, 0]]
             type_labels = [TYPE_LABEL_TO_ID["NONE"]]
             sensitivity_labels = [-100]
-
-        gold_redact_char_spans = sorted(
-            [
-                {"start": char_span[0], "end": char_span[1]}
-                for (tok_start, tok_end), sens in sens_by_tok.items()
-                if sens == SENSITIVITY_LABEL_TO_ID["REDACT"]
-                for char_span in [token_span_to_char_span(offsets, tok_start, tok_end)]
-                if char_span is not None
-            ],
-            key=lambda row: (row["start"], row["end"]),
-        )
+            type_soft_labels = [[1.0] + [0.0] * (len(TYPE_LABEL_TO_ID) - 1)]
+            sensitivity_soft_labels = [[-1.0] * len(SENSITIVITY_LABEL_TO_ID)]
 
         return {
             "input_ids": input_ids,
@@ -362,17 +557,13 @@ class JsonlMultiHeadDataset(Dataset):
             "proposal_labels": torch.tensor(proposal_labels, dtype=torch.long),
             "type_labels": torch.tensor(type_labels, dtype=torch.long),
             "sensitivity_labels": torch.tensor(sensitivity_labels, dtype=torch.long),
+            "type_soft_labels": torch.tensor(type_soft_labels, dtype=torch.float),
+            "sensitivity_soft_labels": torch.tensor(sensitivity_soft_labels, dtype=torch.float),
             "raw": {
                 "text": ex.text,
                 "offsets": offsets,
-                "gold_type_spans": [
-                    {"start": char_span[0], "end": char_span[1], "label": label}
-                    for (tok_start, tok_end), type_id in sorted(type_by_tok.items())
-                    for label in [TYPE_ID_TO_LABEL[type_id]]
-                    for char_span in [token_span_to_char_span(offsets, tok_start, tok_end)]
-                    if char_span is not None
-                ],
-                "gold_redact_spans": gold_redact_char_spans,
+                "gold_type_spans": _collect_gold_type_spans(ex),
+                "gold_redact_spans": _collect_gold_redact_spans(ex),
             },
         }
 
@@ -387,6 +578,8 @@ def collate_fn(batch: List[Dict]) -> Dict:
     proposal_labels = []
     type_labels = []
     sensitivity_labels = []
+    type_soft_labels = []
+    sensitivity_soft_labels = []
 
     for item in batch:
         pad_t = max_toks - item["input_ids"].shape[0]
@@ -406,6 +599,20 @@ def collate_fn(batch: List[Dict]) -> Dict:
         sensitivity_labels.append(
             torch.nn.functional.pad(item["sensitivity_labels"], (0, pad_s), value=-100)
         )
+        type_soft_labels.append(
+            torch.nn.functional.pad(
+                item["type_soft_labels"],
+                (0, 0, 0, pad_s),
+                value=0.0,
+            )
+        )
+        sensitivity_soft_labels.append(
+            torch.nn.functional.pad(
+                item["sensitivity_soft_labels"],
+                (0, 0, 0, pad_s),
+                value=-1.0,
+            )
+        )
 
     return {
         "input_ids": torch.stack(input_ids),
@@ -414,5 +621,7 @@ def collate_fn(batch: List[Dict]) -> Dict:
         "proposal_labels": torch.stack(proposal_labels),
         "type_labels": torch.stack(type_labels),
         "sensitivity_labels": torch.stack(sensitivity_labels),
+        "type_soft_labels": torch.stack(type_soft_labels),
+        "sensitivity_soft_labels": torch.stack(sensitivity_soft_labels),
         "raw": [item["raw"] for item in batch],
     }

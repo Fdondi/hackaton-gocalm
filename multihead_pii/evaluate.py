@@ -8,10 +8,12 @@ from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
 
 from .config import MultiHeadConfig
-from .dataset import JsonlMultiHeadDataset, collate_fn
-from .decoder import decode_final_spans
+from .dataset import JsonlMultiHeadDataset, char_span_to_token_span, collate_fn
+from .decoder import decode_final_spans, select_non_overlapping_typed_spans
 from .labels import SENSITIVITY_LABEL_TO_ID, TYPE_ID_TO_LABEL
 from .model import MultiHeadPiiModel
+from .span_credit import soft_match_total_credit
+from .type_comparison import ValueKey, classify_value_relationships, make_value_key
 from .train import resolve_device
 
 
@@ -19,11 +21,17 @@ def _safe_div(num: float, den: float) -> float:
     return num / den if den else 0.0
 
 
-def _prf(tp: int, fp: int, fn: int) -> Dict[str, float]:
+def _prf(tp: float, fp: float, fn: float) -> Dict[str, float]:
     precision = _safe_div(tp, tp + fp)
     recall = _safe_div(tp, tp + fn)
     f1 = _safe_div(2 * precision * recall, precision + recall) if (precision + recall) else 0.0
     return {"precision": precision, "recall": recall, "f1": f1}
+
+
+def _extract_value(text: str, start: int, end: int) -> str:
+    safe_start = max(0, min(start, len(text)))
+    safe_end = max(safe_start, min(end, len(text)))
+    return text[safe_start:safe_end]
 
 
 def parse_args() -> argparse.Namespace:
@@ -88,7 +96,16 @@ def main() -> None:
     sens_brier_sum = 0.0
 
     type_tp = type_fp = type_fn = 0
+    type_mismatch = 0
+    type_subset = 0
+    type_superset = 0
+    type_soft_tp = 0.0
+    type_soft_pred_total = 0
+    type_soft_gold_total = 0
     redact_tp = redact_fp = redact_fn = 0
+    redact_soft_tp = 0.0
+    redact_soft_pred_total = 0
+    redact_soft_gold_total = 0
     docs = 0
 
     for batch in loader:
@@ -102,6 +119,8 @@ def main() -> None:
             proposal_labels=batch_tensors["proposal_labels"],
             type_labels=batch_tensors["type_labels"],
             sensitivity_labels=batch_tensors["sensitivity_labels"],
+            type_soft_labels=batch_tensors.get("type_soft_labels"),
+            sensitivity_soft_labels=batch_tensors.get("sensitivity_soft_labels"),
         )
         for key in losses:
             losses[key] += float(outputs[key].item())
@@ -145,7 +164,7 @@ def main() -> None:
                 sens_mae_sum += float(torch.abs(masked_preds - masked_targets).sum().item())
                 sens_brier_sum += float(((masked_preds - masked_targets) ** 2).sum().item())
 
-            pred_type_set: Set[Tuple[int, int, str]] = set()
+            pred_type_candidates: List[Tuple[int, int, str, float]] = []
             type_probs = torch.softmax(type_i, dim=-1)
             for j in range(n_valid):
                 span = spans_valid[j]
@@ -159,21 +178,61 @@ def main() -> None:
                 label = TYPE_ID_TO_LABEL[type_id]
                 if label == "NONE":
                     continue
-                pred_type_set.add((char_start, char_end, label))
+                score = float(type_probs[j, type_id].item())
+                pred_type_candidates.append((char_start, char_end, label, score))
 
-            gold_type_set: Set[Tuple[int, int, str]] = set()
+            pred_type_set: Set[Tuple[int, int, str]] = set(
+                select_non_overlapping_typed_spans(pred_type_candidates)
+            )
+            pred_type_tok: List[Tuple[int, int, str]] = []
+            for start, end, label in pred_type_set:
+                tok_span = char_span_to_token_span(raw["offsets"], start, end)
+                if tok_span is None:
+                    continue
+                pred_type_tok.append((tok_span[0], tok_span[1], label))
+
+            pred_type_value_keys: Set[ValueKey] = set()
+            for start, end, label in pred_type_set:
+                value = _extract_value(raw["text"], start, end)
+                pred_type_value_keys.add(make_value_key(label, value))
+
+            gold_type_value_keys: Set[ValueKey] = set()
+            gold_type_tok: List[Tuple[int, int, str]] = []
             for span in raw.get("gold_type_spans", []):
+                label = span.get("label")
+                value = span.get("value")
                 start = span.get("start")
                 end = span.get("end")
-                label = span.get("label")
+                if isinstance(label, str) and isinstance(value, str):
+                    gold_type_value_keys.add(make_value_key(label, value))
+                elif isinstance(start, int) and isinstance(end, int) and isinstance(label, str):
+                    gold_value = _extract_value(raw["text"], start, end)
+                    gold_type_value_keys.add(make_value_key(label, gold_value))
                 if isinstance(start, int) and isinstance(end, int) and isinstance(label, str):
-                    gold_type_set.add((start, end, label))
+                    tok_span = char_span_to_token_span(raw["offsets"], start, end)
+                    if tok_span is not None:
+                        gold_type_tok.append((tok_span[0], tok_span[1], label))
 
-            type_tp += len(pred_type_set & gold_type_set)
-            type_fp += len(pred_type_set - gold_type_set)
-            type_fn += len(gold_type_set - pred_type_set)
+            comparison = classify_value_relationships(
+                pred_keys=pred_type_value_keys,
+                gold_keys=gold_type_value_keys,
+            )
+            type_tp += len(comparison["exact_tp"])
+            type_fp += len(comparison["exact_fp"])
+            type_fn += len(comparison["exact_fn"])
+            type_mismatch += len(comparison["type_mismatches"])
+            type_subset += len(comparison["value_subsets"])
+            type_superset += len(comparison["value_supersets"])
+            type_soft_tp += soft_match_total_credit(
+                pred_spans=pred_type_tok,
+                gold_spans=gold_type_tok,
+                require_same_label=True,
+            )
+            type_soft_pred_total += len(pred_type_tok)
+            type_soft_gold_total += len(gold_type_tok)
 
             final_redact = decode_final_spans(
+                text=raw["text"],
                 offsets=raw["offsets"],
                 candidate_spans=spans_valid,
                 type_logits=type_i,
@@ -190,6 +249,25 @@ def main() -> None:
             redact_tp += len(pred_redact_set & gold_redact_set)
             redact_fp += len(pred_redact_set - gold_redact_set)
             redact_fn += len(gold_redact_set - pred_redact_set)
+            pred_redact_tok: List[Tuple[int, int, str]] = []
+            for start, end in pred_redact_set:
+                tok_span = char_span_to_token_span(raw["offsets"], start, end)
+                if tok_span is None:
+                    continue
+                pred_redact_tok.append((tok_span[0], tok_span[1], "REDACT"))
+            gold_redact_tok: List[Tuple[int, int, str]] = []
+            for start, end in gold_redact_set:
+                tok_span = char_span_to_token_span(raw["offsets"], start, end)
+                if tok_span is None:
+                    continue
+                gold_redact_tok.append((tok_span[0], tok_span[1], "REDACT"))
+            redact_soft_tp += soft_match_total_credit(
+                pred_spans=pred_redact_tok,
+                gold_spans=gold_redact_tok,
+                require_same_label=False,
+            )
+            redact_soft_pred_total += len(pred_redact_tok)
+            redact_soft_gold_total += len(gold_redact_tok)
 
     report = {
         "num_docs": docs,
@@ -199,10 +277,35 @@ def main() -> None:
         "sensitivity_redact_probability_mae": _safe_div(sens_mae_sum, sens_total),
         "sensitivity_redact_probability_brier": _safe_div(sens_brier_sum, sens_total),
         "type_metrics": _prf(type_tp, type_fp, type_fn),
+        "type_overlap_metrics": _prf(
+            type_soft_tp,
+            float(type_soft_pred_total) - type_soft_tp,
+            float(type_soft_gold_total) - type_soft_tp,
+        ),
         "redaction_metrics": _prf(redact_tp, redact_fp, redact_fn),
+        "redaction_overlap_metrics": _prf(
+            redact_soft_tp,
+            float(redact_soft_pred_total) - redact_soft_tp,
+            float(redact_soft_gold_total) - redact_soft_tp,
+        ),
         "span_counts": {
             "type": {"tp": type_tp, "fp": type_fp, "fn": type_fn},
+            "type_overlap_credit": {
+                "tp_credit": type_soft_tp,
+                "predicted_total": type_soft_pred_total,
+                "gold_total": type_soft_gold_total,
+            },
+            "type_non_exact_breakdown": {
+                "type_mismatch": type_mismatch,
+                "value_subset": type_subset,
+                "value_superset": type_superset,
+            },
             "redaction": {"tp": redact_tp, "fp": redact_fp, "fn": redact_fn},
+            "redaction_overlap_credit": {
+                "tp_credit": redact_soft_tp,
+                "predicted_total": redact_soft_pred_total,
+                "gold_total": redact_soft_gold_total,
+            },
         },
     }
 

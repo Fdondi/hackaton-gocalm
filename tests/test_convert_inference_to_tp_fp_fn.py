@@ -4,25 +4,33 @@ import convert_inference_to_tp_fp_fn as conv
 
 
 class ConvertInferenceComparisonTests(unittest.TestCase):
-    def test_exact_matching_marks_off_by_one_as_mismatch(self) -> None:
-        pred = [(8, 30, "EMAIL")]
-        gold = [(9, 30, "EMAIL")]
+    def test_value_matching_ignores_boundary_mismatch(self) -> None:
+        pred = [("EMAIL", "jane.doe@acme.example")]
+        gold = [("EMAIL", "jane.doe@acme.example")]
 
         tp, fp, fn = conv._compute_comparison(
             pred_rows=pred,
             gold_rows=gold,
         )
-        self.assertEqual(tp, [])
-        self.assertEqual(len(fp), 1)
-        self.assertEqual(len(fn), 1)
+        self.assertEqual(tp, [("EMAIL", "jane.doe@acme.example")])
+        self.assertEqual(len(fp), 0)
+        self.assertEqual(len(fn), 0)
 
-    def test_exact_matching_marks_identical_span_as_tp(self) -> None:
-        pred = [(9, 30, "EMAIL")]
-        gold = [(9, 30, "EMAIL")]
+    def test_value_matching_trims_predicted_value(self) -> None:
+        pred = [("EMAIL", " jane.doe@acme.example ")]
+        gold = [("EMAIL", "jane.doe@acme.example")]
         tp, fp, fn = conv._compute_comparison(pred_rows=pred, gold_rows=gold)
-        self.assertEqual(tp, [(9, 30, "EMAIL")])
+        self.assertEqual(tp, [("EMAIL", "jane.doe@acme.example")])
         self.assertEqual(fp, [])
         self.assertEqual(fn, [])
+
+    def test_value_matching_marks_different_string_as_mismatch(self) -> None:
+        pred = [("EMAIL", "jane.doe@acme.example")]
+        gold = [("EMAIL", "john.doe@acme.example")]
+        tp, fp, fn = conv._compute_comparison(pred_rows=pred, gold_rows=gold)
+        self.assertEqual(tp, [])
+        self.assertEqual(fp, [("EMAIL", "jane.doe@acme.example")])
+        self.assertEqual(fn, [("EMAIL", "john.doe@acme.example")])
 
 
 class SuspiciousSpanDetectionTests(unittest.TestCase):

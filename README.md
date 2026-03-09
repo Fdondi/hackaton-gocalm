@@ -7,6 +7,15 @@
 * (suggested) inspect data quality with `python export_declared_spans.py`, which puts it in human/LLM readable format (.review.md). 
 * run the `modernbert_span_classifier_notebook.ipynb` to train and evaluate the model. It should take ~minutes per epoch on any GPU with 8+GB. Cpu fallback available.
 
+## Overlap-aware span scoring
+
+Training and evaluation now include partial credit for non-exact overlapping spans.
+If predicted span length is `N`, gold span length is `M`, and token overlap is `K > 0`, the overlap score is:
+
+`1 / 2^(M + N - K)`
+
+Exact matches still score `1.0`, and overlap-based metrics are reported alongside exact-match metrics in evaluation output.
+
 ## Local generation with LM Studio
 
 Use this when you want local generation instead of OpenAI-hosted models.

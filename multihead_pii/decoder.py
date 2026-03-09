@@ -46,6 +46,10 @@ def _iou(a: Tuple[int, int], b: Tuple[int, int]) -> float:
     return inter / union if union > 0 else 0.0
 
 
+def _overlap(a: Tuple[int, int], b: Tuple[int, int]) -> bool:
+    return max(a[0], b[0]) < min(a[1], b[1])
+
+
 def _token_span_to_char_span(
     offsets: List[Tuple[int, int]], token_start: int, token_end: int
 ) -> Optional[Tuple[int, int]]:
@@ -56,6 +60,18 @@ def _token_span_to_char_span(
     if char_end <= char_start:
         return None
     return char_start, char_end
+
+
+def _trim_char_span(text: str, start: int, end: int) -> Optional[Tuple[int, int]]:
+    safe_start = max(0, min(start, len(text)))
+    safe_end = max(safe_start, min(end, len(text)))
+    while safe_start < safe_end and text[safe_start].isspace():
+        safe_start += 1
+    while safe_end > safe_start and text[safe_end - 1].isspace():
+        safe_end -= 1
+    if safe_end <= safe_start:
+        return None
+    return safe_start, safe_end
 
 
 def decode_proposal_bio(
@@ -108,7 +124,13 @@ def non_max_suppression(
     for candidate in ordered:
         keep = True
         for existing in selected:
-            if _iou((candidate.start, candidate.end), (existing.start, existing.end)) >= iou_threshold:
+            candidate_bounds = (candidate.start, candidate.end)
+            existing_bounds = (existing.start, existing.end)
+            # Never emit overlapping final spans. Keep highest-score candidate.
+            if _overlap(candidate_bounds, existing_bounds):
+                keep = False
+                break
+            if _iou(candidate_bounds, existing_bounds) >= iou_threshold:
                 keep = False
                 break
         if keep:
@@ -116,7 +138,31 @@ def non_max_suppression(
     return sorted(selected, key=lambda x: (x.start, x.end))
 
 
+def select_non_overlapping_typed_spans(
+    typed_spans: List[Tuple[int, int, str, float]]
+) -> List[Tuple[int, int, str]]:
+    """Select a deterministic non-overlapping typed span set.
+
+    Each input tuple is (start, end, label, score). Selection is score-first,
+    with longer spans preferred on ties so container spans beat nested spans.
+    """
+    ordered = sorted(
+        typed_spans,
+        key=lambda item: (-item[3], -(item[1] - item[0]), item[0], item[1], item[2]),
+    )
+    selected: List[Tuple[int, int, str]] = []
+    selected_bounds: List[Tuple[int, int]] = []
+    for start, end, label, _score in ordered:
+        bounds = (start, end)
+        if any(_overlap(bounds, existing) for existing in selected_bounds):
+            continue
+        selected.append((start, end, label))
+        selected_bounds.append(bounds)
+    return sorted(selected, key=lambda item: (item[0], item[1], item[2]))
+
+
 def decode_final_spans(
+    text: Optional[str],
     offsets: List[Tuple[int, int]],
     candidate_spans: torch.Tensor,
     type_logits: Optional[torch.Tensor],
@@ -138,6 +184,11 @@ def decode_final_spans(
         char_span = _token_span_to_char_span(offsets, token_start, token_end)
         if char_span is None:
             continue
+        if text is not None:
+            trimmed = _trim_char_span(text, char_span[0], char_span[1])
+            if trimmed is None:
+                continue
+            char_span = trimmed
 
         type_id = int(type_probs[idx].argmax(dim=-1).item())
         sens_id = int(sensitivity_probs[idx].argmax(dim=-1).item())

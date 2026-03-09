@@ -9,9 +9,10 @@ from transformers import AutoTokenizer
 
 from .config import MultiHeadConfig
 from .dataset import JsonlMultiHeadDataset, collate_fn
-from .decoder import decode_final_spans
+from .decoder import decode_final_spans, select_non_overlapping_typed_spans
 from .labels import TYPE_ID_TO_LABEL
 from .model import MultiHeadPiiModel
+from .type_comparison import ValueKey, classify_value_relationships, make_value_key
 from .train import resolve_device
 
 
@@ -21,11 +22,9 @@ def _extract_value(text: str, start: int, end: int) -> str:
     return text[safe_start:safe_end]
 
 
-def _span_dict(text: str, start: int, end: int, label: str) -> Dict:
+def _value_dict(label: str, value: str) -> Dict:
     return {
-        "start": start,
-        "end": end,
-        "value": _extract_value(text, start, end),
+        "value": value,
         "label": label,
     }
 
@@ -61,6 +60,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=2)
     parser.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"])
     parser.add_argument("--sensitivity", default=None, help="Optional sensitivity companion JSONL.")
+    parser.add_argument(
+        "--pretty-output",
+        default=None,
+        help=(
+            "Optional pretty JSON output path. Defaults to <output stem>.pretty.jsonl "
+            "when not provided."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -96,6 +103,12 @@ def main() -> None:
     model = _build_model_from_checkpoint(checkpoint, device=device)
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    pretty_output_path = (
+        Path(args.pretty_output)
+        if args.pretty_output
+        else output_path.with_name(f"{output_path.stem}.pretty{output_path.suffix}")
+    )
+    pretty_output_path.parent.mkdir(parents=True, exist_ok=True)
 
     all_rows: List[Dict] = []
     for batch in loader:
@@ -135,6 +148,7 @@ def main() -> None:
             cursor += n_valid
 
             final_redact = decode_final_spans(
+                text=raw["text"],
                 offsets=raw["offsets"],
                 candidate_spans=spans_valid,
                 type_logits=type_i,
@@ -144,7 +158,7 @@ def main() -> None:
             )
 
             type_probs = torch.softmax(type_i, dim=-1)
-            pred_type_set: Set[Tuple[int, int, str]] = set()
+            pred_type_candidates: List[Tuple[int, int, str, float]] = []
             for j in range(n_valid):
                 span = spans_valid[j]
                 token_start = int(span[0].item())
@@ -157,21 +171,38 @@ def main() -> None:
                 label = TYPE_ID_TO_LABEL[type_id]
                 if label == "NONE":
                     continue
-                # Keep only positive type predictions; NONE spans are true negatives and noisy.
-                pred_type_set.add((char_start, char_end, label))
+                score = float(type_probs[j, type_id].item())
+                pred_type_candidates.append((char_start, char_end, label, score))
 
-            gold_type_set: Set[Tuple[int, int, str]] = set()
+            # Remove nested/overlapping predictions to avoid contradictory TP/FP accounting.
+            pred_type_set: Set[Tuple[int, int, str]] = set(
+                select_non_overlapping_typed_spans(pred_type_candidates)
+            )
+
+            pred_type_value_keys: Set[ValueKey] = set()
+            for start, end, label in pred_type_set:
+                value = _extract_value(raw["text"], start, end)
+                pred_type_value_keys.add(make_value_key(label, value))
+
+            gold_type_value_keys: Set[ValueKey] = set()
             for span in raw.get("gold_type_spans", []):
+                label = span.get("label")
+                value = span.get("value")
                 start = span.get("start")
                 end = span.get("end")
-                label = span.get("label")
-                if isinstance(start, int) and isinstance(end, int) and isinstance(label, str):
-                    if label != "NONE":
-                        gold_type_set.add((start, end, label))
+                if not isinstance(label, str) or label == "NONE":
+                    continue
+                if isinstance(value, str):
+                    gold_type_value_keys.add(make_value_key(label, value))
+                    continue
+                if isinstance(start, int) and isinstance(end, int):
+                    gold_value = _extract_value(raw["text"], start, end)
+                    gold_type_value_keys.add(make_value_key(label, gold_value))
 
-            type_tp = sorted(pred_type_set & gold_type_set)
-            type_fp = sorted(pred_type_set - gold_type_set)
-            type_fn = sorted(gold_type_set - pred_type_set)
+            comparison = classify_value_relationships(
+                pred_keys=pred_type_value_keys,
+                gold_keys=gold_type_value_keys,
+            )
 
             all_rows.append(
                 {
@@ -191,17 +222,20 @@ def main() -> None:
                     ],
                     "type_comparison": {
                         "true_positives": [
-                            _span_dict(raw["text"], start, end, label)
-                            for start, end, label in type_tp
+                            _value_dict(label=row["label"], value=row["value"])
+                            for row in comparison["exact_tp"]
                         ],
                         "false_positives": [
-                            _span_dict(raw["text"], start, end, label)
-                            for start, end, label in type_fp
+                            _value_dict(label=row["label"], value=row["value"])
+                            for row in comparison["exact_fp"]
                         ],
                         "false_negatives": [
-                            _span_dict(raw["text"], start, end, label)
-                            for start, end, label in type_fn
+                            _value_dict(label=row["label"], value=row["value"])
+                            for row in comparison["exact_fn"]
                         ],
+                        "type_mismatches": comparison["type_mismatches"],
+                        "value_subsets": comparison["value_subsets"],
+                        "value_supersets": comparison["value_supersets"],
                     },
                 }
             )
@@ -209,7 +243,11 @@ def main() -> None:
     with output_path.open("w", encoding="utf-8") as handle:
         for row in all_rows:
             handle.write(json.dumps(row, ensure_ascii=True) + "\n")
+    with pretty_output_path.open("w", encoding="utf-8") as handle:
+        for row in all_rows:
+            handle.write(json.dumps(row, ensure_ascii=True, indent=2) + "\n")
     print(f"saved predictions to {output_path.resolve()}")
+    print(f"saved pretty predictions to {pretty_output_path.resolve()}")
 
 
 if __name__ == "__main__":

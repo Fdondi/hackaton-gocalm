@@ -49,6 +49,8 @@ def train_one_epoch(
             proposal_labels=batch["proposal_labels"],
             type_labels=batch["type_labels"],
             sensitivity_labels=batch["sensitivity_labels"],
+            type_soft_labels=batch.get("type_soft_labels"),
+            sensitivity_soft_labels=batch.get("sensitivity_soft_labels"),
         )
         optimizer.zero_grad()
         outputs["loss"].backward()
@@ -77,6 +79,8 @@ def evaluate_loss(
             proposal_labels=batch["proposal_labels"],
             type_labels=batch["type_labels"],
             sensitivity_labels=batch["sensitivity_labels"],
+            type_soft_labels=batch.get("type_soft_labels"),
+            sensitivity_soft_labels=batch.get("sensitivity_soft_labels"),
         )
         for key in totals:
             totals[key] += float(outputs[key].item())

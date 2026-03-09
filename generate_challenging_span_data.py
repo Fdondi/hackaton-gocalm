@@ -457,7 +457,13 @@ def _parse_annotated_text_to_example(annotated_text: str, labels: set) -> Dict:
                 raise ValueError(
                     f"invalid REAL_PII label in marker: {label!r}; allowed={sorted(labels)}"
                 )
-            item = {"start": start, "end": end, "category": "REAL_PII", "label": label}
+            item = {
+                "start": start,
+                "end": end,
+                "category": "REAL_PII",
+                "label": label,
+                "value": value,
+            }
         elif root_category == "PII_LOOKALIKE":
             label = subcategory.upper()
             if label not in labels:
@@ -469,6 +475,7 @@ def _parse_annotated_text_to_example(annotated_text: str, labels: set) -> Dict:
                 "end": end,
                 "category": root_category,
                 "label": label,
+                "value": value,
                 "note": "public-context lookalike",
             }
         elif root_category == "NON_PII":
@@ -476,6 +483,7 @@ def _parse_annotated_text_to_example(annotated_text: str, labels: set) -> Dict:
                 "start": start,
                 "end": end,
                 "category": root_category,
+                "value": value,
                 "note": subcategory or "annotated",
             }
         else:
@@ -502,6 +510,17 @@ def _normalize_model_example(example: Dict, labels: set) -> Dict:
     text = example.get("text")
     items = example.get("items")
     if isinstance(text, str) and isinstance(items, list):
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            start = item.get("start")
+            end = item.get("end")
+            if not isinstance(start, int) or not isinstance(end, int):
+                continue
+            if not isinstance(item.get("value"), str):
+                safe_start = max(0, min(start, len(text)))
+                safe_end = max(safe_start, min(end, len(text)))
+                item["value"] = text[safe_start:safe_end]
         return {"text": text, "items": items, "original_text": text}
 
     raise ValueError("example missing both annotated_text and legacy text/items")
@@ -652,26 +671,42 @@ def _validate_example(example: Dict, labels: set) -> Tuple[ValidationStatus, Opt
     return ValidationStatus.OK, None
 
 
-def _spans_from_items(items: List[Dict]) -> List[Dict]:
-    dedup = {}
+def _spans_from_items(text: str, items: List[Dict]) -> List[Dict]:
+    dedup: Dict[Tuple[int, int], Dict] = {}
     for item in items:
         if item.get("category") != "REAL_PII":
             continue
         key = (item["start"], item["end"])
-        dedup[key] = item["label"]
-    spans = [{"start": s, "end": e, "label": label} for (s, e), label in dedup.items()]
+        value = item.get("value")
+        if not isinstance(value, str):
+            safe_start = max(0, min(item["start"], len(text)))
+            safe_end = max(safe_start, min(item["end"], len(text)))
+            value = text[safe_start:safe_end]
+        dedup[key] = {"label": item["label"], "value": value}
+    spans = [
+        {"start": s, "end": e, "label": data["label"], "value": data["value"]}
+        for (s, e), data in dedup.items()
+    ]
     spans.sort(key=lambda x: (x["start"], x["end"], x["label"]))
     return spans
 
 
-def _piii_lookalike_from_items(items: List[Dict]) -> List[Dict]:
-    dedup = {}
+def _pii_lookalike_from_items(text: str, items: List[Dict]) -> List[Dict]:
+    dedup: Dict[Tuple[int, int], Dict] = {}
     for item in items:
         if item.get("category") != "PII_LOOKALIKE":
             continue
         key = (item["start"], item["end"])
-        dedup[key] = item.get("label")
-    lookalikes = [{"start": s, "end": e, "label": label} for (s, e), label in dedup.items()]
+        value = item.get("value")
+        if not isinstance(value, str):
+            safe_start = max(0, min(item["start"], len(text)))
+            safe_end = max(safe_start, min(item["end"], len(text)))
+            value = text[safe_start:safe_end]
+        dedup[key] = {"label": item.get("label"), "value": value}
+    lookalikes = [
+        {"start": s, "end": e, "label": data["label"], "value": data["value"]}
+        for (s, e), data in dedup.items()
+    ]
     lookalikes.sort(key=lambda x: (x["start"], x["end"], str(x.get("label"))))
     return lookalikes
 
@@ -1220,13 +1255,12 @@ def generate_dataset(
                             continue
                         seen_texts.add(text)
 
-                        lookalike_items = _piii_lookalike_from_items(ex["items"])
+                        lookalike_items = _pii_lookalike_from_items(text, ex["items"])
                         row = {
                             "text": text,
-                            "spans": _spans_from_items(ex["items"]),
+                            "spans": _spans_from_items(text, ex["items"]),
                             "original_text": ex.get("original_text", text),
-                            "piii_lookalike": lookalike_items,
-                            "PIII_LOOKALIKE": lookalike_items,
+                            "pii_lookalike": lookalike_items,
                         }
                         remaining_train = train_size - train_written
                         remaining_valid = valid_size - valid_written

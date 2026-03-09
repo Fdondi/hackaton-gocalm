@@ -47,6 +47,7 @@ class AiAnnotationRoundtripTests(unittest.TestCase):
 
             self.assertEqual(item["label"], expected_label)
             self.assertEqual(actual_value, expected_value)
+            self.assertEqual(item.get("value"), expected_value)
 
             token_span = char_span_to_token_span(offsets, start, end)
             self.assertIsNotNone(token_span)
@@ -81,6 +82,7 @@ class AiAnnotationRoundtripTests(unittest.TestCase):
             self.assertIsNotNone(token_span)
             self.assertEqual(item["label"], expected_label)
             self.assertEqual(text[start:end], expected_value)
+            self.assertEqual(item.get("value"), expected_value)
 
             roundtrip_char_span = token_span_to_char_span(offsets, token_span[0], token_span[1])  # type: ignore[index]
             self.assertIsNotNone(roundtrip_char_span)

@@ -4,8 +4,9 @@ import re
 from pathlib import Path
 from typing import Dict, Iterable, List, Set, Tuple
 
+from multihead_pii.type_comparison import ValueKey, compute_value_comparison, make_value_key
 
-SpanKey = Tuple[int, int, str]
+
 EMAIL_RE = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
 IPV4_RE = re.compile(r"^(?:\d{1,3}\.){3}\d{1,3}$")
 
@@ -56,40 +57,49 @@ def _extract_value(text: str, start: int, end: int) -> str:
     return text[safe_start:safe_end]
 
 
-def _build_span_key_rows(rows: List[Dict]) -> List[SpanKey]:
-    out: List[SpanKey] = []
+def _build_span_key_rows(text: str, rows: List[Dict]) -> List[ValueKey]:
+    out: List[ValueKey] = []
     for span in rows:
         if not isinstance(span, dict):
             continue
         start = span.get("start")
         end = span.get("end")
         label = span.get("label")
-        if not isinstance(start, int) or not isinstance(end, int) or not isinstance(label, str):
+        if not isinstance(label, str):
             continue
         if label == "NONE":
             continue
-        out.append((start, end, label))
+        value = span.get("value")
+        if not isinstance(value, str):
+            if not isinstance(start, int) or not isinstance(end, int):
+                continue
+            value = _extract_value(text, start, end)
+        out.append(make_value_key(label, value))
     return out
 
 
-def _gold_rows(gold_row: Dict) -> List[SpanKey]:
+def _gold_rows(gold_row: Dict) -> List[ValueKey]:
     spans = gold_row.get("spans", [])
     items = gold_row.get("items", [])
-    return _build_span_key_rows(spans if isinstance(spans, list) else []) + _build_span_key_rows(
-        items if isinstance(items, list) else []
+    text = gold_row.get("text", "")
+    if not isinstance(text, str):
+        text = ""
+    return _build_span_key_rows(text, spans if isinstance(spans, list) else []) + _build_span_key_rows(
+        text, items if isinstance(items, list) else []
     )
 
 
-def _pred_rows(pred_row: Dict) -> List[SpanKey]:
+def _pred_rows(pred_row: Dict) -> List[ValueKey]:
     typed = pred_row.get("typed_predictions", [])
-    return _build_span_key_rows(typed if isinstance(typed, list) else [])
+    text = pred_row.get("text", "")
+    if not isinstance(text, str):
+        text = ""
+    return _build_span_key_rows(text, typed if isinstance(typed, list) else [])
 
 
-def _span_dict(text: str, start: int, end: int, label: str) -> Dict:
+def _span_dict(value: str, label: str) -> Dict:
     return {
-        "start": start,
-        "end": end,
-        "value": _extract_value(text, start, end),
+        "value": value,
         "label": label,
     }
 
@@ -118,16 +128,10 @@ def _is_suspicious_span(text: str, start: int, end: int, label: str) -> bool:
 
 
 def _compute_comparison(
-    pred_rows: List[SpanKey],
-    gold_rows: List[SpanKey],
-) -> Tuple[List[SpanKey], List[SpanKey], List[SpanKey]]:
-    pred_set = set(pred_rows)
-    gold_set = set(gold_rows)
-    # Exact matching only: comparison should reflect exact char spans.
-    tp = sorted(pred_set & gold_set)
-    fp = sorted(pred_set - gold_set)
-    fn = sorted(gold_set - pred_set)
-    return tp, fp, fn
+    pred_rows: List[ValueKey],
+    gold_rows: List[ValueKey],
+) -> Tuple[List[ValueKey], List[ValueKey], List[ValueKey]]:
+    return compute_value_comparison(pred_keys=pred_rows, gold_keys=gold_rows)
 
 
 def main() -> None:
@@ -155,9 +159,22 @@ def main() -> None:
 
         pred_rows_i = _pred_rows(pred_row)
         gold_rows_i = _gold_rows(gold_row)
-        for start, end, label in gold_rows_i:
-            if _is_suspicious_span(text, start, end, label):
-                suspicious_gold_spans += 1
+        for source_key in ("spans", "items"):
+            source_spans = gold_row.get(source_key, [])
+            if not isinstance(source_spans, list):
+                continue
+            for span in source_spans:
+                if not isinstance(span, dict):
+                    continue
+                start = span.get("start")
+                end = span.get("end")
+                label = span.get("label")
+                if not isinstance(start, int) or not isinstance(end, int) or not isinstance(label, str):
+                    continue
+                if label == "NONE":
+                    continue
+                if _is_suspicious_span(text, start, end, label):
+                    suspicious_gold_spans += 1
 
         tp, fp, fn = _compute_comparison(
             pred_rows=pred_rows_i,
@@ -166,9 +183,9 @@ def main() -> None:
 
         pred_row.pop("typed_predictions", None)
         pred_row["type_comparison"] = {
-            "true_positives": [_span_dict(text, s, e, label) for s, e, label in tp],
-            "false_positives": [_span_dict(text, s, e, label) for s, e, label in fp],
-            "false_negatives": [_span_dict(text, s, e, label) for s, e, label in fn],
+            "true_positives": [_span_dict(value, label) for label, value in tp],
+            "false_positives": [_span_dict(value, label) for label, value in fp],
+            "false_negatives": [_span_dict(value, label) for label, value in fn],
         }
         converted.append(pred_row)
 
