@@ -673,44 +673,22 @@ def _validate_example(example: Dict, labels: set) -> Tuple[ValidationStatus, Opt
     return ValidationStatus.OK, None
 
 
-def _spans_from_items(text: str, items: List[Dict]) -> List[Dict]:
-    dedup: Dict[Tuple[int, int], Dict] = {}
-    for item in items:
-        if item.get("category") != "REAL_PII":
-            continue
-        key = (item["start"], item["end"])
-        value = item.get("value")
-        if not isinstance(value, str):
-            safe_start = max(0, min(item["start"], len(text)))
-            safe_end = max(safe_start, min(item["end"], len(text)))
-            value = text[safe_start:safe_end]
-        dedup[key] = {"label": item["label"], "value": value}
+def _get_value(item: Dict, text: str) -> str:
+    value = item.get("value")
+    if not isinstance(value, str):
+        safe_start = max(0, min(item["start"], len(text)))
+        safe_end = max(safe_start, min(item["end"], len(text)))
+        value = text[safe_start:safe_end]
+    return value
+
+def _spans_from_items(text: str, items: List[Dict], category: str) -> List[Dict]:
     spans = [
-        {"start": s, "end": e, "label": data["label"], "value": data["value"]}
-        for (s, e), data in dedup.items()
+        {"start": item["start"], "end": item["end"], "label": item["label"], "value": _get_value(item, text)}
+        for item in items
+        if item.get("category") == category
     ]
     spans.sort(key=lambda x: (x["start"], x["end"], x["label"]))
     return spans
-
-
-def _pii_lookalike_from_items(text: str, items: List[Dict]) -> List[Dict]:
-    dedup: Dict[Tuple[int, int], Dict] = {}
-    for item in items:
-        if item.get("category") != "PII_LOOKALIKE":
-            continue
-        key = (item["start"], item["end"])
-        value = item.get("value")
-        if not isinstance(value, str):
-            safe_start = max(0, min(item["start"], len(text)))
-            safe_end = max(safe_start, min(item["end"], len(text)))
-            value = text[safe_start:safe_end]
-        dedup[key] = {"label": item.get("label"), "value": value}
-    lookalikes = [
-        {"start": s, "end": e, "label": data["label"], "value": data["value"]}
-        for (s, e), data in dedup.items()
-    ]
-    lookalikes.sort(key=lambda x: (x["start"], x["end"], str(x.get("label"))))
-    return lookalikes
 
 
 def _request_examples(
@@ -1259,8 +1237,8 @@ def generate_dataset(
                             continue
                         seen_texts.add(text)
 
-                        true_spans = _spans_from_items(text, ex["items"])
-                        lookalike_spans = _pii_lookalike_from_items(text, ex["items"])
+                        true_spans = _spans_from_items(text, ex["items"], "REAL_PII")
+                        lookalike_spans = _spans_from_items(text, ex["items"], "PII_LOOKALIKE")
                         row_id += 1
                         row = {
                             "row_id": row_id,
