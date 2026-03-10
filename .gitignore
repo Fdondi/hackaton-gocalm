@@ -4,4 +4,5 @@ __pycache__/
 modernbert_span_model/
 _tmp*
 *.pt
+!outputs_multihead/multihead_model.pt
 generation_errors.jsonl
