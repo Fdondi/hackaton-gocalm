@@ -3,6 +3,25 @@ import json
 from pathlib import Path
 from typing import Iterable, List, Tuple
 
+LABEL_ALIASES = {
+    "PHONE_NUMBER": "PHONE",
+    "TELEPHONE": "PHONE",
+    "ORGANIZATION": "ORG",
+    "IP": "IP_ADDRESS",
+    "IPADDRESS": "IP_ADDRESS",
+    "DATE_TIME": "OTHER",
+    "LOCATION": "OTHER",
+    "CITY": "OTHER",
+    "COUNTRY": "OTHER",
+    "STATE": "OTHER",
+    "ZIPCODE": "ADDRESS",
+    "ZIP_CODE": "ADDRESS",
+    "POSTAL_CODE": "ADDRESS",
+    "FIRST_NAME": "PERSON",
+    "LAST_NAME": "PERSON",
+    "NAME": "PERSON",
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -114,6 +133,8 @@ def build_markdown_examples(
 
     for row_idx, row in enumerate(rows, start=1):
         text = row.get("text")
+        if not isinstance(text, str):
+            text = row.get("full_text")
         spans = row.get("spans")
         example_index += 1
         span_lines: List[str] = []
@@ -169,6 +190,11 @@ def build_markdown_examples(
                 start = span.get("start")
                 end = span.get("end")
                 label = span.get("label")
+                if not isinstance(start, int) or not isinstance(end, int):
+                    start = span.get("start_position")
+                    end = span.get("end_position")
+                if not isinstance(label, str):
+                    label = span.get("entity_type")
 
                 if not isinstance(start, int) or not isinstance(end, int):
                     span_lines.append(
@@ -212,6 +238,7 @@ def build_markdown_examples(
                     )
                     malformed_count += 1
                     continue
+                label = LABEL_ALIASES.get(label.strip().upper(), label.strip().upper())
 
                 snippet = text[start:end].replace("\n", "\\n").strip()
                 if not snippet:

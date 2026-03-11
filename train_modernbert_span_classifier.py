@@ -22,6 +22,25 @@ WEIGHT_DECAY = 0.01
 SEED = 42
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
+LABEL_ALIASES = {
+    "PHONE_NUMBER": "PHONE",
+    "TELEPHONE": "PHONE",
+    "ORGANIZATION": "ORG",
+    "IP": "IP_ADDRESS",
+    "IPADDRESS": "IP_ADDRESS",
+    "DATE_TIME": "OTHER",
+    "LOCATION": "OTHER",
+    "CITY": "OTHER",
+    "COUNTRY": "OTHER",
+    "STATE": "OTHER",
+    "ZIPCODE": "ADDRESS",
+    "ZIP_CODE": "ADDRESS",
+    "POSTAL_CODE": "ADDRESS",
+    "FIRST_NAME": "PERSON",
+    "LAST_NAME": "PERSON",
+    "NAME": "PERSON",
+}
+
 
 def set_seed(seed: int = SEED):
     random.seed(seed)
@@ -53,15 +72,85 @@ class JsonlSpanDataset(Dataset):
         self.negative_sample_rate = negative_sample_rate
 
     @staticmethod
-    def _load_jsonl(path: str) -> List[SpanExample]:
+    def _normalize_label(raw_label: object) -> Optional[str]:
+        if not isinstance(raw_label, str):
+            return None
+        label = raw_label.strip().upper()
+        if not label:
+            return None
+        label = LABEL_ALIASES.get(label, label)
+        if label in TRAINING_LABELS:
+            return label
+        return "OTHER"
+
+    @classmethod
+    def _normalize_span(cls, span: object, text: str) -> Optional[Dict]:
+        if not isinstance(span, dict):
+            return None
+        start = span.get("start")
+        end = span.get("end")
+        if not isinstance(start, int) or not isinstance(end, int):
+            start = span.get("start_position")
+            end = span.get("end_position")
+        if not isinstance(start, int) or not isinstance(end, int):
+            return None
+        label = cls._normalize_label(span.get("label"))
+        if label is None:
+            label = cls._normalize_label(span.get("entity_type"))
+        if label is None:
+            return None
+        value = span.get("value")
+        if not isinstance(value, str):
+            value = span.get("entity_value")
+        if not isinstance(value, str):
+            safe_start = max(0, min(start, len(text)))
+            safe_end = max(safe_start, min(end, len(text)))
+            value = text[safe_start:safe_end]
+        return {"start": start, "end": end, "label": label, "value": value}
+
+    @classmethod
+    def _load_jsonl(cls, path: str) -> List[SpanExample]:
+        file_path = Path(path)
+        rows: List[Dict] = []
+        if file_path.suffix.lower() == ".json":
+            raw = json.loads(file_path.read_text(encoding="utf-8"))
+            if isinstance(raw, dict):
+                rows = [raw]
+            elif isinstance(raw, list):
+                if not all(isinstance(x, dict) for x in raw):
+                    raise ValueError(f"{path}: JSON array must contain only objects")
+                rows = raw
+            else:
+                raise ValueError(f"{path}: JSON must be object or array of objects")
+        else:
+            with file_path.open("r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    row = json.loads(line)
+                    if not isinstance(row, dict):
+                        raise ValueError(f"{path}: each JSONL row must be an object")
+                    rows.append(row)
+
         data = []
-        with open(path, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                row = json.loads(line)
-                data.append(SpanExample(text=row["text"], spans=row.get("spans", [])))
+        for idx, row in enumerate(rows):
+            text = row.get("text")
+            if not isinstance(text, str):
+                text = row.get("full_text")
+            if not isinstance(text, str):
+                raise ValueError(f"row {idx}: missing/invalid text or full_text")
+            raw_spans = row.get("spans")
+            if raw_spans is None:
+                raw_spans = []
+            if not isinstance(raw_spans, list):
+                raise ValueError(f"row {idx}: spans must be a list")
+            spans: List[Dict] = []
+            for span in raw_spans:
+                norm = cls._normalize_span(span, text)
+                if norm is not None:
+                    spans.append(norm)
+            data.append(SpanExample(text=text, spans=spans))
         return data
 
     def __len__(self):

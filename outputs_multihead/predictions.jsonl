@@ -1,0 +1,3727 @@
+{
+  "text": "Please have the manager call me at (96) 627-277 I'd like to join accounts with ms. Wijtze",
+  "redactions": [
+    {
+      "start": 35,
+      "end": 47,
+      "value": "(96) 627-277",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.9741183856579667,
+      "redact_probability": 0.9999085664749146,
+      "type_confidence": 0.9742074608802795
+    },
+    {
+      "start": 79,
+      "end": 89,
+      "value": "ms. Wijtze",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.774094194501977,
+      "redact_probability": 0.9996453523635864,
+      "type_confidence": 0.7743688225746155
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "(96) 627-277",
+        "label": "PHONE"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": [
+      {
+        "predicted": {
+          "label": "PERSON",
+          "value": "ms. Wijtze"
+        },
+        "gold": {
+          "label": "PERSON",
+          "value": "Wijtze"
+        }
+      }
+    ]
+  }
+}
+{
+  "text": "billing address: tracy sukhorukova\n    23 8 wressle road suite 771\n   polapit tamar\n    nan\n    77058",
+  "redactions": [
+    {
+      "start": 17,
+      "end": 34,
+      "value": "tracy sukhorukova",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9979743702609483,
+      "redact_probability": 0.9996620416641235,
+      "type_confidence": 0.9983117580413818
+    },
+    {
+      "start": 39,
+      "end": 66,
+      "value": "23 8 wressle road suite 771",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.5817983396163129,
+      "redact_probability": 0.8676260709762573,
+      "type_confidence": 0.6705634593963623
+    },
+    {
+      "start": 96,
+      "end": 101,
+      "value": "77058",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9843355459903407,
+      "redact_probability": 0.9971820116043091,
+      "type_confidence": 0.9871172308921814
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "77058",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "polapit tamar",
+        "label": "OTHER"
+      },
+      {
+        "value": "tracy sukhorukova",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "23",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "nan",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "suite 771",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": [
+      {
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "23 8 wressle road suite 771"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "8 wressle road"
+        }
+      }
+    ]
+  }
+}
+{
+  "text": "I want to increase limit on my card # 5213591727586604 for certain duration of time. is it possible?",
+  "redactions": [
+    {
+      "start": 38,
+      "end": 54,
+      "value": "5213591727586604",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.9996733333159469,
+      "redact_probability": 0.9998190999031067,
+      "type_confidence": 0.9998542070388794
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "5213591727586604",
+        "label": "CREDIT_CARD"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "3... 2... 1... liftoff!",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "At my suggestion, one morning over breakfast, she agreed, and on the last Sunday before Labor Day we returned to Blaketown by helicopter.",
+  "redactions": [
+    {
+      "start": 88,
+      "end": 97,
+      "value": "Labor Day",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.8556017629052377,
+      "redact_probability": 0.8800963163375854,
+      "type_confidence": 0.9721683263778687
+    },
+    {
+      "start": 113,
+      "end": 122,
+      "value": "Blaketown",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9989335996320925,
+      "redact_probability": 0.9994567036628723,
+      "type_confidence": 0.9994766116142273
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Blaketown",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [
+      {
+        "value": "Labor Day",
+        "label": "OTHER"
+      }
+    ],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "john had given shamhan his address: 46 velk\u00fd pr\u016fhon 426, opocnice",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 4,
+      "value": "john",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.998067552115053,
+      "redact_probability": 0.9993583559989929,
+      "type_confidence": 0.9987083673477173
+    },
+    {
+      "start": 15,
+      "end": 22,
+      "value": "shamhan",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9984702418036235,
+      "redact_probability": 0.9995718598365784,
+      "type_confidence": 0.998897910118103
+    },
+    {
+      "start": 36,
+      "end": 38,
+      "value": "46",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9641090221163964,
+      "redact_probability": 0.9775468111038208,
+      "type_confidence": 0.986253559589386
+    },
+    {
+      "start": 39,
+      "end": 55,
+      "value": "velk\u00fd pr\u016fhon 426",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9934423152490695,
+      "redact_probability": 0.9965183734893799,
+      "type_confidence": 0.9969131946563721
+    },
+    {
+      "start": 57,
+      "end": 65,
+      "value": "opocnice",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.997352030658142,
+      "redact_probability": 0.9986860156059265,
+      "type_confidence": 0.9986642599105835
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "46",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "velk\u00fd pr\u016fhon 426",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "opocnice",
+        "label": "OTHER"
+      },
+      {
+        "value": "john",
+        "label": "PERSON"
+      },
+      {
+        "value": "shamhan",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I want to cancel my card 4532276644577020 because I lost it",
+  "redactions": [
+    {
+      "start": 25,
+      "end": 41,
+      "value": "4532276644577020",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.9992273091431514,
+      "redact_probability": 0.9995338916778564,
+      "type_confidence": 0.9996932744979858
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "4532276644577020",
+        "label": "CREDIT_CARD"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Filip lives on Nassaustraat 123 street.",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 5,
+      "value": "Filip",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.998927965620318,
+      "redact_probability": 0.9997702240943909,
+      "type_confidence": 0.9991575479507446
+    },
+    {
+      "start": 15,
+      "end": 31,
+      "value": "Nassaustraat 123",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.998524743818809,
+      "redact_probability": 0.9995920062065125,
+      "type_confidence": 0.9989323019981384
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Nassaustraat 123",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Filip",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "??? Ronald Pes\u00e4l\u00e4\n??? Tableau Software\n??? 48 107 Rue Abdelaziz Th\u00e2albi\n??? Apt. 018\n??? El Akarit\n??? Denmark 15838",
+  "redactions": [
+    {
+      "start": 4,
+      "end": 17,
+      "value": "Ronald Pes\u00e4l\u00e4",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.997975938283929,
+      "redact_probability": 0.9993593096733093,
+      "type_confidence": 0.9986157417297363
+    },
+    {
+      "start": 22,
+      "end": 38,
+      "value": "Tableau Software",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.993339220580097,
+      "redact_probability": 0.9986011385917664,
+      "type_confidence": 0.9947307109832764
+    },
+    {
+      "start": 43,
+      "end": 45,
+      "value": "48",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9891020123137579,
+      "redact_probability": 0.992533802986145,
+      "type_confidence": 0.9965423941612244
+    },
+    {
+      "start": 46,
+      "end": 71,
+      "value": "107 Rue Abdelaziz Th\u00e2albi",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9863604630900014,
+      "redact_probability": 0.9898608922958374,
+      "type_confidence": 0.9964637160301208
+    },
+    {
+      "start": 76,
+      "end": 84,
+      "value": "Apt. 018",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9934355801328287,
+      "redact_probability": 0.9980035424232483,
+      "type_confidence": 0.995422899723053
+    },
+    {
+      "start": 89,
+      "end": 98,
+      "value": "El Akarit",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.968733140745055,
+      "redact_probability": 0.9868165850639343,
+      "type_confidence": 0.9816749691963196
+    },
+    {
+      "start": 103,
+      "end": 110,
+      "value": "Denmark",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9919730925718184,
+      "redact_probability": 0.996276319026947,
+      "type_confidence": 0.9956806898117065
+    },
+    {
+      "start": 111,
+      "end": 116,
+      "value": "15838",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9834334588007643,
+      "redact_probability": 0.9905117154121399,
+      "type_confidence": 0.9928539395332336
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "107 Rue Abdelaziz Th\u00e2albi",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "15838",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "48",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Apt. 018",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Tableau Software",
+        "label": "ORG"
+      },
+      {
+        "value": "Denmark",
+        "label": "OTHER"
+      },
+      {
+        "value": "El Akarit",
+        "label": "OTHER"
+      },
+      {
+        "value": "Ronald Pes\u00e4l\u00e4",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "When: 1998-06-28 14:48:14\nWhere: Kouklia Country Club.",
+  "redactions": [
+    {
+      "start": 6,
+      "end": 25,
+      "value": "1998-06-28 14:48:14",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9988874864726824,
+      "redact_probability": 0.9999363422393799,
+      "type_confidence": 0.9989510774612427
+    },
+    {
+      "start": 33,
+      "end": 40,
+      "value": "Kouklia",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9975477605591365,
+      "redact_probability": 0.9987887740135193,
+      "type_confidence": 0.9987574815750122
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "1998-06-28 14:48:14",
+        "label": "OTHER"
+      },
+      {
+        "value": "Kouklia",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I can't browse to your site, keep getting address 58.74.121.78 blocked error",
+  "redactions": [
+    {
+      "start": 50,
+      "end": 62,
+      "value": "58.74.121.78",
+      "label": "IP_ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9821918353476384,
+      "redact_probability": 0.9997468590736389,
+      "type_confidence": 0.9824405312538147
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "58.74.121.78",
+        "label": "IP_ADDRESS"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Just posted a photo http://www.DialForum.co.uk/",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "http://www.DialForum.co.uk/",
+        "label": "OTHER"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "You can tell Alexandra was a huge Megan Payne fan. Written when he was only 14.",
+  "redactions": [
+    {
+      "start": 13,
+      "end": 22,
+      "value": "Alexandra",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9987969110936916,
+      "redact_probability": 0.9997028708457947,
+      "type_confidence": 0.999093770980835
+    },
+    {
+      "start": 34,
+      "end": 45,
+      "value": "Megan Payne",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9984934096572928,
+      "redact_probability": 0.9996634721755981,
+      "type_confidence": 0.9988295435905457
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Alexandra",
+        "label": "PERSON"
+      },
+      {
+        "value": "Megan Payne",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "ZIP: 11164",
+  "redactions": [
+    {
+      "start": 5,
+      "end": 10,
+      "value": "11164",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9839279884444636,
+      "redact_probability": 0.9975335597991943,
+      "type_confidence": 0.9863607883453369
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "11164",
+        "label": "ADDRESS"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "My card 5474123209470398 expires soon \u05df\u00bf\u00bd when will I get a new one?",
+  "redactions": [
+    {
+      "start": 8,
+      "end": 24,
+      "value": "5474123209470398",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.9996348343115145,
+      "redact_probability": 0.9998544454574585,
+      "type_confidence": 0.9997803568840027
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "5474123209470398",
+        "label": "CREDIT_CARD"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I need to add my addresses, here they are: 63 30 N. Stadion\nULLINISH\n, nan\n 40839, and 75 Auerstrasse 12 Apt. 974 Lyss S\u00c3\u00a3o Tom\u00c3\u00a9 and Pr\u00c3\u00adncipe",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "63 30 N. Stadion\nULLINISH\n, nan\n 40839",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "75 Auerstrasse 12 Apt. 974 Lyss S\u00c3\u00a3o Tom\u00c3\u00a9 and Pr\u00c3\u00adncipe",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Celebrating its 10th year in Palhais, Equilar is a 501(c)3 that invites songwriters from around the world to Texas to share the universal language of music in collaborations designed to bridge cultures, build friendships and cultivate peace.",
+  "redactions": [
+    {
+      "start": 29,
+      "end": 36,
+      "value": "Palhais",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.995470189420935,
+      "redact_probability": 0.9979599714279175,
+      "type_confidence": 0.9975051283836365
+    },
+    {
+      "start": 38,
+      "end": 45,
+      "value": "Equilar",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.9752607524113444,
+      "redact_probability": 0.9992903470993042,
+      "type_confidence": 0.9759533405303955
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Equilar",
+        "label": "ORG"
+      },
+      {
+        "value": "Palhais",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Dustin Rivas listed his top 20 songs for Entertainment Weekly and had the balls to list this song at #15. (What did he put at #1 you ask? Answer:\"Tube Snake Boogie\" by Nancy Sommer \u05d2\u20ac\u201c go figure)",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 12,
+      "value": "Dustin Rivas",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9983255414393852,
+      "redact_probability": 0.9994636178016663,
+      "type_confidence": 0.9988613128662109
+    },
+    {
+      "start": 168,
+      "end": 180,
+      "value": "Nancy Sommer",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9987837445571301,
+      "redact_probability": 0.9996993541717529,
+      "type_confidence": 0.9990841150283813
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Dustin Rivas",
+        "label": "PERSON"
+      },
+      {
+        "value": "Nancy Sommer",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I work for Geoscape",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [
+      {
+        "predicted": {
+          "label": "PERSON",
+          "value": "Geoscape"
+        },
+        "gold": {
+          "label": "ORG",
+          "value": "Geoscape"
+        }
+      }
+    ],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "A great song made even greater by a mandolin coda (not by Janice Brki\u0107 MD).",
+  "redactions": [
+    {
+      "start": 58,
+      "end": 73,
+      "value": "Janice Brki\u0107 MD",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9955418083512413,
+      "redact_probability": 0.9984835982322693,
+      "type_confidence": 0.9970537424087524
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Janice Brki\u0107 MD",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Shelby Araujo lives at 87 Jakobi 69, Laane",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 13,
+      "value": "Shelby Araujo",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9975152692845768,
+      "redact_probability": 0.9991645812988281,
+      "type_confidence": 0.9983493089675903
+    },
+    {
+      "start": 23,
+      "end": 25,
+      "value": "87",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9953352782403186,
+      "redact_probability": 0.9973638653755188,
+      "type_confidence": 0.9979660511016846
+    },
+    {
+      "start": 26,
+      "end": 35,
+      "value": "Jakobi 69",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.993464649359737,
+      "redact_probability": 0.9969336986541748,
+      "type_confidence": 0.9965202808380127
+    },
+    {
+      "start": 37,
+      "end": 42,
+      "value": "Laane",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9888345632142084,
+      "redact_probability": 0.9994674324989319,
+      "type_confidence": 0.9893614649772644
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "87",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Jakobi 69",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Laane",
+        "label": "OTHER"
+      },
+      {
+        "value": "Shelby Araujo",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "During the 1990s, Hubbard-Thomas invested heavily in new microprocessor designs fostering the rapid growth of the computer industry.",
+  "redactions": [
+    {
+      "start": 18,
+      "end": 32,
+      "value": "Hubbard-Thomas",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.988816210864826,
+      "redact_probability": 0.9990121126174927,
+      "type_confidence": 0.9897940158843994
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Hubbard-Thomas",
+        "label": "ORG"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "On 29 March 2017, the sudanese government formally began the process of withdrawal by invoking Article 50 of the Treaty on European Union",
+  "redactions": [
+    {
+      "start": 22,
+      "end": 30,
+      "value": "sudanese",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9298054783119056,
+      "redact_probability": 0.9760631918907166,
+      "type_confidence": 0.9526078701019287
+    },
+    {
+      "start": 123,
+      "end": 137,
+      "value": "European Union",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9090713753557722,
+      "redact_probability": 0.9572824835777283,
+      "type_confidence": 0.9496375322341919
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "sudanese",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [
+      {
+        "value": "29 March 2017",
+        "label": "OTHER"
+      },
+      {
+        "value": "European Union",
+        "label": "OTHER"
+      }
+    ],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "What's your email? LeaVLind@superrito.com",
+  "redactions": [
+    {
+      "start": 19,
+      "end": 41,
+      "value": "LeaVLind@superrito.com",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9998316797237408,
+      "redact_probability": 0.9999778270721436,
+      "type_confidence": 0.9998538494110107
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "LeaVLind@superrito.com",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "excuse me, sir bot, but i really don't like this tone",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "CAN I SPEAK TO A REAL PERSON?!?!",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I'm moving out of the country, so please cancel my subscription",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Please update the billing address with 52 Ibirapita 8057\nErwetegem\n, VOV\n Serbia 23823 for this card: 4556156821609393",
+  "redactions": [
+    {
+      "start": 102,
+      "end": 118,
+      "value": "4556156821609393",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.9959885107064537,
+      "redact_probability": 0.9999643564224243,
+      "type_confidence": 0.9960240125656128
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "4556156821609393",
+        "label": "CREDIT_CARD"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "52 Ibirapita 8057\nErwetegem\n, VOV\n Serbia 23823",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "kristin crni\u0107\n\n98 \u00e1rp\u00e1d fejedelem \u00fatja 45.\n apt. 614\n pom\u00e1z\n\n tunisia 13222",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 13,
+      "value": "kristin crni\u0107",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9946310389485724,
+      "redact_probability": 0.9979775547981262,
+      "type_confidence": 0.9966467022895813
+    },
+    {
+      "start": 15,
+      "end": 17,
+      "value": "98",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9918265610217247,
+      "redact_probability": 0.9948745369911194,
+      "type_confidence": 0.9969363212585449
+    },
+    {
+      "start": 18,
+      "end": 42,
+      "value": "\u00e1rp\u00e1d fejedelem \u00fatja 45.",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9957804669843995,
+      "redact_probability": 0.9976629018783569,
+      "type_confidence": 0.9981131553649902
+    },
+    {
+      "start": 44,
+      "end": 52,
+      "value": "apt. 614",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9917668912456179,
+      "redact_probability": 0.995180606842041,
+      "type_confidence": 0.9965697526931763
+    },
+    {
+      "start": 54,
+      "end": 59,
+      "value": "pom\u00e1z",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9948428742706916,
+      "redact_probability": 0.9973623156547546,
+      "type_confidence": 0.9974738955497742
+    },
+    {
+      "start": 62,
+      "end": 69,
+      "value": "tunisia",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.99110792235372,
+      "redact_probability": 0.9967971444129944,
+      "type_confidence": 0.9942924976348877
+    },
+    {
+      "start": 70,
+      "end": 75,
+      "value": "13222",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9477362811170806,
+      "redact_probability": 0.9710062146186829,
+      "type_confidence": 0.9760352373123169
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "13222",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "98",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "apt. 614",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "\u00e1rp\u00e1d fejedelem \u00fatja 45.",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "pom\u00e1z",
+        "label": "OTHER"
+      },
+      {
+        "value": "tunisia",
+        "label": "OTHER"
+      },
+      {
+        "value": "kristin crni\u0107",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "What's your credit card? 4716952653167634",
+  "redactions": [
+    {
+      "start": 25,
+      "end": 41,
+      "value": "4716952653167634",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.9991562223433448,
+      "redact_probability": 0.999848484992981,
+      "type_confidence": 0.9993076324462891
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "4716952653167634",
+        "label": "CREDIT_CARD"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "My name is Patricia Jekni\u0107 but everyone calls me Lauren",
+  "redactions": [
+    {
+      "start": 11,
+      "end": 26,
+      "value": "Patricia Jekni\u0107",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9994601070806297,
+      "redact_probability": 0.9998156428337097,
+      "type_confidence": 0.99964439868927
+    },
+    {
+      "start": 49,
+      "end": 55,
+      "value": "Lauren",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9992331783700905,
+      "redact_probability": 0.9998055100440979,
+      "type_confidence": 0.9994275569915771
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Lauren",
+        "label": "PERSON"
+      },
+      {
+        "value": "Patricia Jekni\u0107",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Dr. Nielsen is a 50 year old man who grew up in \u00dast\u00ed nad Labem 2.",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 3,
+      "value": "Dr.",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9752626059401592,
+      "redact_probability": 0.9917615652084351,
+      "type_confidence": 0.9833639860153198
+    },
+    {
+      "start": 4,
+      "end": 11,
+      "value": "Nielsen",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.997973681173292,
+      "redact_probability": 0.9993506073951721,
+      "type_confidence": 0.9986221790313721
+    },
+    {
+      "start": 48,
+      "end": 64,
+      "value": "\u00dast\u00ed nad Labem 2",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.6226539969488414,
+      "redact_probability": 0.999711811542511,
+      "type_confidence": 0.6228334903717041
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "\u00dast\u00ed nad Labem 2",
+        "label": "OTHER"
+      },
+      {
+        "value": "Nielsen",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [
+      {
+        "predicted": {
+          "label": "PERSON",
+          "value": "Dr."
+        },
+        "gold": {
+          "label": "OTHER",
+          "value": "Dr."
+        }
+      }
+    ],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "How do I check my balance on my credit card?",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Frank had given Tyler his address: 03 \u03a0\u03bb\u03b1\u03c4\u03b5\u03af\u03b1 \u039c\u03b1\u03b2\u03af\u03bb\u03b7 170, \u0391\u0393\u039b\u0391\u039d\u03a4\u0396\u0399\u0391 (\u0391\u0393\u039b\u0391\u0393\u0393\u0399\u0391)",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 5,
+      "value": "Frank",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9978898899971114,
+      "redact_probability": 0.9992399215698242,
+      "type_confidence": 0.9986489415168762
+    },
+    {
+      "start": 16,
+      "end": 21,
+      "value": "Tyler",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9980685531757061,
+      "redact_probability": 0.9992732405662537,
+      "type_confidence": 0.998794436454773
+    },
+    {
+      "start": 35,
+      "end": 37,
+      "value": "03",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9817824886887436,
+      "redact_probability": 0.988923192024231,
+      "type_confidence": 0.9927793145179749
+    },
+    {
+      "start": 38,
+      "end": 56,
+      "value": "\u03a0\u03bb\u03b1\u03c4\u03b5\u03af\u03b1 \u039c\u03b1\u03b2\u03af\u03bb\u03b7 170",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.974510488859778,
+      "redact_probability": 0.9822649955749512,
+      "type_confidence": 0.9921054840087891
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "03",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "\u03a0\u03bb\u03b1\u03c4\u03b5\u03af\u03b1 \u039c\u03b1\u03b2\u03af\u03bb\u03b7 170",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Frank",
+        "label": "PERSON"
+      },
+      {
+        "value": "Tyler",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "\u0391\u0393\u039b\u0391\u039d\u03a4\u0396\u0399\u0391 (\u0391\u0393\u039b\u0391\u0393\u0393\u0399\u0391)",
+        "label": "OTHER"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Will my account stay active? It's under my partner's name Brian Andersson",
+  "redactions": [
+    {
+      "start": 58,
+      "end": 73,
+      "value": "Brian Andersson",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9992910838607472,
+      "redact_probability": 0.9998565912246704,
+      "type_confidence": 0.9994344115257263
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Brian Andersson",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "As promised, here's Arne's address:\n\n06 Reyes Cat\u00f3licos 17\nSaarj\u00e4rve, JN 91851",
+  "redactions": [
+    {
+      "start": 20,
+      "end": 24,
+      "value": "Arne",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9985920542469557,
+      "redact_probability": 0.9996168613433838,
+      "type_confidence": 0.9989748001098633
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Arne",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "06 Reyes Cat\u00f3licos 17\nSaarj\u00e4rve, JN 91851",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Can someone call me on (07) 5331 0577? I have some questions about opening an account.",
+  "redactions": [
+    {
+      "start": 23,
+      "end": 37,
+      "value": "(07) 5331 0577",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.957801278000808,
+      "redact_probability": 0.999909520149231,
+      "type_confidence": 0.9578879475593567
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "(07) 5331 0577",
+        "label": "PHONE"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Mr. Fernandez is a 50 year old man who grew up in Monroe.",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 3,
+      "value": "Mr.",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9837542616481016,
+      "redact_probability": 0.9928267002105713,
+      "type_confidence": 0.9908620119094849
+    },
+    {
+      "start": 4,
+      "end": 13,
+      "value": "Fernandez",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9981349908537638,
+      "redact_probability": 0.9993414282798767,
+      "type_confidence": 0.9987927675247192
+    },
+    {
+      "start": 50,
+      "end": 56,
+      "value": "Monroe",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.99839349317282,
+      "redact_probability": 0.9990161657333374,
+      "type_confidence": 0.9993767142295837
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Monroe",
+        "label": "OTHER"
+      },
+      {
+        "value": "Fernandez",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [
+      {
+        "predicted": {
+          "label": "PERSON",
+          "value": "Mr."
+        },
+        "gold": {
+          "label": "OTHER",
+          "value": "Mr."
+        }
+      }
+    ],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "CAN I SPEAK TO A REAL PERSON?!?!",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "The Princess Royal arrived at Nugeri this morning from Niger.",
+  "redactions": [
+    {
+      "start": 30,
+      "end": 36,
+      "value": "Nugeri",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9976274074155072,
+      "redact_probability": 0.9987227320671082,
+      "type_confidence": 0.9989032745361328
+    },
+    {
+      "start": 55,
+      "end": 60,
+      "value": "Niger",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9991926109031901,
+      "redact_probability": 0.9997647404670715,
+      "type_confidence": 0.9994277358055115
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Niger",
+        "label": "OTHER"
+      },
+      {
+        "value": "Nugeri",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I have lost my card 4716402611454369. Could you please block my credit card ASAP ? My name is Jessica Solomina.",
+  "redactions": [
+    {
+      "start": 20,
+      "end": 36,
+      "value": "4716402611454369",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.9996232149324449,
+      "redact_probability": 0.9998102784156799,
+      "type_confidence": 0.99981290102005
+    },
+    {
+      "start": 94,
+      "end": 110,
+      "value": "Jessica Solomina",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.999503420240444,
+      "redact_probability": 0.9998762607574463,
+      "type_confidence": 0.9996271133422852
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "4716402611454369",
+        "label": "CREDIT_CARD"
+      },
+      {
+        "value": "Jessica Solomina",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Please block card no 5356890925363056",
+  "redactions": [
+    {
+      "start": 21,
+      "end": 37,
+      "value": "5356890925363056",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.99934258775275,
+      "redact_probability": 0.9999560117721558,
+      "type_confidence": 0.9993865489959717
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "5356890925363056",
+        "label": "CREDIT_CARD"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "His social security number is 531-21-7351",
+  "redactions": [
+    {
+      "start": 30,
+      "end": 41,
+      "value": "531-21-7351",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9999499326514183,
+      "redact_probability": 0.999983549118042,
+      "type_confidence": 0.9999663829803467
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "531-21-7351",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I'm so jealous! said Honor\u00e9 to James",
+  "redactions": [
+    {
+      "start": 21,
+      "end": 27,
+      "value": "Honor\u00e9",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9985956700319285,
+      "redact_probability": 0.9995446801185608,
+      "type_confidence": 0.9990505576133728
+    },
+    {
+      "start": 31,
+      "end": 36,
+      "value": "James",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9961427471151119,
+      "redact_probability": 0.999174177646637,
+      "type_confidence": 0.9969660639762878
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Honor\u00e9",
+        "label": "PERSON"
+      },
+      {
+        "value": "James",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Just posted a photo http://www.NightAgenda.se/",
+  "redactions": [
+    {
+      "start": 20,
+      "end": 46,
+      "value": "http://www.NightAgenda.se/",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9998619592766573,
+      "redact_probability": 0.9998973608016968,
+      "type_confidence": 0.9999645948410034
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "http://www.NightAgenda.se/",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "The bus station is on Ziegelgasse 26",
+  "redactions": [
+    {
+      "start": 22,
+      "end": 36,
+      "value": "Ziegelgasse 26",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9690420914455657,
+      "redact_probability": 0.9999431371688843,
+      "type_confidence": 0.9690971970558167
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Ziegelgasse 26",
+        "label": "ADDRESS"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "What's your last name? Krylova",
+  "redactions": [
+    {
+      "start": 23,
+      "end": 30,
+      "value": "Krylova",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9995148627741202,
+      "redact_probability": 0.999876856803894,
+      "type_confidence": 0.9996379613876343
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Krylova",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "My name appears incorrectly on credit card statement could you please correct it to Mrs. Amy Kupcov\u00e1?",
+  "redactions": [
+    {
+      "start": 84,
+      "end": 88,
+      "value": "Mrs.",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9941381487761305,
+      "redact_probability": 0.9977583885192871,
+      "type_confidence": 0.9963716268539429
+    },
+    {
+      "start": 89,
+      "end": 100,
+      "value": "Amy Kupcov\u00e1",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9992438552898442,
+      "redact_probability": 0.9997766613960266,
+      "type_confidence": 0.9994670748710632
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Amy Kupcov\u00e1",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [
+      {
+        "predicted": {
+          "label": "PERSON",
+          "value": "Mrs."
+        },
+        "gold": {
+          "label": "OTHER",
+          "value": "Mrs."
+        }
+      }
+    ],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Sometimes people call me Roland",
+  "redactions": [
+    {
+      "start": 25,
+      "end": 31,
+      "value": "Roland",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9987526549857648,
+      "redact_probability": 0.9996757507324219,
+      "type_confidence": 0.9990766048431396
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Roland",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Please return to 39 79 Argyll Road\nNoorderwijk\n, VAN\n Portugal 76970 in case of an issue.",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "39 79 Argyll Road\nNoorderwijk\n, VAN\n Portugal 76970",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "It was a done thing between him and Sumaya's kid; and everybody thought so.",
+  "redactions": [
+    {
+      "start": 36,
+      "end": 42,
+      "value": "Sumaya",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9978644222130413,
+      "redact_probability": 0.9992935657501221,
+      "type_confidence": 0.9985698461532593
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Sumaya",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "She was born on 12/27/1986. Her maiden name is Vestergaard",
+  "redactions": [
+    {
+      "start": 16,
+      "end": 26,
+      "value": "12/27/1986",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9988139870632935,
+      "redact_probability": 0.999175488948822,
+      "type_confidence": 0.9996381998062134
+    },
+    {
+      "start": 47,
+      "end": 58,
+      "value": "Vestergaard",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9994136633443418,
+      "redact_probability": 0.9998860359191895,
+      "type_confidence": 0.9995275735855103
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "12/27/1986",
+        "label": "OTHER"
+      },
+      {
+        "value": "Vestergaard",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Zoolander is a 2001 American action-comedy film directed by Tiffany G\u00e1bor and starring Sandberg",
+  "redactions": [
+    {
+      "start": 60,
+      "end": 73,
+      "value": "Tiffany G\u00e1bor",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.998272397874647,
+      "redact_probability": 0.9995502829551697,
+      "type_confidence": 0.9987215399742126
+    },
+    {
+      "start": 87,
+      "end": 95,
+      "value": "Sandberg",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9992533418794807,
+      "redact_probability": 0.9997312426567078,
+      "type_confidence": 0.9995219707489014
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Sandberg",
+        "label": "PERSON"
+      },
+      {
+        "value": "Tiffany G\u00e1bor",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "His social security number is 594-62-0140",
+  "redactions": [
+    {
+      "start": 30,
+      "end": 41,
+      "value": "594-62-0140",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.999969124965645,
+      "redact_probability": 0.9999927282333374,
+      "type_confidence": 0.999976396560669
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "594-62-0140",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "\"I'm glad to hear that Poland is moving in that direction,\" says Eklund.",
+  "redactions": [
+    {
+      "start": 23,
+      "end": 29,
+      "value": "Poland",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9990220466164743,
+      "redact_probability": 0.99965500831604,
+      "type_confidence": 0.999366819858551
+    },
+    {
+      "start": 65,
+      "end": 71,
+      "value": "Eklund",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9987707158561534,
+      "redact_probability": 0.999664306640625,
+      "type_confidence": 0.9991061091423035
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Poland",
+        "label": "OTHER"
+      },
+      {
+        "value": "Eklund",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "How do I open my credit card statement?",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "For my take on Mrs. Ayers, see Guilty Pleasures: 5 Musicians Of The 70s You're Supposed To Hate (But Secretly Love)",
+  "redactions": [
+    {
+      "start": 15,
+      "end": 25,
+      "value": "Mrs. Ayers",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9135413708577573,
+      "redact_probability": 0.9626455903053284,
+      "type_confidence": 0.9489903450012207
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "Mrs.",
+        "label": "OTHER"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": [
+      {
+        "predicted": {
+          "label": "PERSON",
+          "value": "Mrs. Ayers"
+        },
+        "gold": {
+          "label": "PERSON",
+          "value": "Ayers"
+        }
+      }
+    ]
+  }
+}
+{
+  "text": "This song by ex-Zombie Jonak is a perfect example of why you shouldn't concentrate on the order of this list. An argument could be made that this should be at number one, and I wouldn't argue with it.",
+  "redactions": [
+    {
+      "start": 23,
+      "end": 28,
+      "value": "Jonak",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.999275387621708,
+      "redact_probability": 0.9997416138648987,
+      "type_confidence": 0.9995336532592773
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Jonak",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Mission Statement: This non-profit founded by radio executives \"serves as an advocate for the value of music\" and \"supports its songwriters, composers and publishers by taking care of an important aspect of their careers \u05d2\u20ac\u201c getting paid,\" according to the Hubbard, Fox and Gillespie website. They offer blanket music licenses to businesses and organizations that allow them to play nearly 13 million musical works.",
+  "redactions": [
+    {
+      "start": 257,
+      "end": 283,
+      "value": "Hubbard, Fox and Gillespie",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.6283910866294704,
+      "redact_probability": 0.9995971322059631,
+      "type_confidence": 0.6286443471908569
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Hubbard, Fox and Gillespie",
+        "label": "ORG"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Taylor Barab\u00e1s\nAreavibes Inc\n27 2279 President St\nGleniti\n, nan\n Canada 32586\nMobile: 041-412-293\nDesk: 986.291.2294x751\nFax: 001-420-335-7509x38548",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 14,
+      "value": "Taylor Barab\u00e1s",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9895311358575292,
+      "redact_probability": 0.995854914188385,
+      "type_confidence": 0.9936498999595642
+    },
+    {
+      "start": 15,
+      "end": 28,
+      "value": "Areavibes Inc",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.654740321560439,
+      "redact_probability": 0.9914193153381348,
+      "type_confidence": 0.6604070663452148
+    },
+    {
+      "start": 58,
+      "end": 77,
+      "value": ", nan\n Canada 32586",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.6966526455746589,
+      "redact_probability": 0.861828088760376,
+      "type_confidence": 0.8083429336547852
+    },
+    {
+      "start": 86,
+      "end": 97,
+      "value": "041-412-293",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.9861889251489657,
+      "redact_probability": 0.9948264956474304,
+      "type_confidence": 0.9913175106048584
+    },
+    {
+      "start": 98,
+      "end": 102,
+      "value": "Desk",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.7045675502684858,
+      "redact_probability": 0.8766762018203735,
+      "type_confidence": 0.8036804795265198
+    },
+    {
+      "start": 104,
+      "end": 120,
+      "value": "986.291.2294x751",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.9753339934086718,
+      "redact_probability": 0.9995495676994324,
+      "type_confidence": 0.9757735133171082
+    },
+    {
+      "start": 126,
+      "end": 148,
+      "value": "001-420-335-7509x38548",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.983939933967136,
+      "redact_probability": 0.9998773336410522,
+      "type_confidence": 0.9840606451034546
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Areavibes Inc",
+        "label": "ORG"
+      },
+      {
+        "value": "Taylor Barab\u00e1s",
+        "label": "PERSON"
+      },
+      {
+        "value": "001-420-335-7509x38548",
+        "label": "PHONE"
+      },
+      {
+        "value": "041-412-293",
+        "label": "PHONE"
+      },
+      {
+        "value": "986.291.2294x751",
+        "label": "PHONE"
+      }
+    ],
+    "false_positives": [
+      {
+        "value": "Desk",
+        "label": "OTHER"
+      }
+    ],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
+      {
+        "predicted": {
+          "label": "ADDRESS",
+          "value": ", nan\n Canada 32586"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "27 2279 President St\nGleniti\n, nan\n Canada 32586"
+        }
+      }
+    ],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Duqyaha shouted at Janet: \"What are you doing here?\"",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 7,
+      "value": "Duqyaha",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.999049590747358,
+      "redact_probability": 0.9997702240943909,
+      "type_confidence": 0.9992792010307312
+    },
+    {
+      "start": 19,
+      "end": 24,
+      "value": "Janet",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9986878841862783,
+      "redact_probability": 0.999572217464447,
+      "type_confidence": 0.9991152882575989
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Duqyaha",
+        "label": "PERSON"
+      },
+      {
+        "value": "Janet",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I once lived in 95 Bem rkp. 97. Suite 446, Pozna\u0144, Bolivia 28327. I now live in the corner of Kapelaniestraat 88 and Whittaker Street",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "95 Bem rkp. 97. Suite 446, Pozna\u0144, Bolivia 28327",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "the corner of Kapelaniestraat 88 and Whittaker Street",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "This song by ex-Zombie Fukunaga is a perfect example of why you shouldn't concentrate on the order of this list. An argument could be made that this should be at number one, and I wouldn't argue with it.",
+  "redactions": [
+    {
+      "start": 23,
+      "end": 31,
+      "value": "Fukunaga",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9994123924716547,
+      "redact_probability": 0.9999334812164307,
+      "type_confidence": 0.9994788765907288
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Fukunaga",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "What is your address? it is 05 Weblinger G\u00fcrtel 92 Apt. 584 HEILIGENBRUNN France",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "05 Weblinger G\u00fcrtel 92 Apt. 584 HEILIGENBRUNN France",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Please charge my credit card. Number is 4539988915720591",
+  "redactions": [
+    {
+      "start": 40,
+      "end": 56,
+      "value": "4539988915720591",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.9989406189189936,
+      "redact_probability": 0.9999690055847168,
+      "type_confidence": 0.9989715814590454
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "4539988915720591",
+        "label": "CREDIT_CARD"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Just posted a photo https://TestingStress.pl/",
+  "redactions": [
+    {
+      "start": 20,
+      "end": 45,
+      "value": "https://TestingStress.pl/",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9998259601273389,
+      "redact_probability": 0.9998695850372314,
+      "type_confidence": 0.9999563694000244
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "https://TestingStress.pl/",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "The restaurant is at 19 1755 Nelson Mandela Drive",
+  "redactions": [
+    {
+      "start": 21,
+      "end": 49,
+      "value": "19 1755 Nelson Mandela Drive",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.990110524042052,
+      "redact_probability": 0.9998648166656494,
+      "type_confidence": 0.9902443885803223
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "19",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": [
+      {
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "19 1755 Nelson Mandela Drive"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "1755 Nelson Mandela Drive"
+        }
+      }
+    ]
+  }
+}
+{
+  "text": "Beaufort is very reliable. You can always depend on him.",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 8,
+      "value": "Beaufort",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9993220800812352,
+      "redact_probability": 0.9998399019241333,
+      "type_confidence": 0.9994820952415466
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Beaufort",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Bruce Alexander will be talking in the conference",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 15,
+      "value": "Bruce Alexander",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9992944737859375,
+      "redact_probability": 0.9998728036880493,
+      "type_confidence": 0.9994215965270996
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Bruce Alexander",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Capitalized words like Wisdom and Discipline are often mistaken with names.",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Delvis spent a year at Weight Watchers as the assistant to Douglas Lind, and the following year at Kpmg in CHISHOLM, which later became Next Step Living in 1965.",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 6,
+      "value": "Delvis",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9988712882605384,
+      "redact_probability": 0.9996780157089233,
+      "type_confidence": 0.999193012714386
+    },
+    {
+      "start": 23,
+      "end": 38,
+      "value": "Weight Watchers",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.8081574362490684,
+      "redact_probability": 0.9617244601249695,
+      "type_confidence": 0.8403211832046509
+    },
+    {
+      "start": 59,
+      "end": 71,
+      "value": "Douglas Lind",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9976633652975444,
+      "redact_probability": 0.9992642998695374,
+      "type_confidence": 0.9983978867530823
+    },
+    {
+      "start": 99,
+      "end": 103,
+      "value": "Kpmg",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.7702427745555873,
+      "redact_probability": 0.9959903359413147,
+      "type_confidence": 0.7733436226844788
+    },
+    {
+      "start": 107,
+      "end": 115,
+      "value": "CHISHOLM",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9977251025907208,
+      "redact_probability": 0.9989643096923828,
+      "type_confidence": 0.9987595081329346
+    },
+    {
+      "start": 136,
+      "end": 152,
+      "value": "Next Step Living",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.9737946021283683,
+      "redact_probability": 0.9949100613594055,
+      "type_confidence": 0.9787765145301819
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Kpmg",
+        "label": "ORG"
+      },
+      {
+        "value": "Next Step Living",
+        "label": "ORG"
+      },
+      {
+        "value": "Weight Watchers",
+        "label": "ORG"
+      },
+      {
+        "value": "CHISHOLM",
+        "label": "OTHER"
+      },
+      {
+        "value": "Delvis",
+        "label": "PERSON"
+      },
+      {
+        "value": "Douglas Lind",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "ZIP: 43672",
+  "redactions": [
+    {
+      "start": 5,
+      "end": 10,
+      "value": "43672",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9837553908334513,
+      "redact_probability": 0.9980350136756897,
+      "type_confidence": 0.9856922626495361
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "43672",
+        "label": "ADDRESS"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I'm moving out of the country, so please cancel my subscription",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Jakobine, can I please speak to your boss?",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 8,
+      "value": "Jakobine",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9995887583395415,
+      "redact_probability": 0.9999034404754639,
+      "type_confidence": 0.9996852874755859
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Jakobine",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Marisca, can I please speak to your boss?",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 7,
+      "value": "Marisca",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9991581837439334,
+      "redact_probability": 0.999714195728302,
+      "type_confidence": 0.9994438290596008
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Marisca",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Morishita began writing as a teenager, publishing her first story, \"The Dimensions of a Shadow\", in 1950 while studying English and journalism at the University of Zafferana Etnea.",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 9,
+      "value": "Morishita",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9994012174850866,
+      "redact_probability": 0.9998564720153809,
+      "type_confidence": 0.9995446801185608
+    },
+    {
+      "start": 100,
+      "end": 104,
+      "value": "1950",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.5617991004134382,
+      "redact_probability": 0.7517802715301514,
+      "type_confidence": 0.747291624546051
+    },
+    {
+      "start": 146,
+      "end": 179,
+      "value": "the University of Zafferana Etnea",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9660987310998337,
+      "redact_probability": 0.9798665046691895,
+      "type_confidence": 0.9859493374824524
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Morishita",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [
+      {
+        "value": "1950",
+        "label": "OTHER"
+      }
+    ],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": [
+      {
+        "predicted": {
+          "label": "OTHER",
+          "value": "the University of Zafferana Etnea"
+        },
+        "gold": {
+          "label": "OTHER",
+          "value": "Zafferana Etnea"
+        }
+      }
+    ]
+  }
+}
+{
+  "text": "The restaurant is located at 01 Korte Noordsstraat 307\n\u00d6VERTURINGEN, nan 80815. It serves great indian food.",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "01 Korte Noordsstraat 307\n\u00d6VERTURINGEN, nan 80815",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "95 230 Wit Rd\n Suite 246\n Bryanston\n Rwanda 02438",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 2,
+      "value": "95",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9836370121232818,
+      "redact_probability": 0.9900216460227966,
+      "type_confidence": 0.9935510158538818
+    },
+    {
+      "start": 3,
+      "end": 13,
+      "value": "230 Wit Rd",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9956297411574866,
+      "redact_probability": 0.997752845287323,
+      "type_confidence": 0.9978721141815186
+    },
+    {
+      "start": 15,
+      "end": 24,
+      "value": "Suite 246",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9843771742191194,
+      "redact_probability": 0.9909111857414246,
+      "type_confidence": 0.9934060573577881
+    },
+    {
+      "start": 26,
+      "end": 35,
+      "value": "Bryanston",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9822093073713489,
+      "redact_probability": 0.9919992089271545,
+      "type_confidence": 0.990131139755249
+    },
+    {
+      "start": 37,
+      "end": 43,
+      "value": "Rwanda",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9862361969431106,
+      "redact_probability": 0.9944798946380615,
+      "type_confidence": 0.9917105436325073
+    },
+    {
+      "start": 44,
+      "end": 49,
+      "value": "02438",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.991150857298372,
+      "redact_probability": 0.9950273633003235,
+      "type_confidence": 0.9961041212081909
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "02438",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "230 Wit Rd",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "95",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Suite 246",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Bryanston",
+        "label": "OTHER"
+      },
+      {
+        "value": "Rwanda",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "My driver's license number is 481195160",
+  "redactions": [
+    {
+      "start": 30,
+      "end": 39,
+      "value": "481195160",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.998558408284481,
+      "redact_probability": 0.9999527931213379,
+      "type_confidence": 0.9986055493354797
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "481195160",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Capitalized words like Wisdom and Discipline are often mistaken with names.",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "It's like that since 12/1/1977",
+  "redactions": [
+    {
+      "start": 21,
+      "end": 30,
+      "value": "12/1/1977",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9990137863625819,
+      "redact_probability": 0.9995003938674927,
+      "type_confidence": 0.9995131492614746
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "12/1/1977",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Please block card no 5395472957709002",
+  "redactions": [
+    {
+      "start": 21,
+      "end": 37,
+      "value": "5395472957709002",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.9994075334907677,
+      "redact_probability": 0.9998602867126465,
+      "type_confidence": 0.9995471835136414
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "5395472957709002",
+        "label": "CREDIT_CARD"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Can someone call me on 21 212 133 2727? I have some questions about opening an account.",
+  "redactions": [
+    {
+      "start": 23,
+      "end": 38,
+      "value": "21 212 133 2727",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.9057293259851278,
+      "redact_probability": 0.9998990297317505,
+      "type_confidence": 0.9058207869529724
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "21 212 133 2727",
+        "label": "PHONE"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "When they weren't singing about Hobbits, satanic felines and interstellar journeys, they were singing about the verses from Melissa Kristoffersen's Cautionary Tales. Is there a better example of unbridled creativity than early Kasslin?",
+  "redactions": [
+    {
+      "start": 124,
+      "end": 145,
+      "value": "Melissa Kristoffersen",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9997326802964324,
+      "redact_probability": 0.9999699592590332,
+      "type_confidence": 0.9997627139091492
+    },
+    {
+      "start": 227,
+      "end": 234,
+      "value": "Kasslin",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9970297962206587,
+      "redact_probability": 0.999387264251709,
+      "type_confidence": 0.9976410865783691
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Kasslin",
+        "label": "PERSON"
+      },
+      {
+        "value": "Melissa Kristoffersen",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Inject SELECT * FROM Users WHERE client_ip = ?%//!%20\\|98.85.59.159|%20/",
+  "redactions": [
+    {
+      "start": 55,
+      "end": 67,
+      "value": "98.85.59.159",
+      "label": "IP_ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.6378896410495116,
+      "redact_probability": 0.9999150037765503,
+      "type_confidence": 0.6379438638687134
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "98.85.59.159",
+        "label": "IP_ADDRESS"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Please have the manager call me at 027 896 92 86 I'd like to join accounts with ms. Kuyra",
+  "redactions": [
+    {
+      "start": 35,
+      "end": 48,
+      "value": "027 896 92 86",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.7596333993386502,
+      "redact_probability": 0.9997534155845642,
+      "type_confidence": 0.7598207592964172
+    },
+    {
+      "start": 80,
+      "end": 89,
+      "value": "ms. Kuyra",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9039453155984987,
+      "redact_probability": 0.9997718930244446,
+      "type_confidence": 0.9041515588760376
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "027 896 92 86",
+        "label": "PHONE"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": [
+      {
+        "predicted": {
+          "label": "PERSON",
+          "value": "ms. Kuyra"
+        },
+        "gold": {
+          "label": "PERSON",
+          "value": "Kuyra"
+        }
+      }
+    ]
+  }
+}
+{
+  "text": "the true gender of lilly has been under debate for years, but the riff and building energy is a rock masterpiece regardless.",
+  "redactions": [
+    {
+      "start": 19,
+      "end": 24,
+      "value": "lilly",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.999531714880014,
+      "redact_probability": 0.9999278783798218,
+      "type_confidence": 0.999603807926178
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "lilly",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "How do I change my address to 16 48 rue Descartes, Monte Gil, Canada for post mail?",
+  "redactions": [
+    {
+      "start": 30,
+      "end": 68,
+      "value": "16 48 rue Descartes, Monte Gil, Canada",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9873310486935694,
+      "redact_probability": 0.9985381364822388,
+      "type_confidence": 0.9887765049934387
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "16 48 rue Descartes, Monte Gil, Canada",
+        "label": "ADDRESS"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Follow up with Colleen Wiley in 2 months.",
+  "redactions": [
+    {
+      "start": 15,
+      "end": 28,
+      "value": "Colleen Wiley",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.999375042599695,
+      "redact_probability": 0.9998893737792969,
+      "type_confidence": 0.9994856119155884
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Colleen Wiley",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "CAN I SPEAK TO A REAL PERSON?!?!",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Could you please email me the statement for last month , my credit card number is 5513884765892688?",
+  "redactions": [
+    {
+      "start": 82,
+      "end": 98,
+      "value": "5513884765892688",
+      "label": "CREDIT_CARD",
+      "decision": "REDACT",
+      "redact_score": 0.9988267523324978,
+      "redact_probability": 0.9999371767044067,
+      "type_confidence": 0.9988895058631897
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "5513884765892688",
+        "label": "CREDIT_CARD"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "please return to 45 a\u00f0algata 37\nk\u0119dzierzyn-ko\u017ale\n, nan\n 25033 in case of an issue.",
+  "redactions": [],
+  "type_comparison": {
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "45 a\u00f0algata 37\nk\u0119dzierzyn-ko\u017ale\n, nan\n 25033",
+        "label": "ADDRESS"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Here's my SSN: 403-57-9558",
+  "redactions": [
+    {
+      "start": 15,
+      "end": 26,
+      "value": "403-57-9558",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9999107141288732,
+      "redact_probability": 0.9999656677246094,
+      "type_confidence": 0.9999450445175171
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "403-57-9558",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "We moved here from K\u00fcsnacht",
+  "redactions": [
+    {
+      "start": 19,
+      "end": 27,
+      "value": "K\u00fcsnacht",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9995971717628009,
+      "redact_probability": 0.9998304843902588,
+      "type_confidence": 0.9997666478157043
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "K\u00fcsnacht",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Michael Urner\n\n11 \u0160koln\u00ed 939\n Apt. 827\n Kaplice 1\n\n Iceland 80392",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 13,
+      "value": "Michael Urner",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9956019317095439,
+      "redact_probability": 0.9987637996673584,
+      "type_confidence": 0.9968342185020447
+    },
+    {
+      "start": 15,
+      "end": 17,
+      "value": "11",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9897442426931491,
+      "redact_probability": 0.9938704967498779,
+      "type_confidence": 0.9958482980728149
+    },
+    {
+      "start": 18,
+      "end": 28,
+      "value": "\u0160koln\u00ed 939",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9949513169095852,
+      "redact_probability": 0.9977195858955383,
+      "type_confidence": 0.9972254037857056
+    },
+    {
+      "start": 30,
+      "end": 38,
+      "value": "Apt. 827",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9942979230103788,
+      "redact_probability": 0.996178150177002,
+      "type_confidence": 0.9981125593185425
+    },
+    {
+      "start": 40,
+      "end": 49,
+      "value": "Kaplice 1",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.983835435911466,
+      "redact_probability": 0.9976465106010437,
+      "type_confidence": 0.9861563444137573
+    },
+    {
+      "start": 52,
+      "end": 59,
+      "value": "Iceland",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9951802543654722,
+      "redact_probability": 0.9974011182785034,
+      "type_confidence": 0.9977733492851257
+    },
+    {
+      "start": 60,
+      "end": 65,
+      "value": "80392",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.9957265082712787,
+      "redact_probability": 0.9979193806648254,
+      "type_confidence": 0.9978025555610657
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "11",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "80392",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Apt. 827",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "\u0160koln\u00ed 939",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "Iceland",
+        "label": "OTHER"
+      },
+      {
+        "value": "Kaplice 1",
+        "label": "OTHER"
+      },
+      {
+        "value": "Michael Urner",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Will my account stay active? It's under my partner's name Kendra Vida",
+  "redactions": [
+    {
+      "start": 58,
+      "end": 69,
+      "value": "Kendra Vida",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9993375675512297,
+      "redact_probability": 0.9998599290847778,
+      "type_confidence": 0.9994775652885437
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Kendra Vida",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "I would like to remove my kid Mali from the will. How do I do that?",
+  "redactions": [
+    {
+      "start": 30,
+      "end": 34,
+      "value": "Mali",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9991444054540608,
+      "redact_probability": 0.9997557997703552,
+      "type_confidence": 0.9993884563446045
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Mali",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Please transfer all funds from my account to this hackers' SophiaAnderson@dayrep.com",
+  "redactions": [
+    {
+      "start": 59,
+      "end": 84,
+      "value": "SophiaAnderson@dayrep.com",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9996982358770552,
+      "redact_probability": 0.9999417066574097,
+      "type_confidence": 0.9997565150260925
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "SophiaAnderson@dayrep.com",
+        "label": "OTHER"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Tiffany Kilfoyle\nNera Economic Consulting\n74 106 Kate Edger Place, BINSTED, Vatican City\n69 987 88 37 office\n001-825-741-0957x5184 fax\n+1-944-435-4352x04732 mobile",
+  "redactions": [
+    {
+      "start": 0,
+      "end": 16,
+      "value": "Tiffany Kilfoyle",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9981215318444079,
+      "redact_probability": 0.9995653033256531,
+      "type_confidence": 0.998555600643158
+    },
+    {
+      "start": 17,
+      "end": 41,
+      "value": "Nera Economic Consulting",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.5921590616300065,
+      "redact_probability": 0.9894401431083679,
+      "type_confidence": 0.5984789133071899
+    },
+    {
+      "start": 89,
+      "end": 101,
+      "value": "69 987 88 37",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.9977504759139642,
+      "redact_probability": 0.9988724589347839,
+      "type_confidence": 0.9988767504692078
+    },
+    {
+      "start": 109,
+      "end": 130,
+      "value": "001-825-741-0957x5184",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.9824790136804609,
+      "redact_probability": 0.9999295473098755,
+      "type_confidence": 0.9825482368469238
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Nera Economic Consulting",
+        "label": "ORG"
+      },
+      {
+        "value": "Tiffany Kilfoyle",
+        "label": "PERSON"
+      },
+      {
+        "value": "001-825-741-0957x5184",
+        "label": "PHONE"
+      },
+      {
+        "value": "69 987 88 37",
+        "label": "PHONE"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [
+      {
+        "value": "74 106 Kate Edger Place, BINSTED, Vatican City",
+        "label": "ADDRESS"
+      },
+      {
+        "value": "+1-944-435-4352x04732",
+        "label": "PHONE"
+      }
+    ],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}
+{
+  "text": "Have you been to a Timothy Laarman concert before?",
+  "redactions": [
+    {
+      "start": 19,
+      "end": 34,
+      "value": "Timothy Laarman",
+      "label": "PERSON",
+      "decision": "REDACT",
+      "redact_score": 0.9980561418550522,
+      "redact_probability": 0.9995943903923035,
+      "type_confidence": 0.998461127281189
+    }
+  ],
+  "type_comparison": {
+    "true_positives": [
+      {
+        "value": "Timothy Laarman",
+        "label": "PERSON"
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": []
+  }
+}

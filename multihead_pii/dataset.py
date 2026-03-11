@@ -31,6 +31,25 @@ REGEX_TYPE_MAP = {
     "CREDIT_CARD": CREDIT_CARD_PATTERN,
 }
 
+LABEL_ALIASES = {
+    "PHONE_NUMBER": "PHONE",
+    "TELEPHONE": "PHONE",
+    "ORGANIZATION": "ORG",
+    "IP": "IP_ADDRESS",
+    "IPADDRESS": "IP_ADDRESS",
+    "DATE_TIME": "OTHER",
+    "LOCATION": "OTHER",
+    "CITY": "OTHER",
+    "COUNTRY": "OTHER",
+    "STATE": "OTHER",
+    "ZIPCODE": "ADDRESS",
+    "ZIP_CODE": "ADDRESS",
+    "POSTAL_CODE": "ADDRESS",
+    "FIRST_NAME": "PERSON",
+    "LAST_NAME": "PERSON",
+    "NAME": "PERSON",
+}
+
 
 @dataclass
 class MultiHeadExample:
@@ -94,6 +113,69 @@ def _extract_value(text: str, start: int, end: int) -> str:
     safe_start = max(0, min(start, len(text)))
     safe_end = max(safe_start, min(end, len(text)))
     return text[safe_start:safe_end]
+
+
+def _normalize_label(raw_label: object) -> Optional[str]:
+    if not isinstance(raw_label, str):
+        return None
+    label = raw_label.strip().upper()
+    if not label:
+        return None
+    label = LABEL_ALIASES.get(label, label)
+    if label in TYPE_LABEL_TO_ID:
+        return label
+    return "OTHER"
+
+
+def _normalize_span_dict(span: object, text: str) -> Optional[Dict]:
+    if not isinstance(span, dict):
+        return None
+
+    start = span.get("start")
+    end = span.get("end")
+    if not isinstance(start, int) or not isinstance(end, int):
+        start = span.get("start_position")
+        end = span.get("end_position")
+    if not isinstance(start, int) or not isinstance(end, int):
+        return None
+
+    out: Dict = {"start": start, "end": end}
+    label = _normalize_label(span.get("label"))
+    if label is None:
+        label = _normalize_label(span.get("entity_type"))
+    if label is not None:
+        out["label"] = label
+
+    sensitivity = span.get("sensitivity")
+    if isinstance(sensitivity, str):
+        sensitivity = sensitivity.strip().upper()
+        if sensitivity in SENSITIVITY_LABEL_TO_ID:
+            out["sensitivity"] = sensitivity
+
+    category = span.get("category")
+    if isinstance(category, str):
+        out["category"] = category
+
+    value = span.get("value")
+    if not isinstance(value, str):
+        value = span.get("entity_value")
+    if not isinstance(value, str):
+        value = _extract_value(text, start, end)
+    out["value"] = value
+    return out
+
+
+def _normalize_span_list(spans: object, text: str) -> List[Dict]:
+    if spans is None:
+        return []
+    if not isinstance(spans, list):
+        raise ValueError("spans/items/sensitivity_spans must be a list")
+    out: List[Dict] = []
+    for span in spans:
+        norm = _normalize_span_dict(span, text)
+        if norm is not None:
+            out.append(norm)
+    return out
 
 
 def _collect_gold_type_spans(example: MultiHeadExample) -> List[Dict]:
@@ -186,9 +268,24 @@ def _collect_gold_redact_spans(example: MultiHeadExample) -> List[Dict]:
     return sorted(out.values(), key=lambda row: (row["start"], row["end"]))
 
 
-def _load_jsonl_rows(path: str) -> List[Dict]:
+def _load_rows(path: str) -> List[Dict]:
+    file_path = Path(path)
+    suffix = file_path.suffix.lower()
+    if suffix == ".json":
+        raw = json.loads(file_path.read_text(encoding="utf-8"))
+        if isinstance(raw, dict):
+            return [raw]
+        if isinstance(raw, list):
+            if not all(isinstance(x, dict) for x in raw):
+                raise ValueError(f"{path}: JSON array must contain only objects")
+            return raw
+        raise ValueError(f"{path}: JSON must be object or array of objects")
+
+    if suffix != ".jsonl":
+        raise ValueError(f"{path}: unsupported extension (expected .json or .jsonl)")
+
     rows: List[Dict] = []
-    with Path(path).open("r", encoding="utf-8") as handle:
+    with file_path.open("r", encoding="utf-8") as handle:
         for line_no, raw in enumerate(handle, start=1):
             text = raw.strip()
             if not text:
@@ -213,21 +310,15 @@ def _normalize_rows(
     for idx, row in enumerate(main_rows):
         text = row.get("text")
         if not isinstance(text, str):
-            raise ValueError(f"row {idx}: missing/invalid text")
-        spans = row.get("spans")
-        items = row.get("items")
-        if spans is None:
-            spans = []
-        if items is None:
-            items = []
-        if not isinstance(spans, list):
-            raise ValueError(f"row {idx}: spans must be a list")
-        if not isinstance(items, list):
-            raise ValueError(f"row {idx}: items must be a list")
+            text = row.get("full_text")
+        if not isinstance(text, str):
+            raise ValueError(f"row {idx}: missing/invalid text or full_text")
+        spans = _normalize_span_list(row.get("spans"), text)
+        items = _normalize_span_list(row.get("items"), text)
         companion = sensitivity_by_index.get(idx, {})
-        companion_spans = companion.get("sensitivity_spans", []) if isinstance(companion, dict) else []
-        if not isinstance(companion_spans, list):
-            raise ValueError(f"sensitivity row {idx}: sensitivity_spans must be a list")
+        companion_spans = []
+        if isinstance(companion, dict):
+            companion_spans = _normalize_span_list(companion.get("sensitivity_spans", []), text)
         examples.append(
             MultiHeadExample(
                 text=text,
@@ -467,8 +558,8 @@ class JsonlMultiHeadDataset(Dataset):
         lookalike_redact_target: float = 0.8,
         no_info_keep_target: float = 1.0,
     ):
-        main_rows = _load_jsonl_rows(path)
-        sensitivity_rows = _load_jsonl_rows(sensitivity_path) if sensitivity_path else None
+        main_rows = _load_rows(path)
+        sensitivity_rows = _load_rows(sensitivity_path) if sensitivity_path else None
         if sensitivity_rows and len(sensitivity_rows) != len(main_rows):
             raise ValueError(
                 "Sensitivity companion row count mismatch: "

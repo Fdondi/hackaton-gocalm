@@ -10,6 +10,25 @@ from multihead_pii.type_comparison import ValueKey, compute_value_comparison, ma
 EMAIL_RE = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
 IPV4_RE = re.compile(r"^(?:\d{1,3}\.){3}\d{1,3}$")
 
+LABEL_ALIASES = {
+    "PHONE_NUMBER": "PHONE",
+    "TELEPHONE": "PHONE",
+    "ORGANIZATION": "ORG",
+    "IP": "IP_ADDRESS",
+    "IPADDRESS": "IP_ADDRESS",
+    "DATE_TIME": "OTHER",
+    "LOCATION": "OTHER",
+    "CITY": "OTHER",
+    "COUNTRY": "OTHER",
+    "STATE": "OTHER",
+    "ZIPCODE": "ADDRESS",
+    "ZIP_CODE": "ADDRESS",
+    "POSTAL_CODE": "ADDRESS",
+    "FIRST_NAME": "PERSON",
+    "LAST_NAME": "PERSON",
+    "NAME": "PERSON",
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -65,11 +84,19 @@ def _build_span_key_rows(text: str, rows: List[Dict]) -> List[ValueKey]:
         start = span.get("start")
         end = span.get("end")
         label = span.get("label")
+        if not isinstance(start, int) or not isinstance(end, int):
+            start = span.get("start_position")
+            end = span.get("end_position")
+        if not isinstance(label, str):
+            label = span.get("entity_type")
         if not isinstance(label, str):
             continue
+        label = LABEL_ALIASES.get(label.strip().upper(), label.strip().upper())
         if label == "NONE":
             continue
         value = span.get("value")
+        if not isinstance(value, str):
+            value = span.get("entity_value")
         if not isinstance(value, str):
             if not isinstance(start, int) or not isinstance(end, int):
                 continue
@@ -81,7 +108,7 @@ def _build_span_key_rows(text: str, rows: List[Dict]) -> List[ValueKey]:
 def _gold_rows(gold_row: Dict) -> List[ValueKey]:
     spans = gold_row.get("spans", [])
     items = gold_row.get("items", [])
-    text = gold_row.get("text", "")
+    text = gold_row.get("text", gold_row.get("full_text", ""))
     if not isinstance(text, str):
         text = ""
     return _build_span_key_rows(text, spans if isinstance(spans, list) else []) + _build_span_key_rows(
@@ -91,7 +118,7 @@ def _gold_rows(gold_row: Dict) -> List[ValueKey]:
 
 def _pred_rows(pred_row: Dict) -> List[ValueKey]:
     typed = pred_row.get("typed_predictions", [])
-    text = pred_row.get("text", "")
+    text = pred_row.get("text", pred_row.get("full_text", ""))
     if not isinstance(text, str):
         text = ""
     return _build_span_key_rows(text, typed if isinstance(typed, list) else [])
@@ -153,7 +180,9 @@ def main() -> None:
     for pred_row, gold_row in zip(pred_rows, gold_rows):
         text = pred_row.get("text")
         if not isinstance(text, str):
-            text = gold_row.get("text", "")
+            text = pred_row.get("full_text")
+        if not isinstance(text, str):
+            text = gold_row.get("text", gold_row.get("full_text", ""))
             if not isinstance(text, str):
                 text = ""
 
@@ -169,8 +198,14 @@ def main() -> None:
                 start = span.get("start")
                 end = span.get("end")
                 label = span.get("label")
+                if not isinstance(start, int) or not isinstance(end, int):
+                    start = span.get("start_position")
+                    end = span.get("end_position")
+                if not isinstance(label, str):
+                    label = span.get("entity_type")
                 if not isinstance(start, int) or not isinstance(end, int) or not isinstance(label, str):
                     continue
+                label = LABEL_ALIASES.get(label.strip().upper(), label.strip().upper())
                 if label == "NONE":
                     continue
                 if _is_suspicious_span(text, start, end, label):

@@ -26,6 +26,19 @@ def parse_args() -> argparse.Namespace:
 
 
 def _iter_jsonl(path: Path) -> Iterable[Dict]:
+    if path.suffix.lower() == ".json":
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(raw, dict):
+            yield raw
+            return
+        if isinstance(raw, list):
+            for row in raw:
+                if not isinstance(row, dict):
+                    raise ValueError(f"{path}: JSON array must contain objects")
+                yield row
+            return
+        raise ValueError(f"{path}: JSON must be object or array of objects")
+
     with path.open("r", encoding="utf-8") as handle:
         for line_no, raw in enumerate(handle, start=1):
             text = raw.strip()
@@ -66,7 +79,9 @@ def main() -> None:
     for idx, row in enumerate(rows):
         text = row.get("text")
         if not isinstance(text, str):
-            raise ValueError(f"row {idx}: missing/invalid `text`")
+            text = row.get("full_text")
+        if not isinstance(text, str):
+            raise ValueError(f"row {idx}: missing/invalid `text` or `full_text`")
         for field in fields:
             spans = row.get(field)
             if not isinstance(spans, list):
@@ -76,6 +91,9 @@ def main() -> None:
                     continue
                 start = span.get("start")
                 end = span.get("end")
+                if not isinstance(start, int) or not isinstance(end, int):
+                    start = span.get("start_position")
+                    end = span.get("end_position")
                 if not isinstance(start, int) or not isinstance(end, int):
                     continue
                 extracted = _extract_value(text, start, end)
