@@ -105,12 +105,6 @@ def main() -> None:
     model = _build_model_from_checkpoint(checkpoint, device=device)
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    pretty_output_path = (
-        Path(args.pretty_output)
-        if args.pretty_output
-        else output_path.with_name(f"{output_path.stem}.pretty{output_path.suffix}")
-    )
-    pretty_output_path.parent.mkdir(parents=True, exist_ok=True)
 
     all_rows: List[Dict] = []
     for batch in loader:
@@ -244,12 +238,8 @@ def main() -> None:
 
     with output_path.open("w", encoding="utf-8") as handle:
         for row in all_rows:
-            handle.write(json.dumps(row, ensure_ascii=True) + "\n")
-    with pretty_output_path.open("w", encoding="utf-8") as handle:
-        for row in all_rows:
             handle.write(json.dumps(row, ensure_ascii=True, indent=2) + "\n")
     print(f"saved predictions to {output_path.resolve()}")
-    print(f"saved pretty predictions to {pretty_output_path.resolve()}")
 
 
 if __name__ == "__main__":
