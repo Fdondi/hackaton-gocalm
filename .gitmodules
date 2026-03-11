@@ -1,0 +1,3 @@
+[submodule "external/presidio-research"]
+	path = external/presidio-research
+	url = git@github.com:microsoft/presidio-research.git
