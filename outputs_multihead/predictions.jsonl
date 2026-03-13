@@ -7,9 +7,9 @@
       "value": "(96) 627-277",
       "label": "PHONE",
       "decision": "REDACT",
-      "redact_score": 0.9741183856579667,
-      "redact_probability": 0.9999085664749146,
-      "type_confidence": 0.9742074608802795
+      "redact_score": 0.9908101835352987,
+      "redact_probability": 0.9988399147987366,
+      "type_confidence": 0.9919609427452087
     },
     {
       "start": 79,
@@ -17,9 +17,9 @@
       "value": "ms. Wijtze",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.774094194501977,
-      "redact_probability": 0.9996453523635864,
-      "type_confidence": 0.7743688225746155
+      "redact_score": 0.8829885106887474,
+      "redact_probability": 0.9984318614006042,
+      "type_confidence": 0.8843753337860107
     }
   ],
   "type_comparison": {
@@ -51,14 +51,24 @@
   "text": "billing address: tracy sukhorukova\n    23 8 wressle road suite 771\n   polapit tamar\n    nan\n    77058",
   "redactions": [
     {
+      "start": 0,
+      "end": 7,
+      "value": "billing",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.9488832149773039,
+      "redact_probability": 0.9854328036308289,
+      "type_confidence": 0.9629101157188416
+    },
+    {
       "start": 17,
       "end": 34,
       "value": "tracy sukhorukova",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9979743702609483,
-      "redact_probability": 0.9996620416641235,
-      "type_confidence": 0.9983117580413818
+      "redact_score": 0.9970968887568255,
+      "redact_probability": 0.9994450211524963,
+      "type_confidence": 0.9976505637168884
     },
     {
       "start": 39,
@@ -66,9 +76,29 @@
       "value": "23 8 wressle road suite 771",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.5817983396163129,
-      "redact_probability": 0.8676260709762573,
-      "type_confidence": 0.6705634593963623
+      "redact_score": 0.9827841180201347,
+      "redact_probability": 0.9955066442489624,
+      "type_confidence": 0.987220048904419
+    },
+    {
+      "start": 70,
+      "end": 83,
+      "value": "polapit tamar",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.9466042427184149,
+      "redact_probability": 0.9867141842842102,
+      "type_confidence": 0.9593499898910522
+    },
+    {
+      "start": 88,
+      "end": 91,
+      "value": "nan",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.7592465746684596,
+      "redact_probability": 0.9271636605262756,
+      "type_confidence": 0.8188916444778442
     },
     {
       "start": 96,
@@ -76,9 +106,9 @@
       "value": "77058",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9843355459903407,
-      "redact_probability": 0.9971820116043091,
-      "type_confidence": 0.9871172308921814
+      "redact_score": 0.873311711531862,
+      "redact_probability": 0.9855610728263855,
+      "type_confidence": 0.8861061334609985
     }
   ],
   "type_comparison": {
@@ -96,14 +126,15 @@
         "label": "PERSON"
       }
     ],
-    "false_positives": [],
+    "false_positives": [
+      {
+        "value": "billing",
+        "label": "ORG"
+      }
+    ],
     "false_negatives": [
       {
         "value": "23",
-        "label": "ADDRESS"
-      },
-      {
-        "value": "nan",
         "label": "ADDRESS"
       },
       {
@@ -111,7 +142,18 @@
         "label": "ADDRESS"
       }
     ],
-    "type_mismatches": [],
+    "type_mismatches": [
+      {
+        "predicted": {
+          "label": "OTHER",
+          "value": "nan"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "nan"
+        }
+      }
+    ],
     "value_subsets": [],
     "value_supersets": [
       {
@@ -136,9 +178,9 @@
       "value": "5213591727586604",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.9996733333159469,
-      "redact_probability": 0.9998190999031067,
-      "type_confidence": 0.9998542070388794
+      "redact_score": 0.9938961667321777,
+      "redact_probability": 0.9974926710128784,
+      "type_confidence": 0.9963944554328918
     }
   ],
   "type_comparison": {
@@ -176,9 +218,9 @@
       "value": "Labor Day",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.8556017629052377,
-      "redact_probability": 0.8800963163375854,
-      "type_confidence": 0.9721683263778687
+      "redact_score": 0.6131307751495108,
+      "redact_probability": 0.7939745783805847,
+      "type_confidence": 0.7722297310829163
     },
     {
       "start": 113,
@@ -186,9 +228,9 @@
       "value": "Blaketown",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9989335996320925,
-      "redact_probability": 0.9994567036628723,
-      "type_confidence": 0.9994766116142273
+      "redact_score": 0.9943407064766241,
+      "redact_probability": 0.9983590245246887,
+      "type_confidence": 0.9959750771522522
     }
   ],
   "type_comparison": {
@@ -219,9 +261,9 @@
       "value": "john",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.998067552115053,
-      "redact_probability": 0.9993583559989929,
-      "type_confidence": 0.9987083673477173
+      "redact_score": 0.9852946299133514,
+      "redact_probability": 0.9952080845832825,
+      "type_confidence": 0.9900388121604919
     },
     {
       "start": 15,
@@ -229,9 +271,9 @@
       "value": "shamhan",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9984702418036235,
-      "redact_probability": 0.9995718598365784,
-      "type_confidence": 0.998897910118103
+      "redact_score": 0.9911752674628644,
+      "redact_probability": 0.996785044670105,
+      "type_confidence": 0.9943721294403076
     },
     {
       "start": 36,
@@ -239,9 +281,9 @@
       "value": "46",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9641090221163964,
-      "redact_probability": 0.9775468111038208,
-      "type_confidence": 0.986253559589386
+      "redact_score": 0.9982093794774372,
+      "redact_probability": 0.9994569420814514,
+      "type_confidence": 0.9987517595291138
     },
     {
       "start": 39,
@@ -249,9 +291,9 @@
       "value": "velk\u00fd pr\u016fhon 426",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9934423152490695,
-      "redact_probability": 0.9965183734893799,
-      "type_confidence": 0.9969131946563721
+      "redact_score": 0.9804965118261748,
+      "redact_probability": 0.9927681684494019,
+      "type_confidence": 0.9876389503479004
     },
     {
       "start": 57,
@@ -259,9 +301,9 @@
       "value": "opocnice",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.997352030658142,
-      "redact_probability": 0.9986860156059265,
-      "type_confidence": 0.9986642599105835
+      "redact_score": 0.9904404055745424,
+      "redact_probability": 0.9974504113197327,
+      "type_confidence": 0.9929720759391785
     }
   ],
   "type_comparison": {
@@ -303,9 +345,9 @@
       "value": "4532276644577020",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.9992273091431514,
-      "redact_probability": 0.9995338916778564,
-      "type_confidence": 0.9996932744979858
+      "redact_score": 0.9945513064045173,
+      "redact_probability": 0.9979065656661987,
+      "type_confidence": 0.9966377019882202
     }
   ],
   "type_comparison": {
@@ -331,9 +373,9 @@
       "value": "Filip",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.998927965620318,
-      "redact_probability": 0.9997702240943909,
-      "type_confidence": 0.9991575479507446
+      "redact_score": 0.9920946375945334,
+      "redact_probability": 0.9983165264129639,
+      "type_confidence": 0.9937676191329956
     },
     {
       "start": 15,
@@ -341,9 +383,9 @@
       "value": "Nassaustraat 123",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.998524743818809,
-      "redact_probability": 0.9995920062065125,
-      "type_confidence": 0.9989323019981384
+      "redact_score": 0.9835598539923751,
+      "redact_probability": 0.9941792488098145,
+      "type_confidence": 0.9893184304237366
     }
   ],
   "type_comparison": {
@@ -373,9 +415,9 @@
       "value": "Ronald Pes\u00e4l\u00e4",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.997975938283929,
-      "redact_probability": 0.9993593096733093,
-      "type_confidence": 0.9986157417297363
+      "redact_score": 0.9958545988786227,
+      "redact_probability": 0.9987163543701172,
+      "type_confidence": 0.9971345663070679
     },
     {
       "start": 22,
@@ -383,9 +425,9 @@
       "value": "Tableau Software",
       "label": "ORG",
       "decision": "REDACT",
-      "redact_score": 0.993339220580097,
-      "redact_probability": 0.9986011385917664,
-      "type_confidence": 0.9947307109832764
+      "redact_score": 0.9962864355719248,
+      "redact_probability": 0.9990617632865906,
+      "type_confidence": 0.9972220659255981
     },
     {
       "start": 43,
@@ -393,9 +435,9 @@
       "value": "48",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9891020123137579,
-      "redact_probability": 0.992533802986145,
-      "type_confidence": 0.9965423941612244
+      "redact_score": 0.9975117616702889,
+      "redact_probability": 0.9989610910415649,
+      "type_confidence": 0.9985491633415222
     },
     {
       "start": 46,
@@ -403,9 +445,9 @@
       "value": "107 Rue Abdelaziz Th\u00e2albi",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9863604630900014,
-      "redact_probability": 0.9898608922958374,
-      "type_confidence": 0.9964637160301208
+      "redact_score": 0.92960117017223,
+      "redact_probability": 0.9720277190208435,
+      "type_confidence": 0.9563525319099426
     },
     {
       "start": 76,
@@ -413,9 +455,9 @@
       "value": "Apt. 018",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9934355801328287,
-      "redact_probability": 0.9980035424232483,
-      "type_confidence": 0.995422899723053
+      "redact_score": 0.9815712222056483,
+      "redact_probability": 0.9954366087913513,
+      "type_confidence": 0.9860710501670837
     },
     {
       "start": 89,
@@ -423,9 +465,9 @@
       "value": "El Akarit",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.968733140745055,
-      "redact_probability": 0.9868165850639343,
-      "type_confidence": 0.9816749691963196
+      "redact_score": 0.9972414794582249,
+      "redact_probability": 0.9993622899055481,
+      "type_confidence": 0.997877836227417
     },
     {
       "start": 103,
@@ -433,9 +475,9 @@
       "value": "Denmark",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9919730925718184,
-      "redact_probability": 0.996276319026947,
-      "type_confidence": 0.9956806898117065
+      "redact_score": 0.9916146087873301,
+      "redact_probability": 0.9981212019920349,
+      "type_confidence": 0.9934811592102051
     },
     {
       "start": 111,
@@ -443,9 +485,9 @@
       "value": "15838",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9834334588007643,
-      "redact_probability": 0.9905117154121399,
-      "type_confidence": 0.9928539395332336
+      "redact_score": 0.9882767734131619,
+      "redact_probability": 0.996483325958252,
+      "type_confidence": 0.991764485836029
     }
   ],
   "type_comparison": {
@@ -499,9 +541,9 @@
       "value": "1998-06-28 14:48:14",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9988874864726824,
-      "redact_probability": 0.9999363422393799,
-      "type_confidence": 0.9989510774612427
+      "redact_score": 0.9924249507944793,
+      "redact_probability": 0.9980112314224243,
+      "type_confidence": 0.9944025874137878
     },
     {
       "start": 33,
@@ -509,9 +551,9 @@
       "value": "Kouklia",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9975477605591365,
-      "redact_probability": 0.9987887740135193,
-      "type_confidence": 0.9987574815750122
+      "redact_score": 0.9969358128492729,
+      "redact_probability": 0.9994111061096191,
+      "type_confidence": 0.9975232481956482
     }
   ],
   "type_comparison": {
@@ -541,9 +583,9 @@
       "value": "58.74.121.78",
       "label": "IP_ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9821918353476384,
-      "redact_probability": 0.9997468590736389,
-      "type_confidence": 0.9824405312538147
+      "redact_score": 0.9822532846719199,
+      "redact_probability": 0.9949087500572205,
+      "type_confidence": 0.9872797727584839
     }
   ],
   "type_comparison": {
@@ -562,18 +604,35 @@
 }
 {
   "text": "Just posted a photo http://www.DialForum.co.uk/",
-  "redactions": [],
+  "redactions": [
+    {
+      "start": 20,
+      "end": 46,
+      "value": "http://www.DialForum.co.uk",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.8588154303474766,
+      "redact_probability": 0.9217029213905334,
+      "type_confidence": 0.9317703247070312
+    }
+  ],
   "type_comparison": {
     "true_positives": [],
     "false_positives": [],
-    "false_negatives": [
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
       {
-        "value": "http://www.DialForum.co.uk/",
-        "label": "OTHER"
+        "predicted": {
+          "label": "OTHER",
+          "value": "http://www.DialForum.co.uk"
+        },
+        "gold": {
+          "label": "OTHER",
+          "value": "http://www.DialForum.co.uk/"
+        }
       }
     ],
-    "type_mismatches": [],
-    "value_subsets": [],
     "value_supersets": []
   }
 }
@@ -586,9 +645,9 @@
       "value": "Alexandra",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9987969110936916,
-      "redact_probability": 0.9997028708457947,
-      "type_confidence": 0.999093770980835
+      "redact_score": 0.9949261189623115,
+      "redact_probability": 0.9983343482017517,
+      "type_confidence": 0.9965860843658447
     },
     {
       "start": 34,
@@ -596,9 +655,9 @@
       "value": "Megan Payne",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9984934096572928,
-      "redact_probability": 0.9996634721755981,
-      "type_confidence": 0.9988295435905457
+      "redact_score": 0.9804000720744455,
+      "redact_probability": 0.9928327798843384,
+      "type_confidence": 0.9874775409698486
     }
   ],
   "type_comparison": {
@@ -628,9 +687,9 @@
       "value": "11164",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9839279884444636,
-      "redact_probability": 0.9975335597991943,
-      "type_confidence": 0.9863607883453369
+      "redact_score": 0.9561024449677191,
+      "redact_probability": 0.991845428943634,
+      "type_confidence": 0.9639631509780884
     }
   ],
   "type_comparison": {
@@ -656,9 +715,9 @@
       "value": "5474123209470398",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.9996348343115145,
-      "redact_probability": 0.9998544454574585,
-      "type_confidence": 0.9997803568840027
+      "redact_score": 0.9954078276872806,
+      "redact_probability": 0.9983702301979065,
+      "type_confidence": 0.9970327615737915
     }
   ],
   "type_comparison": {
@@ -681,18 +740,30 @@
   "type_comparison": {
     "true_positives": [],
     "false_positives": [],
-    "false_negatives": [
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
       {
-        "value": "63 30 N. Stadion\nULLINISH\n, nan\n 40839",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "63 30 N. Stadion\nULLINISH"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "63 30 N. Stadion\nULLINISH\n, nan\n 40839"
+        }
       },
       {
-        "value": "75 Auerstrasse 12 Apt. 974 Lyss S\u00c3\u00a3o Tom\u00c3\u00a9 and Pr\u00c3\u00adncipe",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "75 Auerstrasse 12 Apt. 974"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "75 Auerstrasse 12 Apt. 974 Lyss S\u00c3\u00a3o Tom\u00c3\u00a9 and Pr\u00c3\u00adncipe"
+        }
       }
     ],
-    "type_mismatches": [],
-    "value_subsets": [],
     "value_supersets": []
   }
 }
@@ -705,9 +776,9 @@
       "value": "Palhais",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.995470189420935,
-      "redact_probability": 0.9979599714279175,
-      "type_confidence": 0.9975051283836365
+      "redact_score": 0.9931966575464628,
+      "redact_probability": 0.9983336329460144,
+      "type_confidence": 0.9948544502258301
     },
     {
       "start": 38,
@@ -715,9 +786,9 @@
       "value": "Equilar",
       "label": "ORG",
       "decision": "REDACT",
-      "redact_score": 0.9752607524113444,
-      "redact_probability": 0.9992903470993042,
-      "type_confidence": 0.9759533405303955
+      "redact_score": 0.982647802553771,
+      "redact_probability": 0.9948858618736267,
+      "type_confidence": 0.987699031829834
     }
   ],
   "type_comparison": {
@@ -747,9 +818,9 @@
       "value": "Dustin Rivas",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9983255414393852,
-      "redact_probability": 0.9994636178016663,
-      "type_confidence": 0.9988613128662109
+      "redact_score": 0.9899396105913638,
+      "redact_probability": 0.9970539808273315,
+      "type_confidence": 0.9928646087646484
     },
     {
       "start": 168,
@@ -757,9 +828,9 @@
       "value": "Nancy Sommer",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9987837445571301,
-      "redact_probability": 0.9996993541717529,
-      "type_confidence": 0.9990841150283813
+      "redact_score": 0.9917361755564897,
+      "redact_probability": 0.9966526627540588,
+      "type_confidence": 0.9950670003890991
     }
   ],
   "type_comparison": {
@@ -782,23 +853,28 @@
 }
 {
   "text": "I work for Geoscape",
-  "redactions": [],
+  "redactions": [
+    {
+      "start": 11,
+      "end": 19,
+      "value": "Geoscape",
+      "label": "ORG",
+      "decision": "REDACT",
+      "redact_score": 0.9711680656363413,
+      "redact_probability": 0.9921312928199768,
+      "type_confidence": 0.9788705110549927
+    }
+  ],
   "type_comparison": {
-    "true_positives": [],
-    "false_positives": [],
-    "false_negatives": [],
-    "type_mismatches": [
+    "true_positives": [
       {
-        "predicted": {
-          "label": "PERSON",
-          "value": "Geoscape"
-        },
-        "gold": {
-          "label": "ORG",
-          "value": "Geoscape"
-        }
+        "value": "Geoscape",
+        "label": "ORG"
       }
     ],
+    "false_positives": [],
+    "false_negatives": [],
+    "type_mismatches": [],
     "value_subsets": [],
     "value_supersets": []
   }
@@ -812,9 +888,9 @@
       "value": "Janice Brki\u0107 MD",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9955418083512413,
-      "redact_probability": 0.9984835982322693,
-      "type_confidence": 0.9970537424087524
+      "redact_score": 0.9956357397011075,
+      "redact_probability": 0.9987019300460815,
+      "type_confidence": 0.9969298243522644
     }
   ],
   "type_comparison": {
@@ -840,9 +916,9 @@
       "value": "Shelby Araujo",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9975152692845768,
-      "redact_probability": 0.9991645812988281,
-      "type_confidence": 0.9983493089675903
+      "redact_score": 0.9952880020687296,
+      "redact_probability": 0.9988253712654114,
+      "type_confidence": 0.9964584708213806
     },
     {
       "start": 23,
@@ -850,9 +926,9 @@
       "value": "87",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9953352782403186,
-      "redact_probability": 0.9973638653755188,
-      "type_confidence": 0.9979660511016846
+      "redact_score": 0.9986129365682395,
+      "redact_probability": 0.9995666146278381,
+      "type_confidence": 0.9990459084510803
     },
     {
       "start": 26,
@@ -860,9 +936,9 @@
       "value": "Jakobi 69",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.993464649359737,
-      "redact_probability": 0.9969336986541748,
-      "type_confidence": 0.9965202808380127
+      "redact_score": 0.9682732390736071,
+      "redact_probability": 0.9918081164360046,
+      "type_confidence": 0.9762707352638245
     },
     {
       "start": 37,
@@ -870,9 +946,9 @@
       "value": "Laane",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9888345632142084,
-      "redact_probability": 0.9994674324989319,
-      "type_confidence": 0.9893614649772644
+      "redact_score": 0.9905875986506913,
+      "redact_probability": 0.9969039559364319,
+      "type_confidence": 0.993664026260376
     }
   ],
   "type_comparison": {
@@ -910,9 +986,9 @@
       "value": "Hubbard-Thomas",
       "label": "ORG",
       "decision": "REDACT",
-      "redact_score": 0.988816210864826,
-      "redact_probability": 0.9990121126174927,
-      "type_confidence": 0.9897940158843994
+      "redact_score": 0.9868339984056007,
+      "redact_probability": 0.9961599111557007,
+      "type_confidence": 0.9906381368637085
     }
   ],
   "type_comparison": {
@@ -938,19 +1014,9 @@
       "value": "sudanese",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9298054783119056,
-      "redact_probability": 0.9760631918907166,
-      "type_confidence": 0.9526078701019287
-    },
-    {
-      "start": 123,
-      "end": 137,
-      "value": "European Union",
-      "label": "OTHER",
-      "decision": "REDACT",
-      "redact_score": 0.9090713753557722,
-      "redact_probability": 0.9572824835777283,
-      "type_confidence": 0.9496375322341919
+      "redact_score": 0.9867792223535403,
+      "redact_probability": 0.9952675104141235,
+      "type_confidence": 0.9914713501930237
     }
   ],
   "type_comparison": {
@@ -963,11 +1029,7 @@
     "false_positives": [
       {
         "value": "29 March 2017",
-        "label": "OTHER"
-      },
-      {
-        "value": "European Union",
-        "label": "OTHER"
+        "label": "ADDRESS"
       }
     ],
     "false_negatives": [],
@@ -985,9 +1047,9 @@
       "value": "LeaVLind@superrito.com",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9998316797237408,
-      "redact_probability": 0.9999778270721436,
-      "type_confidence": 0.9998538494110107
+      "redact_score": 0.9773848784012635,
+      "redact_probability": 0.990388810634613,
+      "type_confidence": 0.9868698716163635
     }
   ],
   "type_comparison": {
@@ -1049,9 +1111,9 @@
       "value": "4556156821609393",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.9959885107064537,
-      "redact_probability": 0.9999643564224243,
-      "type_confidence": 0.9960240125656128
+      "redact_score": 0.9803459346154142,
+      "redact_probability": 0.9904506802558899,
+      "type_confidence": 0.989797830581665
     }
   ],
   "type_comparison": {
@@ -1062,14 +1124,20 @@
       }
     ],
     "false_positives": [],
-    "false_negatives": [
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
       {
-        "value": "52 Ibirapita 8057\nErwetegem\n, VOV\n Serbia 23823",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "wetegem\n, VOV\n Serbia 23823"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "52 Ibirapita 8057\nErwetegem\n, VOV\n Serbia 23823"
+        }
       }
     ],
-    "type_mismatches": [],
-    "value_subsets": [],
     "value_supersets": []
   }
 }
@@ -1082,9 +1150,9 @@
       "value": "kristin crni\u0107",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9946310389485724,
-      "redact_probability": 0.9979775547981262,
-      "type_confidence": 0.9966467022895813
+      "redact_score": 0.9961779855120412,
+      "redact_probability": 0.999311089515686,
+      "type_confidence": 0.9968647360801697
     },
     {
       "start": 15,
@@ -1092,9 +1160,9 @@
       "value": "98",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9918265610217247,
-      "redact_probability": 0.9948745369911194,
-      "type_confidence": 0.9969363212585449
+      "redact_score": 0.9990289398027876,
+      "redact_probability": 0.9998273253440857,
+      "type_confidence": 0.9992014765739441
     },
     {
       "start": 18,
@@ -1102,9 +1170,9 @@
       "value": "\u00e1rp\u00e1d fejedelem \u00fatja 45.",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9957804669843995,
-      "redact_probability": 0.9976629018783569,
-      "type_confidence": 0.9981131553649902
+      "redact_score": 0.896792020075452,
+      "redact_probability": 0.9522144198417664,
+      "type_confidence": 0.9417963027954102
     },
     {
       "start": 44,
@@ -1112,9 +1180,9 @@
       "value": "apt. 614",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9917668912456179,
-      "redact_probability": 0.995180606842041,
-      "type_confidence": 0.9965697526931763
+      "redact_score": 0.9683926258452189,
+      "redact_probability": 0.9940000772476196,
+      "type_confidence": 0.9742379784584045
     },
     {
       "start": 54,
@@ -1122,9 +1190,9 @@
       "value": "pom\u00e1z",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9948428742706916,
-      "redact_probability": 0.9973623156547546,
-      "type_confidence": 0.9974738955497742
+      "redact_score": 0.9748256244393829,
+      "redact_probability": 0.9915508031845093,
+      "type_confidence": 0.9831323027610779
     },
     {
       "start": 62,
@@ -1132,9 +1200,9 @@
       "value": "tunisia",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.99110792235372,
-      "redact_probability": 0.9967971444129944,
-      "type_confidence": 0.9942924976348877
+      "redact_score": 0.9731633797017771,
+      "redact_probability": 0.9888661503791809,
+      "type_confidence": 0.9841204285621643
     },
     {
       "start": 70,
@@ -1142,9 +1210,9 @@
       "value": "13222",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9477362811170806,
-      "redact_probability": 0.9710062146186829,
-      "type_confidence": 0.9760352373123169
+      "redact_score": 0.982075014848121,
+      "redact_probability": 0.9960272312164307,
+      "type_confidence": 0.9859921336174011
     }
   ],
   "type_comparison": {
@@ -1194,9 +1262,9 @@
       "value": "4716952653167634",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.9991562223433448,
-      "redact_probability": 0.999848484992981,
-      "type_confidence": 0.9993076324462891
+      "redact_score": 0.9844623228028127,
+      "redact_probability": 0.9933023452758789,
+      "type_confidence": 0.9911003708839417
     }
   ],
   "type_comparison": {
@@ -1222,9 +1290,9 @@
       "value": "Patricia Jekni\u0107",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9994601070806297,
-      "redact_probability": 0.9998156428337097,
-      "type_confidence": 0.99964439868927
+      "redact_score": 0.996802479095706,
+      "redact_probability": 0.9990660548210144,
+      "type_confidence": 0.9977343082427979
     },
     {
       "start": 49,
@@ -1232,9 +1300,9 @@
       "value": "Lauren",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9992331783700905,
-      "redact_probability": 0.9998055100440979,
-      "type_confidence": 0.9994275569915771
+      "redact_score": 0.9975415991694412,
+      "redact_probability": 0.999481737613678,
+      "type_confidence": 0.9980588555335999
     }
   ],
   "type_comparison": {
@@ -1264,9 +1332,9 @@
       "value": "Dr.",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9752626059401592,
-      "redact_probability": 0.9917615652084351,
-      "type_confidence": 0.9833639860153198
+      "redact_score": 0.991981732082472,
+      "redact_probability": 0.9993818998336792,
+      "type_confidence": 0.9925952553749084
     },
     {
       "start": 4,
@@ -1274,9 +1342,9 @@
       "value": "Nielsen",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.997973681173292,
-      "redact_probability": 0.9993506073951721,
-      "type_confidence": 0.9986221790313721
+      "redact_score": 0.9895615186280757,
+      "redact_probability": 0.9958587288856506,
+      "type_confidence": 0.9936766028404236
     },
     {
       "start": 48,
@@ -1284,9 +1352,9 @@
       "value": "\u00dast\u00ed nad Labem 2",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.6226539969488414,
-      "redact_probability": 0.999711811542511,
-      "type_confidence": 0.6228334903717041
+      "redact_score": 0.5463912117339049,
+      "redact_probability": 0.994579553604126,
+      "type_confidence": 0.5493690371513367
     }
   ],
   "type_comparison": {
@@ -1339,9 +1407,9 @@
       "value": "Frank",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9978898899971114,
-      "redact_probability": 0.9992399215698242,
-      "type_confidence": 0.9986489415168762
+      "redact_score": 0.983271627048623,
+      "redact_probability": 0.9929145574569702,
+      "type_confidence": 0.990288257598877
     },
     {
       "start": 16,
@@ -1349,9 +1417,9 @@
       "value": "Tyler",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9980685531757061,
-      "redact_probability": 0.9992732405662537,
-      "type_confidence": 0.998794436454773
+      "redact_score": 0.9934382050669406,
+      "redact_probability": 0.9971914887428284,
+      "type_confidence": 0.9962361454963684
     },
     {
       "start": 35,
@@ -1359,9 +1427,9 @@
       "value": "03",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9817824886887436,
-      "redact_probability": 0.988923192024231,
-      "type_confidence": 0.9927793145179749
+      "redact_score": 0.9898038785205543,
+      "redact_probability": 0.9959734082221985,
+      "type_confidence": 0.9938055276870728
     },
     {
       "start": 38,
@@ -1369,9 +1437,9 @@
       "value": "\u03a0\u03bb\u03b1\u03c4\u03b5\u03af\u03b1 \u039c\u03b1\u03b2\u03af\u03bb\u03b7 170",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.974510488859778,
-      "redact_probability": 0.9822649955749512,
-      "type_confidence": 0.9921054840087891
+      "redact_score": 0.918538077082804,
+      "redact_probability": 0.963514506816864,
+      "type_confidence": 0.9533204436302185
     }
   ],
   "type_comparison": {
@@ -1393,15 +1461,26 @@
         "label": "PERSON"
       }
     ],
-    "false_positives": [],
-    "false_negatives": [
+    "false_positives": [
       {
-        "value": "\u0391\u0393\u039b\u0391\u039d\u03a4\u0396\u0399\u0391 (\u0391\u0393\u039b\u0391\u0393\u0393\u0399\u0391)",
+        "value": "\u039b\u0391\u039d\u03a4\u0396\u0399\u0391",
         "label": "OTHER"
       }
     ],
+    "false_negatives": [],
     "type_mismatches": [],
-    "value_subsets": [],
+    "value_subsets": [
+      {
+        "predicted": {
+          "label": "OTHER",
+          "value": "\u039b\u0391\u0393\u0393\u0399\u0391"
+        },
+        "gold": {
+          "label": "OTHER",
+          "value": "\u0391\u0393\u039b\u0391\u039d\u03a4\u0396\u0399\u0391 (\u0391\u0393\u039b\u0391\u0393\u0393\u0399\u0391)"
+        }
+      }
+    ],
     "value_supersets": []
   }
 }
@@ -1414,9 +1493,9 @@
       "value": "Brian Andersson",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9992910838607472,
-      "redact_probability": 0.9998565912246704,
-      "type_confidence": 0.9994344115257263
+      "redact_score": 0.9970448546216346,
+      "redact_probability": 0.9990556836128235,
+      "type_confidence": 0.9979872703552246
     }
   ],
   "type_comparison": {
@@ -1442,9 +1521,9 @@
       "value": "Arne",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9985920542469557,
-      "redact_probability": 0.9996168613433838,
-      "type_confidence": 0.9989748001098633
+      "redact_score": 0.9958919719136539,
+      "redact_probability": 0.9987232089042664,
+      "type_confidence": 0.9971651434898376
     }
   ],
   "type_comparison": {
@@ -1455,14 +1534,20 @@
       }
     ],
     "false_positives": [],
-    "false_negatives": [
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
       {
-        "value": "06 Reyes Cat\u00f3licos 17\nSaarj\u00e4rve, JN 91851",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "yes Cat\u00f3licos 17\nSaarj\u00e4rve"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "06 Reyes Cat\u00f3licos 17\nSaarj\u00e4rve, JN 91851"
+        }
       }
     ],
-    "type_mismatches": [],
-    "value_subsets": [],
     "value_supersets": []
   }
 }
@@ -1475,9 +1560,9 @@
       "value": "(07) 5331 0577",
       "label": "PHONE",
       "decision": "REDACT",
-      "redact_score": 0.957801278000808,
-      "redact_probability": 0.999909520149231,
-      "type_confidence": 0.9578879475593567
+      "redact_score": 0.9843173944236341,
+      "redact_probability": 0.9977056384086609,
+      "type_confidence": 0.9865809679031372
     }
   ],
   "type_comparison": {
@@ -1499,23 +1584,13 @@
   "redactions": [
     {
       "start": 0,
-      "end": 3,
-      "value": "Mr.",
-      "label": "PERSON",
-      "decision": "REDACT",
-      "redact_score": 0.9837542616481016,
-      "redact_probability": 0.9928267002105713,
-      "type_confidence": 0.9908620119094849
-    },
-    {
-      "start": 4,
       "end": 13,
-      "value": "Fernandez",
+      "value": "Mr. Fernandez",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9981349908537638,
-      "redact_probability": 0.9993414282798767,
-      "type_confidence": 0.9987927675247192
+      "redact_score": 0.9904056299634796,
+      "redact_probability": 0.9978266358375549,
+      "type_confidence": 0.9925628304481506
     },
     {
       "start": 50,
@@ -1523,9 +1598,9 @@
       "value": "Monroe",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.99839349317282,
-      "redact_probability": 0.9990161657333374,
-      "type_confidence": 0.9993767142295837
+      "redact_score": 0.9973914072317278,
+      "redact_probability": 0.9997161030769348,
+      "type_confidence": 0.9976746439933777
     }
   ],
   "type_comparison": {
@@ -1578,9 +1653,9 @@
       "value": "Nugeri",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9976274074155072,
-      "redact_probability": 0.9987227320671082,
-      "type_confidence": 0.9989032745361328
+      "redact_score": 0.9950586859875443,
+      "redact_probability": 0.9989523887634277,
+      "type_confidence": 0.9961022138595581
     },
     {
       "start": 55,
@@ -1588,9 +1663,9 @@
       "value": "Niger",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9991926109031901,
-      "redact_probability": 0.9997647404670715,
-      "type_confidence": 0.9994277358055115
+      "redact_score": 0.9960780904065558,
+      "redact_probability": 0.9994256496429443,
+      "type_confidence": 0.9966505169868469
     }
   ],
   "type_comparison": {
@@ -1620,9 +1695,9 @@
       "value": "4716402611454369",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.9996232149324449,
-      "redact_probability": 0.9998102784156799,
-      "type_confidence": 0.99981290102005
+      "redact_score": 0.9953616222716555,
+      "redact_probability": 0.9984305500984192,
+      "type_confidence": 0.9969262480735779
     },
     {
       "start": 94,
@@ -1630,9 +1705,9 @@
       "value": "Jessica Solomina",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.999503420240444,
-      "redact_probability": 0.9998762607574463,
-      "type_confidence": 0.9996271133422852
+      "redact_score": 0.997278914562095,
+      "redact_probability": 0.9992528557777405,
+      "type_confidence": 0.998024582862854
     }
   ],
   "type_comparison": {
@@ -1662,9 +1737,9 @@
       "value": "5356890925363056",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.99934258775275,
-      "redact_probability": 0.9999560117721558,
-      "type_confidence": 0.9993865489959717
+      "redact_score": 0.9908134775014759,
+      "redact_probability": 0.9956238865852356,
+      "type_confidence": 0.9951684474945068
     }
   ],
   "type_comparison": {
@@ -1690,9 +1765,9 @@
       "value": "531-21-7351",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9999499326514183,
-      "redact_probability": 0.999983549118042,
-      "type_confidence": 0.9999663829803467
+      "redact_score": 0.9921647187913436,
+      "redact_probability": 0.9970097541809082,
+      "type_confidence": 0.9951404333114624
     }
   ],
   "type_comparison": {
@@ -1718,9 +1793,9 @@
       "value": "Honor\u00e9",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9985956700319285,
-      "redact_probability": 0.9995446801185608,
-      "type_confidence": 0.9990505576133728
+      "redact_score": 0.9854787527408853,
+      "redact_probability": 0.9937168955802917,
+      "type_confidence": 0.9917097687721252
     },
     {
       "start": 31,
@@ -1728,9 +1803,9 @@
       "value": "James",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9961427471151119,
-      "redact_probability": 0.999174177646637,
-      "type_confidence": 0.9969660639762878
+      "redact_score": 0.9948395292477841,
+      "redact_probability": 0.9984886646270752,
+      "type_confidence": 0.9963453412055969
     }
   ],
   "type_comparison": {
@@ -1760,9 +1835,9 @@
       "value": "http://www.NightAgenda.se/",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9998619592766573,
-      "redact_probability": 0.9998973608016968,
-      "type_confidence": 0.9999645948410034
+      "redact_score": 0.973206050029038,
+      "redact_probability": 0.9861630797386169,
+      "type_confidence": 0.9868611693382263
     }
   ],
   "type_comparison": {
@@ -1788,9 +1863,9 @@
       "value": "Ziegelgasse 26",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9690420914455657,
-      "redact_probability": 0.9999431371688843,
-      "type_confidence": 0.9690971970558167
+      "redact_score": 0.9961106599635627,
+      "redact_probability": 0.9990556836128235,
+      "type_confidence": 0.9970521926879883
     }
   ],
   "type_comparison": {
@@ -1816,9 +1891,9 @@
       "value": "Krylova",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9995148627741202,
-      "redact_probability": 0.999876856803894,
-      "type_confidence": 0.9996379613876343
+      "redact_score": 0.9964801264599821,
+      "redact_probability": 0.9988228678703308,
+      "type_confidence": 0.9976544976234436
     }
   ],
   "type_comparison": {
@@ -1840,48 +1915,38 @@
   "redactions": [
     {
       "start": 84,
-      "end": 88,
-      "value": "Mrs.",
-      "label": "PERSON",
-      "decision": "REDACT",
-      "redact_score": 0.9941381487761305,
-      "redact_probability": 0.9977583885192871,
-      "type_confidence": 0.9963716268539429
-    },
-    {
-      "start": 89,
       "end": 100,
-      "value": "Amy Kupcov\u00e1",
+      "value": "Mrs. Amy Kupcov\u00e1",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9992438552898442,
-      "redact_probability": 0.9997766613960266,
-      "type_confidence": 0.9994670748710632
+      "redact_score": 0.9966089240552023,
+      "redact_probability": 0.999342143535614,
+      "type_confidence": 0.9972649812698364
     }
   ],
   "type_comparison": {
-    "true_positives": [
+    "true_positives": [],
+    "false_positives": [],
+    "false_negatives": [
       {
-        "value": "Amy Kupcov\u00e1",
-        "label": "PERSON"
+        "value": "Mrs.",
+        "label": "OTHER"
       }
     ],
-    "false_positives": [],
-    "false_negatives": [],
-    "type_mismatches": [
+    "type_mismatches": [],
+    "value_subsets": [],
+    "value_supersets": [
       {
         "predicted": {
           "label": "PERSON",
-          "value": "Mrs."
+          "value": "Mrs. Amy Kupcov\u00e1"
         },
         "gold": {
-          "label": "OTHER",
-          "value": "Mrs."
+          "label": "PERSON",
+          "value": "Amy Kupcov\u00e1"
         }
       }
-    ],
-    "value_subsets": [],
-    "value_supersets": []
+    ]
   }
 }
 {
@@ -1893,9 +1958,9 @@
       "value": "Roland",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9987526549857648,
-      "redact_probability": 0.9996757507324219,
-      "type_confidence": 0.9990766048431396
+      "redact_score": 0.995803816313213,
+      "redact_probability": 0.9985583424568176,
+      "type_confidence": 0.9972414970397949
     }
   ],
   "type_comparison": {
@@ -1918,14 +1983,20 @@
   "type_comparison": {
     "true_positives": [],
     "false_positives": [],
-    "false_negatives": [
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
       {
-        "value": "39 79 Argyll Road\nNoorderwijk\n, VAN\n Portugal 76970",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "Argyll Road\nNoorderwijk\n,"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "39 79 Argyll Road\nNoorderwijk\n, VAN\n Portugal 76970"
+        }
       }
     ],
-    "type_mismatches": [],
-    "value_subsets": [],
     "value_supersets": []
   }
 }
@@ -1938,9 +2009,9 @@
       "value": "Sumaya",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9978644222130413,
-      "redact_probability": 0.9992935657501221,
-      "type_confidence": 0.9985698461532593
+      "redact_score": 0.9946425130374337,
+      "redact_probability": 0.9982757568359375,
+      "type_confidence": 0.9963604807853699
     }
   ],
   "type_comparison": {
@@ -1966,9 +2037,9 @@
       "value": "12/27/1986",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9988139870632935,
-      "redact_probability": 0.999175488948822,
-      "type_confidence": 0.9996381998062134
+      "redact_score": 0.9874157700657094,
+      "redact_probability": 0.9965487122535706,
+      "type_confidence": 0.990835428237915
     },
     {
       "start": 47,
@@ -1976,9 +2047,9 @@
       "value": "Vestergaard",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9994136633443418,
-      "redact_probability": 0.9998860359191895,
-      "type_confidence": 0.9995275735855103
+      "redact_score": 0.9950141096878937,
+      "redact_probability": 0.9983087778091431,
+      "type_confidence": 0.9966997504234314
     }
   ],
   "type_comparison": {
@@ -2008,9 +2079,9 @@
       "value": "Tiffany G\u00e1bor",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.998272397874647,
-      "redact_probability": 0.9995502829551697,
-      "type_confidence": 0.9987215399742126
+      "redact_score": 0.9963192514339738,
+      "redact_probability": 0.9990255832672119,
+      "type_confidence": 0.9972910284996033
     },
     {
       "start": 87,
@@ -2018,9 +2089,9 @@
       "value": "Sandberg",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9992533418794807,
-      "redact_probability": 0.9997312426567078,
-      "type_confidence": 0.9995219707489014
+      "redact_score": 0.9865347424245492,
+      "redact_probability": 0.9938967823982239,
+      "type_confidence": 0.9925927519798279
     }
   ],
   "type_comparison": {
@@ -2050,9 +2121,9 @@
       "value": "594-62-0140",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.999969124965645,
-      "redact_probability": 0.9999927282333374,
-      "type_confidence": 0.999976396560669
+      "redact_score": 0.9939563336868389,
+      "redact_probability": 0.9979356527328491,
+      "type_confidence": 0.9960124492645264
     }
   ],
   "type_comparison": {
@@ -2078,9 +2149,9 @@
       "value": "Poland",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9990220466164743,
-      "redact_probability": 0.99965500831604,
-      "type_confidence": 0.999366819858551
+      "redact_score": 0.9980579301363406,
+      "redact_probability": 0.9997753500938416,
+      "type_confidence": 0.9982821941375732
     },
     {
       "start": 65,
@@ -2088,9 +2159,9 @@
       "value": "Eklund",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9987707158561534,
-      "redact_probability": 0.999664306640625,
-      "type_confidence": 0.9991061091423035
+      "redact_score": 0.9930058912563133,
+      "redact_probability": 0.9971675276756287,
+      "type_confidence": 0.9958265423774719
     }
   ],
   "type_comparison": {
@@ -2132,9 +2203,9 @@
       "value": "Mrs. Ayers",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9135413708577573,
-      "redact_probability": 0.9626455903053284,
-      "type_confidence": 0.9489903450012207
+      "redact_score": 0.9928445842420466,
+      "redact_probability": 0.9983593821525574,
+      "type_confidence": 0.9944761395454407
     }
   ],
   "type_comparison": {
@@ -2171,9 +2242,9 @@
       "value": "Jonak",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.999275387621708,
-      "redact_probability": 0.9997416138648987,
-      "type_confidence": 0.9995336532592773
+      "redact_score": 0.9886432810537826,
+      "redact_probability": 0.9951896667480469,
+      "type_confidence": 0.9934219717979431
     }
   ],
   "type_comparison": {
@@ -2199,9 +2270,9 @@
       "value": "Hubbard, Fox and Gillespie",
       "label": "ORG",
       "decision": "REDACT",
-      "redact_score": 0.6283910866294704,
-      "redact_probability": 0.9995971322059631,
-      "type_confidence": 0.6286443471908569
+      "redact_score": 0.6963483374843626,
+      "redact_probability": 0.9219854474067688,
+      "type_confidence": 0.7552704215049744
     }
   ],
   "type_comparison": {
@@ -2227,9 +2298,9 @@
       "value": "Taylor Barab\u00e1s",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9895311358575292,
-      "redact_probability": 0.995854914188385,
-      "type_confidence": 0.9936498999595642
+      "redact_score": 0.9940983575404374,
+      "redact_probability": 0.998865008354187,
+      "type_confidence": 0.9952279329299927
     },
     {
       "start": 15,
@@ -2237,19 +2308,39 @@
       "value": "Areavibes Inc",
       "label": "ORG",
       "decision": "REDACT",
-      "redact_score": 0.654740321560439,
-      "redact_probability": 0.9914193153381348,
-      "type_confidence": 0.6604070663452148
+      "redact_score": 0.9457261569410633,
+      "redact_probability": 0.9758440256118774,
+      "type_confidence": 0.9691365957260132
     },
     {
-      "start": 58,
-      "end": 77,
-      "value": ", nan\n Canada 32586",
+      "start": 29,
+      "end": 57,
+      "value": "27 2279 President St\nGleniti",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.6966526455746589,
-      "redact_probability": 0.861828088760376,
-      "type_confidence": 0.8083429336547852
+      "redact_score": 0.7453207430237399,
+      "redact_probability": 0.8823497891426086,
+      "type_confidence": 0.8446998596191406
+    },
+    {
+      "start": 65,
+      "end": 71,
+      "value": "Canada",
+      "label": "OTHER",
+      "decision": "REDACT",
+      "redact_score": 0.5785072042892807,
+      "redact_probability": 0.8660926818847656,
+      "type_confidence": 0.6679506897926331
+    },
+    {
+      "start": 72,
+      "end": 77,
+      "value": "32586",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.8749826323441852,
+      "redact_probability": 0.9464318752288818,
+      "type_confidence": 0.9245067238807678
     },
     {
       "start": 86,
@@ -2257,19 +2348,9 @@
       "value": "041-412-293",
       "label": "PHONE",
       "decision": "REDACT",
-      "redact_score": 0.9861889251489657,
-      "redact_probability": 0.9948264956474304,
-      "type_confidence": 0.9913175106048584
-    },
-    {
-      "start": 98,
-      "end": 102,
-      "value": "Desk",
-      "label": "OTHER",
-      "decision": "REDACT",
-      "redact_score": 0.7045675502684858,
-      "redact_probability": 0.8766762018203735,
-      "type_confidence": 0.8036804795265198
+      "redact_score": 0.99155828549398,
+      "redact_probability": 0.9985692501068115,
+      "type_confidence": 0.9929789900779724
     },
     {
       "start": 104,
@@ -2277,9 +2358,9 @@
       "value": "986.291.2294x751",
       "label": "PHONE",
       "decision": "REDACT",
-      "redact_score": 0.9753339934086718,
-      "redact_probability": 0.9995495676994324,
-      "type_confidence": 0.9757735133171082
+      "redact_score": 0.9854120118431453,
+      "redact_probability": 0.9984105825424194,
+      "type_confidence": 0.9869807362556458
     },
     {
       "start": 126,
@@ -2287,9 +2368,9 @@
       "value": "001-420-335-7509x38548",
       "label": "PHONE",
       "decision": "REDACT",
-      "redact_score": 0.983939933967136,
-      "redact_probability": 0.9998773336410522,
-      "type_confidence": 0.9840606451034546
+      "redact_score": 0.9769726813759299,
+      "redact_probability": 0.9917736649513245,
+      "type_confidence": 0.9850762486457825
     }
   ],
   "type_comparison": {
@@ -2317,7 +2398,15 @@
     ],
     "false_positives": [
       {
+        "value": "32586",
+        "label": "ADDRESS"
+      },
+      {
         "value": "Desk",
+        "label": "ORG"
+      },
+      {
+        "value": "Canada",
         "label": "OTHER"
       }
     ],
@@ -2327,7 +2416,7 @@
       {
         "predicted": {
           "label": "ADDRESS",
-          "value": ", nan\n Canada 32586"
+          "value": "27 2279 President St\nGleniti"
         },
         "gold": {
           "label": "ADDRESS",
@@ -2347,9 +2436,9 @@
       "value": "Duqyaha",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.999049590747358,
-      "redact_probability": 0.9997702240943909,
-      "type_confidence": 0.9992792010307312
+      "redact_score": 0.9925317900001396,
+      "redact_probability": 0.9977737069129944,
+      "type_confidence": 0.9947463870048523
     },
     {
       "start": 19,
@@ -2357,9 +2446,9 @@
       "value": "Janet",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9986878841862783,
-      "redact_probability": 0.999572217464447,
-      "type_confidence": 0.9991152882575989
+      "redact_score": 0.9956486973800693,
+      "redact_probability": 0.9988377690315247,
+      "type_confidence": 0.9968072175979614
     }
   ],
   "type_comparison": {
@@ -2382,22 +2471,45 @@
 }
 {
   "text": "I once lived in 95 Bem rkp. 97. Suite 446, Pozna\u0144, Bolivia 28327. I now live in the corner of Kapelaniestraat 88 and Whittaker Street",
-  "redactions": [],
+  "redactions": [
+    {
+      "start": 94,
+      "end": 133,
+      "value": "Kapelaniestraat 88 and Whittaker Street",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.5723137927598145,
+      "redact_probability": 0.7581939697265625,
+      "type_confidence": 0.754838228225708
+    }
+  ],
   "type_comparison": {
     "true_positives": [],
     "false_positives": [],
-    "false_negatives": [
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
       {
-        "value": "95 Bem rkp. 97. Suite 446, Pozna\u0144, Bolivia 28327",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "Kapelaniestraat 88 and Whittaker Street"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "the corner of Kapelaniestraat 88 and Whittaker Street"
+        }
       },
       {
-        "value": "the corner of Kapelaniestraat 88 and Whittaker Street",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "rkp. 97. Suite 446, Pozna\u0144"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "95 Bem rkp. 97. Suite 446, Pozna\u0144, Bolivia 28327"
+        }
       }
     ],
-    "type_mismatches": [],
-    "value_subsets": [],
     "value_supersets": []
   }
 }
@@ -2410,9 +2522,9 @@
       "value": "Fukunaga",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9994123924716547,
-      "redact_probability": 0.9999334812164307,
-      "type_confidence": 0.9994788765907288
+      "redact_score": 0.9925378650222427,
+      "redact_probability": 0.9972754120826721,
+      "type_confidence": 0.9952495098114014
     }
   ],
   "type_comparison": {
@@ -2435,14 +2547,20 @@
   "type_comparison": {
     "true_positives": [],
     "false_positives": [],
-    "false_negatives": [
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
       {
-        "value": "05 Weblinger G\u00fcrtel 92 Apt. 584 HEILIGENBRUNN France",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "blinger G\u00fcrtel 92 Apt. 584"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "05 Weblinger G\u00fcrtel 92 Apt. 584 HEILIGENBRUNN France"
+        }
       }
     ],
-    "type_mismatches": [],
-    "value_subsets": [],
     "value_supersets": []
   }
 }
@@ -2455,9 +2573,9 @@
       "value": "4539988915720591",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.9989406189189936,
-      "redact_probability": 0.9999690055847168,
-      "type_confidence": 0.9989715814590454
+      "redact_score": 0.9924532170430069,
+      "redact_probability": 0.997433602809906,
+      "type_confidence": 0.995006799697876
     }
   ],
   "type_comparison": {
@@ -2483,9 +2601,9 @@
       "value": "https://TestingStress.pl/",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9998259601273389,
-      "redact_probability": 0.9998695850372314,
-      "type_confidence": 0.9999563694000244
+      "redact_score": 0.9796561849565677,
+      "redact_probability": 0.9901493787765503,
+      "type_confidence": 0.9894024133682251
     }
   ],
   "type_comparison": {
@@ -2511,9 +2629,9 @@
       "value": "19 1755 Nelson Mandela Drive",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.990110524042052,
-      "redact_probability": 0.9998648166656494,
-      "type_confidence": 0.9902443885803223
+      "redact_score": 0.9926351127856172,
+      "redact_probability": 0.9983611702919006,
+      "type_confidence": 0.994264543056488
     }
   ],
   "type_comparison": {
@@ -2550,9 +2668,9 @@
       "value": "Beaufort",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9993220800812352,
-      "redact_probability": 0.9998399019241333,
-      "type_confidence": 0.9994820952415466
+      "redact_score": 0.9941148809196108,
+      "redact_probability": 0.9983805418014526,
+      "type_confidence": 0.9957274198532104
     }
   ],
   "type_comparison": {
@@ -2578,9 +2696,9 @@
       "value": "Bruce Alexander",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9992944737859375,
-      "redact_probability": 0.9998728036880493,
-      "type_confidence": 0.9994215965270996
+      "redact_score": 0.9959927994820639,
+      "redact_probability": 0.9988793730735779,
+      "type_confidence": 0.9971101880073547
     }
   ],
   "type_comparison": {
@@ -2618,9 +2736,9 @@
       "value": "Delvis",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9988712882605384,
-      "redact_probability": 0.9996780157089233,
-      "type_confidence": 0.999193012714386
+      "redact_score": 0.9915290007655599,
+      "redact_probability": 0.9973918199539185,
+      "type_confidence": 0.9941218495368958
     },
     {
       "start": 23,
@@ -2628,9 +2746,9 @@
       "value": "Weight Watchers",
       "label": "ORG",
       "decision": "REDACT",
-      "redact_score": 0.8081574362490684,
-      "redact_probability": 0.9617244601249695,
-      "type_confidence": 0.8403211832046509
+      "redact_score": 0.932338608685086,
+      "redact_probability": 0.9695707559585571,
+      "type_confidence": 0.9615993499755859
     },
     {
       "start": 59,
@@ -2638,9 +2756,9 @@
       "value": "Douglas Lind",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9976633652975444,
-      "redact_probability": 0.9992642998695374,
-      "type_confidence": 0.9983978867530823
+      "redact_score": 0.9937227018340948,
+      "redact_probability": 0.9981092214584351,
+      "type_confidence": 0.9956051707267761
     },
     {
       "start": 99,
@@ -2648,9 +2766,9 @@
       "value": "Kpmg",
       "label": "ORG",
       "decision": "REDACT",
-      "redact_score": 0.7702427745555873,
-      "redact_probability": 0.9959903359413147,
-      "type_confidence": 0.7733436226844788
+      "redact_score": 0.9790143392537232,
+      "redact_probability": 0.9935145378112793,
+      "type_confidence": 0.9854051470756531
     },
     {
       "start": 107,
@@ -2658,9 +2776,9 @@
       "value": "CHISHOLM",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9977251025907208,
-      "redact_probability": 0.9989643096923828,
-      "type_confidence": 0.9987595081329346
+      "redact_score": 0.9938666161653487,
+      "redact_probability": 0.9983794689178467,
+      "type_confidence": 0.9954798221588135
     },
     {
       "start": 136,
@@ -2668,9 +2786,9 @@
       "value": "Next Step Living",
       "label": "ORG",
       "decision": "REDACT",
-      "redact_score": 0.9737946021283683,
-      "redact_probability": 0.9949100613594055,
-      "type_confidence": 0.9787765145301819
+      "redact_score": 0.9675133694223064,
+      "redact_probability": 0.9888021945953369,
+      "type_confidence": 0.9784700870513916
     }
   ],
   "type_comparison": {
@@ -2716,9 +2834,9 @@
       "value": "43672",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9837553908334513,
-      "redact_probability": 0.9980350136756897,
-      "type_confidence": 0.9856922626495361
+      "redact_score": 0.9760188259633367,
+      "redact_probability": 0.9938977360725403,
+      "type_confidence": 0.9820113182067871
     }
   ],
   "type_comparison": {
@@ -2756,9 +2874,9 @@
       "value": "Jakobine",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9995887583395415,
-      "redact_probability": 0.9999034404754639,
-      "type_confidence": 0.9996852874755859
+      "redact_score": 0.9947398926961881,
+      "redact_probability": 0.9987097978591919,
+      "type_confidence": 0.9960249662399292
     }
   ],
   "type_comparison": {
@@ -2784,9 +2902,9 @@
       "value": "Marisca",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9991581837439334,
-      "redact_probability": 0.999714195728302,
-      "type_confidence": 0.9994438290596008
+      "redact_score": 0.9932888448334793,
+      "redact_probability": 0.9982391595840454,
+      "type_confidence": 0.9950409531593323
     }
   ],
   "type_comparison": {
@@ -2812,59 +2930,37 @@
       "value": "Morishita",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9994012174850866,
-      "redact_probability": 0.9998564720153809,
-      "type_confidence": 0.9995446801185608
+      "redact_score": 0.9951525098806471,
+      "redact_probability": 0.9990614056587219,
+      "type_confidence": 0.9960874319076538
     },
     {
-      "start": 100,
-      "end": 104,
-      "value": "1950",
-      "label": "OTHER",
-      "decision": "REDACT",
-      "redact_score": 0.5617991004134382,
-      "redact_probability": 0.7517802715301514,
-      "type_confidence": 0.747291624546051
-    },
-    {
-      "start": 146,
+      "start": 164,
       "end": 179,
-      "value": "the University of Zafferana Etnea",
+      "value": "Zafferana Etnea",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9660987310998337,
-      "redact_probability": 0.9798665046691895,
-      "type_confidence": 0.9859493374824524
+      "redact_score": 0.9746204519152855,
+      "redact_probability": 0.9907387495040894,
+      "type_confidence": 0.9837310314178467
     }
   ],
   "type_comparison": {
     "true_positives": [
       {
+        "value": "Zafferana Etnea",
+        "label": "OTHER"
+      },
+      {
         "value": "Morishita",
         "label": "PERSON"
       }
     ],
-    "false_positives": [
-      {
-        "value": "1950",
-        "label": "OTHER"
-      }
-    ],
+    "false_positives": [],
     "false_negatives": [],
     "type_mismatches": [],
     "value_subsets": [],
-    "value_supersets": [
-      {
-        "predicted": {
-          "label": "OTHER",
-          "value": "the University of Zafferana Etnea"
-        },
-        "gold": {
-          "label": "OTHER",
-          "value": "Zafferana Etnea"
-        }
-      }
-    ]
+    "value_supersets": []
   }
 }
 {
@@ -2872,15 +2968,26 @@
   "redactions": [],
   "type_comparison": {
     "true_positives": [],
-    "false_positives": [],
-    "false_negatives": [
+    "false_positives": [
       {
-        "value": "01 Korte Noordsstraat 307\n\u00d6VERTURINGEN, nan 80815",
-        "label": "ADDRESS"
+        "value": "indian",
+        "label": "OTHER"
       }
     ],
+    "false_negatives": [],
     "type_mismatches": [],
-    "value_subsets": [],
+    "value_subsets": [
+      {
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "307\n\u00d6VERTURINGEN, nan 80815"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "01 Korte Noordsstraat 307\n\u00d6VERTURINGEN, nan 80815"
+        }
+      }
+    ],
     "value_supersets": []
   }
 }
@@ -2893,9 +3000,9 @@
       "value": "95",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9836370121232818,
-      "redact_probability": 0.9900216460227966,
-      "type_confidence": 0.9935510158538818
+      "redact_score": 0.9986406091698541,
+      "redact_probability": 0.999779999256134,
+      "type_confidence": 0.9988603591918945
     },
     {
       "start": 3,
@@ -2903,9 +3010,9 @@
       "value": "230 Wit Rd",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9956297411574866,
-      "redact_probability": 0.997752845287323,
-      "type_confidence": 0.9978721141815186
+      "redact_score": 0.9715114484233389,
+      "redact_probability": 0.9935459494590759,
+      "type_confidence": 0.9778223633766174
     },
     {
       "start": 15,
@@ -2913,9 +3020,9 @@
       "value": "Suite 246",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9843771742191194,
-      "redact_probability": 0.9909111857414246,
-      "type_confidence": 0.9934060573577881
+      "redact_score": 0.9583603675304175,
+      "redact_probability": 0.9872417449951172,
+      "type_confidence": 0.9707453846931458
     },
     {
       "start": 26,
@@ -2923,9 +3030,9 @@
       "value": "Bryanston",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9822093073713489,
-      "redact_probability": 0.9919992089271545,
-      "type_confidence": 0.990131139755249
+      "redact_score": 0.9909245657300048,
+      "redact_probability": 0.9976676106452942,
+      "type_confidence": 0.9932411909103394
     },
     {
       "start": 37,
@@ -2933,9 +3040,9 @@
       "value": "Rwanda",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9862361969431106,
-      "redact_probability": 0.9944798946380615,
-      "type_confidence": 0.9917105436325073
+      "redact_score": 0.9821323092006793,
+      "redact_probability": 0.9939996004104614,
+      "type_confidence": 0.9880610704421997
     },
     {
       "start": 44,
@@ -2943,9 +3050,9 @@
       "value": "02438",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.991150857298372,
-      "redact_probability": 0.9950273633003235,
-      "type_confidence": 0.9961041212081909
+      "redact_score": 0.9949692147757858,
+      "redact_probability": 0.9993399977684021,
+      "type_confidence": 0.9956263303756714
     }
   ],
   "type_comparison": {
@@ -2991,9 +3098,9 @@
       "value": "481195160",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.998558408284481,
-      "redact_probability": 0.9999527931213379,
-      "type_confidence": 0.9986055493354797
+      "redact_score": 0.9963553130708931,
+      "redact_probability": 0.9992814660072327,
+      "type_confidence": 0.9970717430114746
     }
   ],
   "type_comparison": {
@@ -3031,9 +3138,9 @@
       "value": "12/1/1977",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9990137863625819,
-      "redact_probability": 0.9995003938674927,
-      "type_confidence": 0.9995131492614746
+      "redact_score": 0.9941599554556184,
+      "redact_probability": 0.998480498790741,
+      "type_confidence": 0.995672881603241
     }
   ],
   "type_comparison": {
@@ -3059,9 +3166,9 @@
       "value": "5395472957709002",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.9994075334907677,
-      "redact_probability": 0.9998602867126465,
-      "type_confidence": 0.9995471835136414
+      "redact_score": 0.9944883763257693,
+      "redact_probability": 0.9978606104850769,
+      "type_confidence": 0.9966205358505249
     }
   ],
   "type_comparison": {
@@ -3087,9 +3194,9 @@
       "value": "21 212 133 2727",
       "label": "PHONE",
       "decision": "REDACT",
-      "redact_score": 0.9057293259851278,
-      "redact_probability": 0.9998990297317505,
-      "type_confidence": 0.9058207869529724
+      "redact_score": 0.9817413971314295,
+      "redact_probability": 0.9995088577270508,
+      "type_confidence": 0.9822238087654114
     }
   ],
   "type_comparison": {
@@ -3115,9 +3222,9 @@
       "value": "Melissa Kristoffersen",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9997326802964324,
-      "redact_probability": 0.9999699592590332,
-      "type_confidence": 0.9997627139091492
+      "redact_score": 0.9964093485164298,
+      "redact_probability": 0.998986542224884,
+      "type_confidence": 0.9974201917648315
     },
     {
       "start": 227,
@@ -3125,9 +3232,9 @@
       "value": "Kasslin",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9970297962206587,
-      "redact_probability": 0.999387264251709,
-      "type_confidence": 0.9976410865783691
+      "redact_score": 0.9972863826037894,
+      "redact_probability": 0.9993270635604858,
+      "type_confidence": 0.9979579448699951
     }
   ],
   "type_comparison": {
@@ -3157,9 +3264,9 @@
       "value": "98.85.59.159",
       "label": "IP_ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.6378896410495116,
-      "redact_probability": 0.9999150037765503,
-      "type_confidence": 0.6379438638687134
+      "redact_score": 0.5659691237123177,
+      "redact_probability": 0.98123699426651,
+      "type_confidence": 0.5767914652824402
     }
   ],
   "type_comparison": {
@@ -3185,9 +3292,9 @@
       "value": "027 896 92 86",
       "label": "PHONE",
       "decision": "REDACT",
-      "redact_score": 0.7596333993386502,
-      "redact_probability": 0.9997534155845642,
-      "type_confidence": 0.7598207592964172
+      "redact_score": 0.9862754494186277,
+      "redact_probability": 0.9993135929107666,
+      "type_confidence": 0.9869529008865356
     },
     {
       "start": 80,
@@ -3195,9 +3302,9 @@
       "value": "ms. Kuyra",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9039453155984987,
-      "redact_probability": 0.9997718930244446,
-      "type_confidence": 0.9041515588760376
+      "redact_score": 0.992262828101893,
+      "redact_probability": 0.9988981485366821,
+      "type_confidence": 0.9933573603630066
     }
   ],
   "type_comparison": {
@@ -3234,9 +3341,9 @@
       "value": "lilly",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.999531714880014,
-      "redact_probability": 0.9999278783798218,
-      "type_confidence": 0.999603807926178
+      "redact_score": 0.9968138196116243,
+      "redact_probability": 0.9988200068473816,
+      "type_confidence": 0.9979914426803589
     }
   ],
   "type_comparison": {
@@ -3262,9 +3369,9 @@
       "value": "16 48 rue Descartes, Monte Gil, Canada",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9873310486935694,
-      "redact_probability": 0.9985381364822388,
-      "type_confidence": 0.9887765049934387
+      "redact_score": 0.9104768379348194,
+      "redact_probability": 0.9602354168891907,
+      "type_confidence": 0.9481808543205261
     }
   ],
   "type_comparison": {
@@ -3290,9 +3397,9 @@
       "value": "Colleen Wiley",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.999375042599695,
-      "redact_probability": 0.9998893737792969,
-      "type_confidence": 0.9994856119155884
+      "redact_score": 0.9966188757415324,
+      "redact_probability": 0.9988998174667358,
+      "type_confidence": 0.9977165460586548
     }
   ],
   "type_comparison": {
@@ -3330,9 +3437,9 @@
       "value": "5513884765892688",
       "label": "CREDIT_CARD",
       "decision": "REDACT",
-      "redact_score": 0.9988267523324978,
-      "redact_probability": 0.9999371767044067,
-      "type_confidence": 0.9988895058631897
+      "redact_score": 0.9897496094755454,
+      "redact_probability": 0.9961274266242981,
+      "type_confidence": 0.9935973882675171
     }
   ],
   "type_comparison": {
@@ -3355,14 +3462,20 @@
   "type_comparison": {
     "true_positives": [],
     "false_positives": [],
-    "false_negatives": [
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
       {
-        "value": "45 a\u00f0algata 37\nk\u0119dzierzyn-ko\u017ale\n, nan\n 25033",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "\u00f0algata 37\nk\u0119dzierzyn-"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "45 a\u00f0algata 37\nk\u0119dzierzyn-ko\u017ale\n, nan\n 25033"
+        }
       }
     ],
-    "type_mismatches": [],
-    "value_subsets": [],
     "value_supersets": []
   }
 }
@@ -3375,9 +3488,9 @@
       "value": "403-57-9558",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9999107141288732,
-      "redact_probability": 0.9999656677246094,
-      "type_confidence": 0.9999450445175171
+      "redact_score": 0.9942381830362699,
+      "redact_probability": 0.9985560774803162,
+      "type_confidence": 0.9956758618354797
     }
   ],
   "type_comparison": {
@@ -3403,9 +3516,9 @@
       "value": "K\u00fcsnacht",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9995971717628009,
-      "redact_probability": 0.9998304843902588,
-      "type_confidence": 0.9997666478157043
+      "redact_score": 0.9861567738134625,
+      "redact_probability": 0.9954679012298584,
+      "type_confidence": 0.990646481513977
     }
   ],
   "type_comparison": {
@@ -3431,9 +3544,9 @@
       "value": "Michael Urner",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9956019317095439,
-      "redact_probability": 0.9987637996673584,
-      "type_confidence": 0.9968342185020447
+      "redact_score": 0.99069331965174,
+      "redact_probability": 0.9973927736282349,
+      "type_confidence": 0.9932830333709717
     },
     {
       "start": 15,
@@ -3441,9 +3554,9 @@
       "value": "11",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9897442426931491,
-      "redact_probability": 0.9938704967498779,
-      "type_confidence": 0.9958482980728149
+      "redact_score": 0.9986480697563671,
+      "redact_probability": 0.9996017813682556,
+      "type_confidence": 0.9990459084510803
     },
     {
       "start": 18,
@@ -3451,9 +3564,9 @@
       "value": "\u0160koln\u00ed 939",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9949513169095852,
-      "redact_probability": 0.9977195858955383,
-      "type_confidence": 0.9972254037857056
+      "redact_score": 0.9788227608457056,
+      "redact_probability": 0.9918144345283508,
+      "type_confidence": 0.9869011044502258
     },
     {
       "start": 30,
@@ -3461,9 +3574,9 @@
       "value": "Apt. 827",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9942979230103788,
-      "redact_probability": 0.996178150177002,
-      "type_confidence": 0.9981125593185425
+      "redact_score": 0.9708352261620803,
+      "redact_probability": 0.9920146465301514,
+      "type_confidence": 0.9786500930786133
     },
     {
       "start": 40,
@@ -3471,9 +3584,9 @@
       "value": "Kaplice 1",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.983835435911466,
-      "redact_probability": 0.9976465106010437,
-      "type_confidence": 0.9861563444137573
+      "redact_score": 0.90957242977845,
+      "redact_probability": 0.9945888519287109,
+      "type_confidence": 0.9145210385322571
     },
     {
       "start": 52,
@@ -3481,9 +3594,9 @@
       "value": "Iceland",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9951802543654722,
-      "redact_probability": 0.9974011182785034,
-      "type_confidence": 0.9977733492851257
+      "redact_score": 0.9929835187226246,
+      "redact_probability": 0.9983311295509338,
+      "type_confidence": 0.9946434497833252
     },
     {
       "start": 60,
@@ -3491,9 +3604,9 @@
       "value": "80392",
       "label": "ADDRESS",
       "decision": "REDACT",
-      "redact_score": 0.9957265082712787,
-      "redact_probability": 0.9979193806648254,
-      "type_confidence": 0.9978025555610657
+      "redact_score": 0.9916225353578767,
+      "redact_probability": 0.998012900352478,
+      "type_confidence": 0.9935969114303589
     }
   ],
   "type_comparison": {
@@ -3519,10 +3632,6 @@
         "label": "OTHER"
       },
       {
-        "value": "Kaplice 1",
-        "label": "OTHER"
-      },
-      {
         "value": "Michael Urner",
         "label": "PERSON"
       }
@@ -3530,7 +3639,18 @@
     "false_positives": [],
     "false_negatives": [],
     "type_mismatches": [],
-    "value_subsets": [],
+    "value_subsets": [
+      {
+        "predicted": {
+          "label": "OTHER",
+          "value": "Kaplice"
+        },
+        "gold": {
+          "label": "OTHER",
+          "value": "Kaplice 1"
+        }
+      }
+    ],
     "value_supersets": []
   }
 }
@@ -3543,9 +3663,9 @@
       "value": "Kendra Vida",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9993375675512297,
-      "redact_probability": 0.9998599290847778,
-      "type_confidence": 0.9994775652885437
+      "redact_score": 0.9973027676757553,
+      "redact_probability": 0.9993234872817993,
+      "type_confidence": 0.9979779124259949
     }
   ],
   "type_comparison": {
@@ -3571,9 +3691,9 @@
       "value": "Mali",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9991444054540608,
-      "redact_probability": 0.9997557997703552,
-      "type_confidence": 0.9993884563446045
+      "redact_score": 0.9962227689445413,
+      "redact_probability": 0.9987257122993469,
+      "type_confidence": 0.9974938631057739
     }
   ],
   "type_comparison": {
@@ -3599,9 +3719,9 @@
       "value": "SophiaAnderson@dayrep.com",
       "label": "OTHER",
       "decision": "REDACT",
-      "redact_score": 0.9996982358770552,
-      "redact_probability": 0.9999417066574097,
-      "type_confidence": 0.9997565150260925
+      "redact_score": 0.9546362997987856,
+      "redact_probability": 0.978033185005188,
+      "type_confidence": 0.9760776162147522
     }
   ],
   "type_comparison": {
@@ -3627,9 +3747,9 @@
       "value": "Tiffany Kilfoyle",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9981215318444079,
-      "redact_probability": 0.9995653033256531,
-      "type_confidence": 0.998555600643158
+      "redact_score": 0.9920331077634401,
+      "redact_probability": 0.9979375600814819,
+      "type_confidence": 0.9940833449363708
     },
     {
       "start": 17,
@@ -3637,9 +3757,19 @@
       "value": "Nera Economic Consulting",
       "label": "ORG",
       "decision": "REDACT",
-      "redact_score": 0.5921590616300065,
-      "redact_probability": 0.9894401431083679,
-      "type_confidence": 0.5984789133071899
+      "redact_score": 0.9657425499007815,
+      "redact_probability": 0.9907009601593018,
+      "type_confidence": 0.9748073220252991
+    },
+    {
+      "start": 42,
+      "end": 83,
+      "value": "74 106 Kate Edger Place, BINSTED, Vatican",
+      "label": "ADDRESS",
+      "decision": "REDACT",
+      "redact_score": 0.6642055334635799,
+      "redact_probability": 0.8109243512153625,
+      "type_confidence": 0.8190721273422241
     },
     {
       "start": 89,
@@ -3647,9 +3777,9 @@
       "value": "69 987 88 37",
       "label": "PHONE",
       "decision": "REDACT",
-      "redact_score": 0.9977504759139642,
-      "redact_probability": 0.9988724589347839,
-      "type_confidence": 0.9988767504692078
+      "redact_score": 0.9850163797920217,
+      "redact_probability": 0.9966676831245422,
+      "type_confidence": 0.9883097410202026
     },
     {
       "start": 109,
@@ -3657,9 +3787,19 @@
       "value": "001-825-741-0957x5184",
       "label": "PHONE",
       "decision": "REDACT",
-      "redact_score": 0.9824790136804609,
-      "redact_probability": 0.9999295473098755,
-      "type_confidence": 0.9825482368469238
+      "redact_score": 0.9898891107095409,
+      "redact_probability": 0.9982272982597351,
+      "type_confidence": 0.9916470050811768
+    },
+    {
+      "start": 135,
+      "end": 154,
+      "value": "+1-944-435-4352x047",
+      "label": "PHONE",
+      "decision": "REDACT",
+      "redact_score": 0.8524423441748752,
+      "redact_probability": 0.927145779132843,
+      "type_confidence": 0.919426441192627
     }
   ],
   "type_comparison": {
@@ -3682,18 +3822,30 @@
       }
     ],
     "false_positives": [],
-    "false_negatives": [
+    "false_negatives": [],
+    "type_mismatches": [],
+    "value_subsets": [
       {
-        "value": "74 106 Kate Edger Place, BINSTED, Vatican City",
-        "label": "ADDRESS"
+        "predicted": {
+          "label": "ADDRESS",
+          "value": "74 106 Kate Edger Place, BINSTED, Vatican"
+        },
+        "gold": {
+          "label": "ADDRESS",
+          "value": "74 106 Kate Edger Place, BINSTED, Vatican City"
+        }
       },
       {
-        "value": "+1-944-435-4352x04732",
-        "label": "PHONE"
+        "predicted": {
+          "label": "PHONE",
+          "value": "+1-944-435-4352x047"
+        },
+        "gold": {
+          "label": "PHONE",
+          "value": "+1-944-435-4352x04732"
+        }
       }
     ],
-    "type_mismatches": [],
-    "value_subsets": [],
     "value_supersets": []
   }
 }
@@ -3706,9 +3858,9 @@
       "value": "Timothy Laarman",
       "label": "PERSON",
       "decision": "REDACT",
-      "redact_score": 0.9980561418550522,
-      "redact_probability": 0.9995943903923035,
-      "type_confidence": 0.998461127281189
+      "redact_score": 0.9950933119768202,
+      "redact_probability": 0.9985131621360779,
+      "type_confidence": 0.9965750575065613
     }
   ],
   "type_comparison": {

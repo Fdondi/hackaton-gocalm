@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Predictions Error Analysis</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #131a31;
+      --ink: #eef2ff;
+      --muted: #a8b0cc;
+      --accent1: #59c3c3;
+      --accent2: #ff7f50;
+      --accent3: #f4d35e;
+      --accent4: #9ad1d4;
+      --grid: #2a3356;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    h1, h2 {
+      margin: 0 0 10px 0;
+    }
+    .muted {
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--grid);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .stat {
+      background: #0f1530;
+      border: 1px solid var(--grid);
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .stat .k {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    .stat .v {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      border: 1px solid var(--grid);
+      padding: 6px;
+      text-align: center;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #182147;
+      z-index: 1;
+    }
+    .table-wrap {
+      max-height: 500px;
+      overflow: auto;
+      border: 1px solid var(--grid);
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Predictions Error Analysis</h1>
+  <p class="muted">Counts are computed directly from <code>type_comparison</code> in each JSONL row.</p>
+  <div class="stats">
+    <div class="stat"><div class="k">docs</div><div class="v">100</div></div>
+    <div class="stat"><div class="k">TP</div><div class="v">145</div></div>
+    <div class="stat"><div class="k">merged TP</div><div class="v">2</div></div>
+    <div class="stat"><div class="k">FP</div><div class="v">8</div></div>
+    <div class="stat"><div class="k">FN</div><div class="v">2</div></div>
+    <div class="stat"><div class="k">subset overlaps</div><div class="v">16</div></div>
+    <div class="stat"><div class="k">superset overlaps</div><div class="v">4</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>False Positives vs False Negatives</h2>
+      <canvas id="fpFn"></canvas>
+    </div>
+    <div class="card">
+      <h2>Partial Overlaps by Gold Category</h2>
+      <canvas id="overlapGold"></canvas>
+    </div>
+    <div class="card" style="grid-column: 1 / span 2;">
+      <h2>Type Confusion Matrix (Predicted -> Gold)</h2>
+      <div class="table-wrap">
+        <table id="confusion"></table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const labels = ["ADDRESS", "CREDIT_CARD", "IP_ADDRESS", "ORG", "OTHER", "PERSON", "PHONE"];
+    const fp = {"ORG": 2, "OTHER": 4, "ADDRESS": 2};
+    const fn = {"OTHER": 2};
+    const subsetGold = {"OTHER": 3, "ADDRESS": 12, "PHONE": 1};
+    const supersetGold = {"PERSON": 4};
+    const matrix = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
+
+    const barCommon = {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: '#eef2ff' } }
+      },
+      scales: {
+        x: { ticks: { color: '#eef2ff' }, grid: { color: '#2a3356' } },
+        y: { beginAtZero: true, ticks: { color: '#eef2ff' }, grid: { color: '#2a3356' } },
+      }
+    };
+
+    new Chart(document.getElementById('fpFn'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'False Positives', data: labels.map(k => fp[k] || 0), backgroundColor: '#59c3c3' },
+          { label: 'False Negatives', data: labels.map(k => fn[k] || 0), backgroundColor: '#ff7f50' },
+        ]
+      },
+      options: barCommon
+    });
+
+    new Chart(document.getElementById('overlapGold'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Subset overlaps (gold category)', data: labels.map(k => subsetGold[k] || 0), backgroundColor: '#f4d35e' },
+          { label: 'Superset overlaps (gold category)', data: labels.map(k => supersetGold[k] || 0), backgroundColor: '#9ad1d4' },
+        ]
+      },
+      options: barCommon
+    });
+
+    const table = document.getElementById('confusion');
+    const maxValue = Math.max(1, ...matrix.flat());
+    const header = document.createElement('tr');
+    header.appendChild(document.createElement('th'));
+    for (const gold of labels) {
+      const th = document.createElement('th');
+      th.textContent = gold;
+      header.appendChild(th);
+    }
+    table.appendChild(header);
+
+    for (let i = 0; i < labels.length; i++) {
+      const tr = document.createElement('tr');
+      const rowHead = document.createElement('th');
+      rowHead.textContent = labels[i];
+      tr.appendChild(rowHead);
+      for (let j = 0; j < labels.length; j++) {
+        const td = document.createElement('td');
+        const val = matrix[i][j];
+        td.textContent = String(val);
+        const alpha = 0.08 + (val / maxValue) * 0.75;
+        td.style.backgroundColor = `rgba(255, 127, 80, ${alpha.toFixed(3)})`;
+        tr.appendChild(td);
+      }
+      table.appendChild(tr);
+    }
+  </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 import argparse
 import json
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Any, Dict, List, Set, Tuple
 
 import torch
 from torch.utils.data import DataLoader
@@ -9,7 +9,13 @@ from transformers import AutoTokenizer
 
 from .config import MultiHeadConfig
 from .dataset import JsonlMultiHeadDataset, collate_fn
-from .decoder import decode_final_spans, select_non_overlapping_typed_spans
+from .decoder import (
+    DecodedSpan,
+    attach_regex_candidates,
+    decode_final_spans,
+    non_max_suppression,
+    select_non_overlapping_typed_spans,
+)
 from .labels import TYPE_ID_TO_LABEL
 from .model import MultiHeadPiiModel
 from .type_comparison import ValueKey, classify_value_relationships, make_value_key
@@ -50,6 +56,154 @@ def _build_model_from_checkpoint(
     model.load_state_dict(checkpoint["model_state_dict"], strict=True)
     model.eval()
     return model
+
+
+def _enumerate_candidates_from_offsets(
+    offsets: List[Tuple[int, int]],
+    max_span_len: int,
+) -> List[Tuple[int, int]]:
+    valid_idxs = [i for i, off in enumerate(offsets) if off != (0, 0)]
+    candidates: List[Tuple[int, int]] = []
+    for start in valid_idxs:
+        max_end = min(start + max_span_len - 1, len(offsets) - 1)
+        for end in range(start, max_end + 1):
+            if offsets[end] == (0, 0):
+                break
+            candidates.append((start, end))
+    return candidates
+
+
+def _infer_window_spans(
+    text: str,
+    offsets: List[Tuple[int, int]],
+    input_ids: torch.Tensor,
+    attention_mask: torch.Tensor,
+    bundle: Dict[str, Any],
+) -> List[DecodedSpan]:
+    config: MultiHeadConfig = bundle["config"]
+    model: MultiHeadPiiModel = bundle["model"]
+    device: str = bundle["device"]
+
+    candidate_spans = _enumerate_candidates_from_offsets(
+        offsets=offsets,
+        max_span_len=config.max_span_len,
+    )
+    if config.include_regex_candidates:
+        candidate_spans = attach_regex_candidates(
+            text=text,
+            offsets=offsets,
+            candidate_spans=candidate_spans,
+            max_span_len=config.max_span_len,
+        )
+    if not candidate_spans:
+        return []
+
+    candidate_tensor = torch.tensor(candidate_spans, dtype=torch.long, device=device).unsqueeze(0)
+    outputs = model(
+        input_ids=input_ids.unsqueeze(0),
+        attention_mask=attention_mask.unsqueeze(0),
+        candidate_spans=candidate_tensor,
+    )
+    type_logits = outputs["type_logits"]
+    sens_logits = outputs["sensitivity_logits"]
+    if type_logits is None or sens_logits is None:
+        return []
+
+    return decode_final_spans(
+        text=text,
+        offsets=offsets,
+        candidate_spans=candidate_tensor[0],
+        type_logits=type_logits,
+        sensitivity_logits=sens_logits,
+        redact_score_threshold=config.redact_score_threshold,
+        nms_iou_threshold=config.nms_iou_threshold,
+    )
+
+
+def _merge_window_redactions(spans: List[DecodedSpan], iou_threshold: float) -> List[DecodedSpan]:
+    best_by_key: Dict[Tuple[int, int, str], DecodedSpan] = {}
+    for span in spans:
+        key = (span.start, span.end, span.label)
+        prev = best_by_key.get(key)
+        if prev is None or span.redact_score > prev.redact_score:
+            best_by_key[key] = span
+    deduped = list(best_by_key.values())
+    return non_max_suppression(deduped, iou_threshold=iou_threshold)
+
+
+def load_inference_bundle(checkpoint_path: str, device: str = "auto") -> Dict[str, Any]:
+    resolved_device = resolve_device(device)
+    checkpoint = _load_checkpoint(checkpoint_path, device=resolved_device)
+    config = MultiHeadConfig(**checkpoint["config"])
+
+    encoder_source = str((Path(checkpoint_path).parent / "encoder").resolve())
+    if not Path(encoder_source).exists():
+        encoder_source = config.model_name
+    tokenizer = AutoTokenizer.from_pretrained(encoder_source, use_fast=True)
+    model = _build_model_from_checkpoint(checkpoint, device=resolved_device)
+    return {
+        "device": resolved_device,
+        "config": config,
+        "tokenizer": tokenizer,
+        "model": model,
+    }
+
+
+@torch.no_grad()
+def infer_text(text: str, bundle: Dict[str, Any]) -> Dict[str, Any]:
+    config: MultiHeadConfig = bundle["config"]
+    tokenizer = bundle["tokenizer"]
+    device: str = bundle["device"]
+
+    enc = tokenizer(
+        text,
+        truncation=True,
+        max_length=config.max_length,
+        return_overflowing_tokens=True,
+        stride=max(1, config.max_length // 8),
+        return_offsets_mapping=True,
+    )
+    input_batches = enc["input_ids"]
+    attention_batches = enc["attention_mask"]
+    offset_batches = enc["offset_mapping"]
+
+    all_decoded: List[DecodedSpan] = []
+    for i in range(len(input_batches)):
+        offsets = [tuple(x) for x in offset_batches[i]]
+        input_ids_tensor = torch.tensor(input_batches[i], dtype=torch.long, device=device)
+        attention_mask_tensor = torch.tensor(attention_batches[i], dtype=torch.long, device=device)
+        decoded = _infer_window_spans(
+            text=text,
+            offsets=offsets,
+            input_ids=input_ids_tensor,
+            attention_mask=attention_mask_tensor,
+            bundle=bundle,
+        )
+        all_decoded.extend(decoded)
+
+    merged = _merge_window_redactions(
+        all_decoded,
+        iou_threshold=config.nms_iou_threshold,
+    )
+    return {
+        "text": text,
+        "truncated": False,
+        "windowed": len(input_batches) > 1,
+        "window_count": len(input_batches),
+        "redactions": [
+            {
+                "start": span.start,
+                "end": span.end,
+                "value": _extract_value(text, span.start, span.end),
+                "label": span.label,
+                "decision": span.decision,
+                "redact_score": span.redact_score,
+                "redact_probability": span.redact_probability,
+                "type_confidence": span.type_confidence,
+            }
+            for span in merged
+        ],
+    }
 
 
 def parse_args() -> argparse.Namespace:

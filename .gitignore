@@ -6,3 +6,5 @@ _tmp*
 *.pt
 !outputs_multihead/multihead_model.pt
 generation_errors.jsonl
+
+.vscode/

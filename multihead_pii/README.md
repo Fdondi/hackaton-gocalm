@@ -102,6 +102,20 @@ python -m multihead_pii.infer --input valid.gpt-5-nano.jsonl --checkpoint output
 `typed_predictions` contains per-candidate `redact_probability` (0-1).
 `redactions` contains spans chosen by decoder thresholding.
 
+## PDF redaction UI
+
+Run a small UI to upload a PDF and view extracted redactions:
+
+```bash
+python -m streamlit run multihead_pii/ui.py
+```
+
+The UI:
+- lets you pick a checkpoint path
+- extracts text page-by-page from the uploaded PDF
+- runs inference and shows detected redacted components
+- renders a redacted text preview for each page
+
 ## Evaluate
 
 ```bash

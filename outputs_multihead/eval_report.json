@@ -1,24 +1,24 @@
 {
-  "num_docs": 2,
+  "num_docs": 100,
   "avg_losses": {
-    "loss": 0.21920263767242432,
-    "proposal_loss": 0.0007141843088902533,
-    "type_loss": 0.11163358390331268,
-    "sensitivity_loss": 0.1068548783659935
+    "loss": 0.7640198836347554,
+    "proposal_loss": 0.057425987747992624,
+    "type_loss": 0.36731803075119385,
+    "sensitivity_loss": 0.339275872681028
   },
-  "proposal_accuracy": 1.0,
-  "sensitivity_candidate_accuracy": 1.0,
-  "sensitivity_redact_probability_mae": 0.000621110200881958,
-  "sensitivity_redact_probability_brier": 5.214425868871331e-07,
+  "proposal_accuracy": 0.9872190392243279,
+  "sensitivity_candidate_accuracy": 0.9746835443037974,
+  "sensitivity_redact_probability_mae": 0.03408746138403687,
+  "sensitivity_redact_probability_brier": 0.01717761811279798,
   "type_metrics": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1": 1.0
+    "precision": 0.9470198675496688,
+    "recall": 0.9662162162162162,
+    "f1": 0.9565217391304347
   },
   "type_overlap_metrics": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1": 1.0
+    "precision": 0.8077208647421437,
+    "recall": 0.8217275849399843,
+    "f1": 0.8146640240379214
   },
   "redaction_metrics": {
     "precision": 0.0,
@@ -32,28 +32,28 @@
   },
   "span_counts": {
     "type": {
-      "tp": 4,
-      "fp": 0,
-      "fn": 0
+      "tp": 143,
+      "fp": 8,
+      "fn": 5
     },
     "type_overlap_credit": {
-      "tp_credit": 4.0,
-      "predicted_total": 4,
-      "gold_total": 4
+      "tp_credit": 142.1588721946173,
+      "predicted_total": 176,
+      "gold_total": 173
     },
     "type_non_exact_breakdown": {
-      "type_mismatch": 0,
-      "value_subset": 0,
-      "value_superset": 0
+      "type_mismatch": 3,
+      "value_subset": 16,
+      "value_superset": 6
     },
     "redaction": {
       "tp": 0,
-      "fp": 4,
+      "fp": 161,
       "fn": 0
     },
     "redaction_overlap_credit": {
       "tp_credit": 0.0,
-      "predicted_total": 4,
+      "predicted_total": 161,
       "gold_total": 0
     }
   }

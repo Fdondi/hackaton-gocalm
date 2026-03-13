@@ -1,0 +1,266 @@
+{
+  "num_docs": 100,
+  "labels": [
+    "ADDRESS",
+    "CREDIT_CARD",
+    "IP_ADDRESS",
+    "ORG",
+    "OTHER",
+    "PERSON",
+    "PHONE"
+  ],
+  "fp_by_label": {
+    "ORG": 2,
+    "OTHER": 4,
+    "ADDRESS": 2
+  },
+  "fn_by_label": {
+    "OTHER": 2
+  },
+  "tp_by_label": {
+    "PHONE": 9,
+    "ADDRESS": 30,
+    "OTHER": 33,
+    "PERSON": 51,
+    "CREDIT_CARD": 10,
+    "ORG": 10,
+    "IP_ADDRESS": 2
+  },
+  "merged_to_tp_by_label": {
+    "ADDRESS": 2
+  },
+  "subset_by_gold": {
+    "OTHER": 3,
+    "ADDRESS": 12,
+    "PHONE": 1
+  },
+  "subset_by_pred": {
+    "OTHER": 3,
+    "ADDRESS": 12,
+    "PHONE": 1
+  },
+  "superset_by_gold": {
+    "PERSON": 4
+  },
+  "superset_by_pred": {
+    "PERSON": 4
+  },
+  "mismatch_pairs": [
+    {
+      "predicted": "PERSON",
+      "gold": "OTHER",
+      "count": 2
+    },
+    {
+      "predicted": "OTHER",
+      "gold": "ADDRESS",
+      "count": 1
+    }
+  ],
+  "examples": {
+    "false_positives": {
+      "ORG": [
+        {
+          "doc_index": 1,
+          "text": "billing address: tracy sukhorukova 23 8 wressle road suite 771 polapit tamar nan 77058",
+          "detail": "predicted=ORG value='billing'"
+        },
+        {
+          "doc_index": 59,
+          "text": "Taylor Barab\u00e1s Areavibes Inc 27 2279 President St Gleniti , nan Canada 32586 Mobile: 041-412-293 Desk: 986.291.2294x751 Fax: 001-420-335-7509x38548",
+          "detail": "predicted=ORG value='Desk'"
+        }
+      ],
+      "OTHER": [
+        {
+          "doc_index": 4,
+          "text": "At my suggestion, one morning over breakfast, she agreed, and on the last Sunday before Labor Day we returned to Blaketown by helicopter.",
+          "detail": "predicted=OTHER value='Labor Day'"
+        },
+        {
+          "doc_index": 33,
+          "text": "Frank had given Tyler his address: 03 \u03a0\u03bb\u03b1\u03c4\u03b5\u03af\u03b1 \u039c\u03b1\u03b2\u03af\u03bb\u03b7 170, \u0391\u0393\u039b\u0391\u039d\u03a4\u0396\u0399\u0391 (\u0391\u0393\u039b\u0391\u0393\u0393\u0399\u0391)",
+          "detail": "predicted=OTHER value='\u039b\u0391\u039d\u03a4\u0396\u0399\u0391'"
+        },
+        {
+          "doc_index": 59,
+          "text": "Taylor Barab\u00e1s Areavibes Inc 27 2279 President St Gleniti , nan Canada 32586 Mobile: 041-412-293 Desk: 986.291.2294x751 Fax: 001-420-335-7509x38548",
+          "detail": "predicted=OTHER value='Canada'"
+        },
+        {
+          "doc_index": 76,
+          "text": "The restaurant is located at 01 Korte Noordsstraat 307 \u00d6VERTURINGEN, nan 80815. It serves great indian food.",
+          "detail": "predicted=OTHER value='indian'"
+        }
+      ],
+      "ADDRESS": [
+        {
+          "doc_index": 22,
+          "text": "On 29 March 2017, the sudanese government formally began the process of withdrawal by invoking Article 50 of the Treaty on European Union",
+          "detail": "predicted=ADDRESS value='29 March 2017'"
+        },
+        {
+          "doc_index": 59,
+          "text": "Taylor Barab\u00e1s Areavibes Inc 27 2279 President St Gleniti , nan Canada 32586 Mobile: 041-412-293 Desk: 986.291.2294x751 Fax: 001-420-335-7509x38548",
+          "detail": "predicted=ADDRESS value='32586'"
+        }
+      ]
+    },
+    "false_negatives": {
+      "OTHER": [
+        {
+          "doc_index": 47,
+          "text": "My name appears incorrectly on credit card statement could you please correct it to Mrs. Amy Kupcov\u00e1?",
+          "detail": "gold=OTHER value='Mrs.'"
+        },
+        {
+          "doc_index": 56,
+          "text": "For my take on Mrs. Ayers, see Guilty Pleasures: 5 Musicians Of The 70s You're Supposed To Hate (But Secretly Love)",
+          "detail": "gold=OTHER value='Mrs.'"
+        }
+      ]
+    },
+    "value_subsets": {
+      "OTHER->OTHER": [
+        {
+          "doc_index": 11,
+          "text": "Just posted a photo http://www.DialForum.co.uk/",
+          "detail": "pred=OTHER:'http://www.DialForum.co.uk' | gold=OTHER:'http://www.DialForum.co.uk/'"
+        },
+        {
+          "doc_index": 33,
+          "text": "Frank had given Tyler his address: 03 \u03a0\u03bb\u03b1\u03c4\u03b5\u03af\u03b1 \u039c\u03b1\u03b2\u03af\u03bb\u03b7 170, \u0391\u0393\u039b\u0391\u039d\u03a4\u0396\u0399\u0391 (\u0391\u0393\u039b\u0391\u0393\u0393\u0399\u0391)",
+          "detail": "pred=OTHER:'\u039b\u0391\u0393\u0393\u0399\u0391' | gold=OTHER:'\u0391\u0393\u039b\u0391\u039d\u03a4\u0396\u0399\u0391 (\u0391\u0393\u039b\u0391\u0393\u0393\u0399\u0391)'"
+        },
+        {
+          "doc_index": 94,
+          "text": "Michael Urner 11 \u0160koln\u00ed 939 Apt. 827 Kaplice 1 Iceland 80392",
+          "detail": "pred=OTHER:'Kaplice' | gold=OTHER:'Kaplice 1'"
+        }
+      ],
+      "ADDRESS->ADDRESS": [
+        {
+          "doc_index": 15,
+          "text": "I need to add my addresses, here they are: 63 30 N. Stadion ULLINISH , nan 40839, and 75 Auerstrasse 12 Apt. 974 Lyss S\u00c3\u00a3o Tom\u00c3\u00a9 and Pr\u00c3\u00adncipe",
+          "detail": "pred=ADDRESS:'63 30 N. Stadion\\nULLINISH' | gold=ADDRESS:'63 30 N. Stadion\\nULLINISH\\n, nan\\n 40839'"
+        },
+        {
+          "doc_index": 15,
+          "text": "I need to add my addresses, here they are: 63 30 N. Stadion ULLINISH , nan 40839, and 75 Auerstrasse 12 Apt. 974 Lyss S\u00c3\u00a3o Tom\u00c3\u00a9 and Pr\u00c3\u00adncipe",
+          "detail": "pred=ADDRESS:'75 Auerstrasse 12 Apt. 974' | gold=ADDRESS:'75 Auerstrasse 12 Apt. 974 Lyss S\u00c3\u00a3o Tom\u00c3\u00a9 and Pr\u00c3\\xadncipe'"
+        },
+        {
+          "doc_index": 27,
+          "text": "Please update the billing address with 52 Ibirapita 8057 Erwetegem , VOV Serbia 23823 for this card: 4556156821609393",
+          "detail": "pred=ADDRESS:'wetegem\\n, VOV\\n Serbia 23823' | gold=ADDRESS:'52 Ibirapita 8057\\nErwetegem\\n, VOV\\n Serbia 23823'"
+        },
+        {
+          "doc_index": 35,
+          "text": "As promised, here's Arne's address: 06 Reyes Cat\u00f3licos 17 Saarj\u00e4rve, JN 91851",
+          "detail": "pred=ADDRESS:'yes Cat\u00f3licos 17\\nSaarj\u00e4rve' | gold=ADDRESS:'06 Reyes Cat\u00f3licos 17\\nSaarj\u00e4rve, JN 91851'"
+        },
+        {
+          "doc_index": 49,
+          "text": "Please return to 39 79 Argyll Road Noorderwijk , VAN Portugal 76970 in case of an issue.",
+          "detail": "pred=ADDRESS:'Argyll Road\\nNoorderwijk\\n,' | gold=ADDRESS:'39 79 Argyll Road\\nNoorderwijk\\n, VAN\\n Portugal 76970'"
+        },
+        {
+          "doc_index": 59,
+          "text": "Taylor Barab\u00e1s Areavibes Inc 27 2279 President St Gleniti , nan Canada 32586 Mobile: 041-412-293 Desk: 986.291.2294x751 Fax: 001-420-335-7509x38548",
+          "detail": "pred=ADDRESS:'27 2279 President St\\nGleniti' | gold=ADDRESS:'27 2279 President St\\nGleniti\\n, nan\\n Canada 32586'"
+        },
+        {
+          "doc_index": 61,
+          "text": "I once lived in 95 Bem rkp. 97. Suite 446, Pozna\u0144, Bolivia 28327. I now live in the corner of Kapelaniestraat 88 and Whittaker Street",
+          "detail": "pred=ADDRESS:'Kapelaniestraat 88 and Whittaker Street' | gold=ADDRESS:'the corner of Kapelaniestraat 88 and Whittaker Street'"
+        },
+        {
+          "doc_index": 61,
+          "text": "I once lived in 95 Bem rkp. 97. Suite 446, Pozna\u0144, Bolivia 28327. I now live in the corner of Kapelaniestraat 88 and Whittaker Street",
+          "detail": "pred=ADDRESS:'rkp. 97. Suite 446, Pozna\u0144' | gold=ADDRESS:'95 Bem rkp. 97. Suite 446, Pozna\u0144, Bolivia 28327'"
+        },
+        {
+          "doc_index": 63,
+          "text": "What is your address? it is 05 Weblinger G\u00fcrtel 92 Apt. 584 HEILIGENBRUNN France",
+          "detail": "pred=ADDRESS:'blinger G\u00fcrtel 92 Apt. 584' | gold=ADDRESS:'05 Weblinger G\u00fcrtel 92 Apt. 584 HEILIGENBRUNN France'"
+        },
+        {
+          "doc_index": 76,
+          "text": "The restaurant is located at 01 Korte Noordsstraat 307 \u00d6VERTURINGEN, nan 80815. It serves great indian food.",
+          "detail": "pred=ADDRESS:'307\\n\u00d6VERTURINGEN, nan 80815' | gold=ADDRESS:'01 Korte Noordsstraat 307\\n\u00d6VERTURINGEN, nan 80815'"
+        },
+        {
+          "doc_index": 91,
+          "text": "please return to 45 a\u00f0algata 37 k\u0119dzierzyn-ko\u017ale , nan 25033 in case of an issue.",
+          "detail": "pred=ADDRESS:'\u00f0algata 37\\nk\u0119dzierzyn-' | gold=ADDRESS:'45 a\u00f0algata 37\\nk\u0119dzierzyn-ko\u017ale\\n, nan\\n 25033'"
+        },
+        {
+          "doc_index": 98,
+          "text": "Tiffany Kilfoyle Nera Economic Consulting 74 106 Kate Edger Place, BINSTED, Vatican City 69 987 88 37 office 001-825-741-0957x5184 fax +1-944-435-4352x04732 mobile",
+          "detail": "pred=ADDRESS:'74 106 Kate Edger Place, BINSTED, Vatican' | gold=ADDRESS:'74 106 Kate Edger Place, BINSTED, Vatican City'"
+        }
+      ],
+      "PHONE->PHONE": [
+        {
+          "doc_index": 98,
+          "text": "Tiffany Kilfoyle Nera Economic Consulting 74 106 Kate Edger Place, BINSTED, Vatican City 69 987 88 37 office 001-825-741-0957x5184 fax +1-944-435-4352x04732 mobile",
+          "detail": "pred=PHONE:'+1-944-435-4352x047' | gold=PHONE:'+1-944-435-4352x04732'"
+        }
+      ]
+    },
+    "value_supersets": {
+      "PERSON->PERSON": [
+        {
+          "doc_index": 0,
+          "text": "Please have the manager call me at (96) 627-277 I'd like to join accounts with ms. Wijtze",
+          "detail": "pred=PERSON:'ms. Wijtze' | gold=PERSON:'Wijtze'"
+        },
+        {
+          "doc_index": 47,
+          "text": "My name appears incorrectly on credit card statement could you please correct it to Mrs. Amy Kupcov\u00e1?",
+          "detail": "pred=PERSON:'Mrs. Amy Kupcov\u00e1' | gold=PERSON:'Amy Kupcov\u00e1'"
+        },
+        {
+          "doc_index": 56,
+          "text": "For my take on Mrs. Ayers, see Guilty Pleasures: 5 Musicians Of The 70s You're Supposed To Hate (But Secretly Love)",
+          "detail": "pred=PERSON:'Mrs. Ayers' | gold=PERSON:'Ayers'"
+        },
+        {
+          "doc_index": 85,
+          "text": "Please have the manager call me at 027 896 92 86 I'd like to join accounts with ms. Kuyra",
+          "detail": "pred=PERSON:'ms. Kuyra' | gold=PERSON:'Kuyra'"
+        }
+      ]
+    },
+    "type_mismatches": {
+      "OTHER->ADDRESS": [
+        {
+          "doc_index": 1,
+          "text": "billing address: tracy sukhorukova 23 8 wressle road suite 771 polapit tamar nan 77058",
+          "detail": "pred=OTHER:'nan' | gold=ADDRESS:'nan'"
+        }
+      ],
+      "PERSON->OTHER": [
+        {
+          "doc_index": 31,
+          "text": "Dr. Nielsen is a 50 year old man who grew up in \u00dast\u00ed nad Labem 2.",
+          "detail": "pred=PERSON:'Dr.' | gold=OTHER:'Dr.'"
+        },
+        {
+          "doc_index": 37,
+          "text": "Mr. Fernandez is a 50 year old man who grew up in Monroe.",
+          "detail": "pred=PERSON:'Mr.' | gold=OTHER:'Mr.'"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "false_positives": 8,
+    "false_negatives": 2,
+    "true_positives": 145,
+    "merged_to_true_positive": 2,
+    "value_subsets": 16,
+    "value_supersets": 4,
+    "type_mismatches": 3
+  }
+}

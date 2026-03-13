@@ -462,10 +462,43 @@ def _build_type_soft_target(
         target[exact_type_id] = 1.0
         return target
 
+    def iou_with_overlapping_gold_group(
+        candidate_span: Tuple[int, int],
+        gold_spans_for_label: List[Tuple[int, int]],
+    ) -> float:
+        pred_start, pred_end = candidate_span
+        if pred_end < pred_start:
+            return 0.0
+        overlapping_gold = [
+            span
+            for span in gold_spans_for_label
+            if overlap_credit(candidate_span, span) > 0.0
+        ]
+        if not overlapping_gold:
+            return 0.0
+        pred_tokens = set(range(pred_start, pred_end + 1))
+        gold_tokens = set()
+        for gold_start, gold_end in overlapping_gold:
+            if gold_end >= gold_start:
+                gold_tokens.update(range(gold_start, gold_end + 1))
+        if not pred_tokens or not gold_tokens:
+            return 0.0
+        union = pred_tokens | gold_tokens
+        if not union:
+            return 0.0
+        intersection = pred_tokens & gold_tokens
+        return float(len(intersection)) / float(len(union))
+
+    by_type: Dict[int, List[Tuple[int, int]]] = {}
+    for gold_span, gold_type_id in gold_type_spans:
+        if gold_type_id == none_id:
+            continue
+        by_type.setdefault(gold_type_id, []).append(gold_span)
+
     best_score = 0.0
     best_type_id = none_id
-    for gold_span, gold_type_id in gold_type_spans:
-        score = overlap_credit(candidate, gold_span)
+    for gold_type_id, spans in by_type.items():
+        score = iou_with_overlapping_gold_group(candidate, spans)
         if score > best_score:
             best_score = score
             best_type_id = gold_type_id
@@ -506,10 +539,43 @@ def _build_sensitivity_soft_target(
         target[exact_sens_id] = 1.0
         return target
 
+    def iou_with_overlapping_gold_group(
+        candidate_span: Tuple[int, int],
+        gold_spans_for_label: List[Tuple[int, int]],
+    ) -> float:
+        pred_start, pred_end = candidate_span
+        if pred_end < pred_start:
+            return 0.0
+        overlapping_gold = [
+            span
+            for span in gold_spans_for_label
+            if overlap_credit(candidate_span, span) > 0.0
+        ]
+        if not overlapping_gold:
+            return 0.0
+        pred_tokens = set(range(pred_start, pred_end + 1))
+        gold_tokens = set()
+        for gold_start, gold_end in overlapping_gold:
+            if gold_end >= gold_start:
+                gold_tokens.update(range(gold_start, gold_end + 1))
+        if not pred_tokens or not gold_tokens:
+            return 0.0
+        union = pred_tokens | gold_tokens
+        if not union:
+            return 0.0
+        intersection = pred_tokens & gold_tokens
+        return float(len(intersection)) / float(len(union))
+
+    by_sens: Dict[int, List[Tuple[int, int]]] = {}
+    for gold_span, gold_sens_id in gold_sens_spans:
+        if gold_sens_id < 0:
+            continue
+        by_sens.setdefault(gold_sens_id, []).append(gold_span)
+
     best_score = 0.0
     best_sens_id = -100
-    for gold_span, gold_sens_id in gold_sens_spans:
-        score = overlap_credit(candidate, gold_span)
+    for gold_sens_id, spans in by_sens.items():
+        score = iou_with_overlapping_gold_group(candidate, spans)
         if score > best_score:
             best_score = score
             best_sens_id = gold_sens_id
